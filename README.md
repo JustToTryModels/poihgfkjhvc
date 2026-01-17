@@ -59,7 +59,7 @@ Try the live prediction model here:
   <img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/Employee-Churn-GIF.gif?raw=true" alt="Employee" width="650" />
 </div>
 
-Enter employee details and get instant predictions on their likelihood of leaving!
+> Enter employee details and get instant predictions on their likelihood of leaving!
 
 ---
 
