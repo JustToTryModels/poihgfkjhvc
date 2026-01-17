@@ -246,6 +246,8 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Fix** | Flag anyone working >220 hours. Redistribute their work to under-utilized staff |
 | **Why** | 7 projects or 300+ hours guarantees 100% turnover |
 
+
+
 ### 2. 📈 Fix the "Mid-Career" Promotion Gap
 
 | Action | Details |
