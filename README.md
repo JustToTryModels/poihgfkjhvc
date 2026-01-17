@@ -107,7 +107,12 @@ employee-churn-prediction/
 
 ## ⚔️ Model Comparison & Selection
 
-To ensure the most robust prediction capability, **11 different classification models** were evaluated using Recursive Feature Elimination (RFE) and Stratified K-Fold Cross-Validation.
+To ensure the most robust prediction capability, **11 different classification models** were evaluated. Feature selection techniques were tailored to each model where applicable:
+
+- **Tree-based models** (e.g., Random Forest, XGBoost, LightGBM) used their own **internal feature importance metrics** (such as Mean Decrease in Impurity or Gain-based importance).
+- **Other models** (e.g., Logistic Regression, SVC, KNN) were evaluated using **Recursive Feature Elimination (RFE)**.
+
+All models were validated using **Stratified K-Fold Cross-Validation (k=5)** to ensure fair comparison and generalizability.
 
 ### 🚀 Performance Leaderboard (Test Set)
 
