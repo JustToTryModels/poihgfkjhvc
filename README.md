@@ -119,7 +119,7 @@ To ensure the most robust prediction capability, **11 different classification m
 | SVC | 0.9296 | 0.9550 | 0.8043 | 0.9856 | 0.9423 | 8 |
 | Logistic Regression | 0.8894 | 0.7842 | 0.4504 | 0.9727 | 0.8368 | 8 |
 
-### Why Random Forest?
+### 🌳 Why Random Forest?
 
 Despite strong competition, **Random Forest** was selected for deployment based on the following criteria:
 
