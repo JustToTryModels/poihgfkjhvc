@@ -1,6 +1,3 @@
-Here is the complete, corrected README file with the **Methodology** section moved before **Model Comparison**, and the **Table of Contents** updated to match.
-
-```markdown
 # 🏢 Employee Churn Prediction
 A machine learning project to predict employee attrition, helping organizations identify at-risk employees and take proactive retention measures.
 
@@ -350,4 +347,3 @@ The app will open in the default browser at `http://localhost:8501`
   
   If this project was helpful, please consider giving it a ⭐
 </div>
-```
