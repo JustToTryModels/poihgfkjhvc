@@ -51,7 +51,7 @@ Predict whether an employee will leave the company based on various factors such
 
 ## 🚀 Demo
 
-> Try the live prediction model here:
+Try the live prediction model here:
 
 [![Open Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://employee-turnover-predictor.streamlit.app/) 
 
