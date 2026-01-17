@@ -190,7 +190,7 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 The organisation is facing a dual crisis of **burnout and stagnation**, systematically losing its most valuable employees. While low satisfaction (median 0.41 for leavers) is the immediate trigger, the root causes are structural: unsustainable workloads, a near-total lack of career progression, and compensation that fails to reward high effort.
 
-### 1. The Core Predictors of Turnover
+### 🔑 1. The Core Predictors of Turnover
 
 | Metric | Employees Who Stayed | Employees Who Left | Key Insight |
 |--------|----------------------|--------------------|-------------|
@@ -201,7 +201,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 ---
 
-### 2. The Workload Crisis: A U-Shaped Curve of Risk
+### 📉 2. The Workload Crisis: A U-Shaped Curve of Risk
 
 | Risk Group | Hours/Month | Projects | Attrition Rate | Core Driver |
 |------------|-------------|----------|----------------|-------------|
@@ -211,7 +211,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 ---
 
-### 3. Career Stagnation and the Tenure Cliff
+### 📆 3. Career Stagnation and the Tenure Cliff
 
 | Tenure (Years) | Attrition Rate | Observation |
 |----------------|----------------|-------------|
@@ -224,7 +224,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 ---
 
-### 4. Compensation and Departmental Risks
+### 💰 4. Compensation and Departmental Risks
 
 | Salary Level | Attrition Rate | Workload Pattern | Key Insight |
 |--------------|----------------|------------------|-------------|
@@ -234,7 +234,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 ---
 
-### 5. Critical Flight Risk Profiles
+### 🚨 5. Critical Flight Risk Profiles
 
 | Cluster | Performance | Satisfaction | Workload | Primary Reason for Leaving |
 |---------|-------------|--------------|----------|----------------------------|
