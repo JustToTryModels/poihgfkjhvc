@@ -54,6 +54,7 @@ Predict whether an employee will leave the company based on various factors such
 Try the live prediction model here:
 
 [![Open Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://employee-turnover-predictor.streamlit.app/) 
+
 <img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/Employee-Churn-GIF.gif?raw=true" alt="Employee" width="650" />
 </div>
 
