@@ -1,3 +1,6 @@
+Here is the complete, corrected README file with the **Methodology** section moved before **Model Comparison**, and the **Table of Contents** updated to match.
+
+```markdown
 # 🏢 Employee Churn Prediction
 A machine learning project to predict employee attrition, helping organizations identify at-risk employees and take proactive retention measures.
 
@@ -10,8 +13,8 @@ A machine learning project to predict employee attrition, helping organizations 
 - [Demo](#-demo)
 - [Project Structure](#-project-structure)
 - [Dataset](#-dataset)
-- [Model Comparison & Selection](#-model-comparison--selection)
 - [Methodology](#-methodology)
+- [Model Comparison & Selection](#-model-comparison--selection)
 - [Final Model Results](#-final-model-results)
 - [Key Findings](#-key-findings)
 - [Strategic Recommendations](#-strategic-recommendations)
@@ -105,6 +108,24 @@ employee-churn-prediction/
 
 ---
 
+## 🔬 Methodology
+
+### 📊 1. Data Preparation
+- **Train-Test Split:** 90% training, 10% testing.
+- **Stratified splitting** to maintain class distribution.
+- Test set locked for final evaluation only.
+
+### ⚖️ 2. Imbalance Handling Strategy
+- `class_weight='balanced'` in tree-based models.
+- Stratified K-Fold Cross-Validation (k=5).
+- Focus on both majority and minority class performance.
+
+### 📌 3. Feature Selection
+- **Method:** Recursive Feature Elimination (RFE) & Mean Decrease in Impurity (MDI).
+- Iterative testing to find the minimum feature set required for maximum performance.
+
+---
+
 ## ⚔️ Model Comparison & Selection
 
 To ensure the most robust prediction capability, **11 different classification models** were evaluated. Feature selection techniques were tailored to each model where applicable:
@@ -143,24 +164,6 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 *   Less data collection overhead.
 *   Lower risk of data drift.
 *   Easier interpretation for stakeholders.
-
----
-
-## 🔬 Methodology
-
-### 📊 1. Data Preparation
-- **Train-Test Split:** 90% training, 10% testing.
-- **Stratified splitting** to maintain class distribution.
-- Test set locked for final evaluation only.
-
-### ⚖️ 2. Imbalance Handling Strategy
-- `class_weight='balanced'` in tree-based models.
-- Stratified K-Fold Cross-Validation (k=5).
-- Focus on both majority and minority class performance.
-
-### 📌 3. Feature Selection
-- **Method:** Recursive Feature Elimination (RFE) & Mean Decrease in Impurity (MDI).
-- Iterative testing to find the minimum feature set required for maximum performance.
 
 ---
 
@@ -347,3 +350,4 @@ The app will open in the default browser at `http://localhost:8501`
   
   If this project was helpful, please consider giving it a ⭐
 </div>
+```
