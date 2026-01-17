@@ -105,7 +105,7 @@ employee-churn-prediction/
 
 To ensure the most robust prediction capability, **11 different classification models** were evaluated using Recursive Feature Elimination (RFE) and Stratified K-Fold Cross-Validation.
 
-### Performance Leaderboard (Test Set)
+### 🚀 Performance Leaderboard (Test Set)
 
 | Model | Recall (Left) | Recall (Stayed) | Precision (Left) | Precision (Stayed) | Balanced Acc | Features Used |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -139,17 +139,17 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 ## 🔬 Methodology
 
-### 1. Data Preparation
+### 📊 1. Data Preparation
 - **Train-Test Split:** 90% training, 10% testing.
 - **Stratified splitting** to maintain class distribution.
 - Test set locked for final evaluation only.
 
-### 2. Imbalance Handling Strategy
+### ⚖️ 2. Imbalance Handling Strategy
 - `class_weight='balanced'` in tree-based models.
 - Stratified K-Fold Cross-Validation (k=5).
 - Focus on both majority and minority class performance.
 
-### 3. Feature Selection
+### 📌 3. Feature Selection
 - **Method:** Recursive Feature Elimination (RFE) & Mean Decrease in Impurity (MDI).
 - Iterative testing to find the minimum feature set required for maximum performance.
 
@@ -167,7 +167,7 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 | 4 | `number_project` |
 | 5 | `last_evaluation` |
 
-### Performance Metrics (Random Forest)
+### 💪 Performance Metrics (Random Forest)
 
 | Metric | Class 0 (Stayed) | Class 1 (Left) |
 |--------|------------------|----------------|
