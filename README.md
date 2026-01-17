@@ -247,6 +247,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **Why** | 7 projects or 300+ hours guarantees 100% turnover |
 
 ---
+
 ### 2. 📈 Fix the "Mid-Career" Promotion Gap
 
 | Action | Details |
@@ -254,6 +255,8 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Rule** | Implement a mandatory career review at the 3-year mark |
 | **The Fix** | Create a clear promotion path. With only 1.69% of staff promoted in 5 years, the organisation is forcing its experienced staff to leave to advance their careers |
 | **Why** | Promoted employees have ~4% churn rate vs. ~17% for non-promoted |
+
+---
 
 ### 3. 💵 Pay High Performers Fairly
 
@@ -263,6 +266,8 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Fix** | Audit Low and Medium salary brackets. Identify employees with High Evaluations (>0.8) and provide raises or bonuses |
 | **Why** | The organisation is losing top talent because they work the most hours but receive the lowest pay |
 
+---
+
 ### 4. 🎯 Engage the Under-Utilized
 
 | Action | Details |
@@ -270,6 +275,8 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Rule** | Identify employees with <160 hours or only 2 projects |
 | **The Fix** | Assign them more work, upskill them, or manage them out |
 | **Why** | Boredom is driving nearly as much turnover as burnout |
+
+---
 
 ### 5. 🏢 Target High-Risk Departments
 
