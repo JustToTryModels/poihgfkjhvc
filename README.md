@@ -190,7 +190,7 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 The organisation is facing a dual crisis of **burnout and stagnation**, systematically losing its most valuable employees. While low satisfaction (median 0.41 for leavers) is the immediate trigger, the root causes are structural: unsustainable workloads, a near-total lack of career progression, and compensation that fails to reward high effort.
 
-### The Core Predictors of Turnover
+### 1. The Core Predictors of Turnover
 
 | Metric | Employees Who Stayed | Employees Who Left | Key Insight |
 |--------|----------------------|--------------------|-------------|
@@ -199,7 +199,9 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | Median Monthly Hours | 198 | 226 | Leavers are pushed significantly harder |
 | Promoted (Last 5 Yrs) | 1.8% | 0.3% | Promotions are a powerful yet neglected retention tool |
 
-### The Workload Crisis: A U-Shaped Curve of Risk
+---
+
+### 2. The Workload Crisis: A U-Shaped Curve of Risk
 
 | Risk Group | Hours/Month | Projects | Attrition Rate | Core Driver |
 |------------|-------------|----------|----------------|-------------|
@@ -207,7 +209,9 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | 🟢 The Safe Zone | 160–220 | 3–4 | 1% – 4% | Optimal balance with highest retention |
 | 🟡 Under-Utilized | <160 | 2 | 30% – 54% | Boredom, disengagement, and poor role fit |
 
-### Career Stagnation and the Tenure Cliff
+---
+
+### 3. Career Stagnation and the Tenure Cliff
 
 | Tenure (Years) | Attrition Rate | Observation |
 |----------------|----------------|-------------|
@@ -218,7 +222,9 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 **The Promotion Paradox:** While only 1.69% of the workforce has been promoted, these employees have an attrition rate of 3.9%, compared to 16.8% for unpromoted staff.
 
-### Compensation and Departmental Risks
+---
+
+### 4. Compensation and Departmental Risks
 
 | Salary Level | Attrition Rate | Workload Pattern | Key Insight |
 |--------------|----------------|------------------|-------------|
@@ -226,7 +232,9 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | Medium | 14.6% | More Hours: 229 vs. 199 | Moderate earners face similar burnout risks |
 | High | 4.8% | Fewer Hours: 160 vs. 201 | Leavers are often under-utilized |
 
-### Critical Flight Risk Profiles
+---
+
+### 5. Critical Flight Risk Profiles
 
 | Cluster | Performance | Satisfaction | Workload | Primary Reason for Leaving |
 |---------|-------------|--------------|----------|----------------------------|
