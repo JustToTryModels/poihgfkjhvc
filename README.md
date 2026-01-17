@@ -64,13 +64,13 @@ Enter employee details and get instant predictions on their likelihood of leavin
 ```
 employee-churn-prediction/
 ├── Data/
-│   └── HR_comma_sep.csv          # Dataset
+│   └── HR_comma_sep.csv                    # Dataset
 ├── Notebook/
-│   └── Employee_Churn_Prediction.ipynb      # Jupyter notebook with model comparison
-├── app.py                        # Streamlit web application
-├── requirements.txt              # Python dependencies
-├── LICENSE                       # MIT License
-└── README.md                     # Project documentation
+│   └── Employee_Churn_Prediction.ipynb     # Jupyter notebook with model comparison
+├── app.py                                  # Streamlit web application
+├── requirements.txt                        # Python dependencies
+├── LICENSE                                 # MIT License
+└── README.md                               # Project documentation
 ```
 
 ---
