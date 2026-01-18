@@ -241,9 +241,9 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 | **Balanced Accuracy** | 0.9714 |
 | **Overall Accuracy** | 0.9892 |
 
-</div>
-
 ✅ **Model generalizes well - no overfitting detected!**
+
+</div>
 
 ---
 
@@ -280,7 +280,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
----
+<br>
 
 ### 📆 3. Career Stagnation and the Tenure Cliff
 
@@ -297,7 +297,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 **The Promotion Paradox:** While only 1.69% of the workforce has been promoted, these employees have an attrition rate of 3.9%, compared to 16.8% for unpromoted staff.
 
----
+<br>
 
 ### 💰 4. Compensation and Departmental Risks
 
@@ -311,7 +311,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
----
+<br>
 
 ### 🚨 5. Critical Flight Risk Profiles
 
@@ -341,7 +341,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
----
+<br>
 
 ### 2. 📈 Fix the "Mid-Career" Promotion Gap
 
@@ -355,7 +355,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
----
+<br>
 
 ### 3. 💵 Pay High Performers Fairly
 
@@ -369,7 +369,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
----
+<br>
 
 ### 4. 🎯 Engage the Under-Utilized
 
@@ -383,7 +383,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
----
+<br>
 
 ### 5. 🏢 Target High-Risk Departments
 
