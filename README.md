@@ -11,6 +11,8 @@
   
 A machine learning project to predict employee attrition, helping organizations identify at-risk employees and take proactive retention measures.
 
+<br>
+
 ---
 
 ## 📋 Table of Contents
