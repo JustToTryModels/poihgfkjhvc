@@ -27,6 +27,8 @@ A machine learning project to predict employee attrition, helping organizations 
 - [Strategic Recommendations](#-strategic-recommendations)
 - [Installation & Usage](#-installation--usage)
 
+<br>
+
 ---
 
 ## ❓ What is Employee Churn?
@@ -42,6 +44,8 @@ A machine learning project to predict employee attrition, helping organizations 
 - 👥 Decreased team morale and engagement
 
 This project uses machine learning to predict which employees are likely to leave, enabling HR teams to intervene early and improve retention strategies.
+
+<br>
 
 ---
 
@@ -66,6 +70,8 @@ Predict whether an employee will leave the company based on various factors such
 
 </div>
 
+<br>
+
 ---
 
 ## 🚀 Demo
@@ -79,6 +85,8 @@ Try the live prediction model here:
 </div>
 
 > Enter employee details and get instant predictions on their likelihood of leaving!
+
+<br>
 
 ---
 
@@ -95,6 +103,8 @@ employee-churn-prediction/
 ├── LICENSE                                 # MIT License
 └── README.md                               # Project documentation
 ```
+
+<br>
 
 ---
 
