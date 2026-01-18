@@ -154,8 +154,6 @@ employee-churn-prediction/
 
 ---
 
-<br>
-
 ## ⚔️ Model Comparison & Selection
 
 To ensure the most robust prediction capability, **11 different classification models** were evaluated. Feature selection techniques were tailored to each model where applicable:
