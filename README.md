@@ -112,6 +112,8 @@ employee-churn-prediction/
 
 </div>
 
+<br>
+
 <div align="center">
 
 ### Features
