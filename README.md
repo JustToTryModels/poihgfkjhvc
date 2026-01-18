@@ -149,7 +149,9 @@ All models were validated using **Stratified K-Fold Cross-Validation (k=5)** to 
 | KNN Classifier | 0.9347 | 0.9860 | 0.9300 | 0.9870 | 0.9603 | 5 |
 | SVC | 0.9296 | 0.9550 | 0.8043 | 0.9856 | 0.9423 | 8 |
 | Logistic Regression | 0.8894 | 0.7842 | 0.4504 | 0.9727 | 0.8368 | 8 |
-<br></br>
+
+---
+
 ### 🌳 Why Random Forest?
 
 Despite strong competition, **Random Forest** was selected for deployment based on the following criteria:
