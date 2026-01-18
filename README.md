@@ -159,6 +159,8 @@ To ensure the most robust prediction capability, **11 different classification m
 
 All models were validated using **Stratified K-Fold Cross-Validation (k=5)** to ensure fair comparison and generalizability.
 
+<br>
+
 ### 🚀 Performance Leaderboard (Test Set)
 
 <div align="center">
@@ -177,7 +179,7 @@ All models were validated using **Stratified K-Fold Cross-Validation (k=5)** to 
 
 </div>
 
----
+<br>
 
 ### 🌳 Why Random Forest?
 
@@ -214,6 +216,7 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 </div>
 
+<br>
 
 <div align="center">
 
@@ -261,7 +264,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
----
+<br>
 
 ### 📉 2. The Workload Crisis: A U-Shaped Curve of Risk
 
