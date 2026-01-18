@@ -55,9 +55,10 @@ This project uses machine learning to predict which employees are likely to leav
 
 Predict whether an employee will leave the company based on various factors such as job satisfaction, workload, tenure, and performance metrics.
 
-### Approach
 
 <div align="center">
+
+### Approach
 
 | Component | Description |
 |-----------|-------------|
@@ -103,8 +104,9 @@ employee-churn-prediction/
 
 ## 📊 Dataset
 
-### Overview
 <div align="center">
+
+### Overview
 
 | Metric | Value |
 |--------|-------|
@@ -114,8 +116,9 @@ employee-churn-prediction/
 
 </div>
 
-### Features
 <div align="center">
+
+### Features
 
 | Feature | Description |
 |---------|-------------|
