@@ -1,3 +1,7 @@
+Of course! Here is the complete, corrected `README.md` file with all tables centered as requested.
+
+---
+
 # 🏢 Employee Churn Prediction
 
 <div align="center">  
@@ -53,6 +57,8 @@ Predict whether an employee will leave the company based on various factors such
 
 ### Approach
 
+<div align="center">
+
 | Component | Description |
 |-----------|-------------|
 | **Evaluation Scope** | Benchmarked **11 Classification Algorithms** |
@@ -60,6 +66,8 @@ Predict whether an employee will leave the company based on various factors such
 | **Imbalance Handling** | Class weighting + Stratified K-Fold Cross-Validation |
 | **Feature Selection** | Recursive Feature Elimination (RFE) & MDI |
 | **Deployment** | Streamlit Web Application |
+
+</div>
 
 ---
 
@@ -96,6 +104,7 @@ employee-churn-prediction/
 ## 📊 Dataset
 
 ### Overview
+<div align="center">
 
 | Metric | Value |
 |--------|-------|
@@ -103,7 +112,10 @@ employee-churn-prediction/
 | **Stayed (Class 0)** | 10,000 (83.40%) |
 | **Left (Class 1)** | 1,991 (16.60%) |
 
+</div>
+
 ### Features
+<div align="center">
 
 | Feature | Description |
 |---------|-------------|
@@ -116,6 +128,8 @@ employee-churn-prediction/
 | `promotion_last_5years` | Whether promoted in last 5 years (0/1) |
 | `Department` | Department where employee works |
 | `salary` | Salary level (low/medium/high) |
+
+</div>
 
 ---
 
@@ -148,6 +162,8 @@ All models were validated using **Stratified K-Fold Cross-Validation (k=5)** to 
 
 ### 🚀 Performance Leaderboard (Test Set)
 
+<div align="center">
+
 | Model | Recall (Left) | Recall (Stayed) | Precision (Left) | Precision (Stayed) | Balanced Acc | Features Used |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Random Forest** 🏆 | **0.9447** | **0.9980** | **0.9895** | **0.9891** | **0.9714** | **5** |
@@ -159,6 +175,8 @@ All models were validated using **Stratified K-Fold Cross-Validation (k=5)** to 
 | KNN Classifier | 0.9347 | 0.9860 | 0.9300 | 0.9870 | 0.9603 | 5 |
 | SVC | 0.9296 | 0.9550 | 0.8043 | 0.9856 | 0.9423 | 8 |
 | Logistic Regression | 0.8894 | 0.7842 | 0.4504 | 0.9727 | 0.8368 | 8 |
+
+</div>
 
 ---
 
@@ -184,6 +202,8 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 ### Selected Features (Top 5)
 
+<div align="center">
+
 | Rank | Feature |
 |------|---------|
 | 1 | `satisfaction_level` |
@@ -192,7 +212,11 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 | 4 | `number_project` |
 | 5 | `last_evaluation` |
 
+</div>
+
 ### 💪 Performance Metrics (Random Forest)
+
+<div align="center">
 
 | Metric | Class 0 (Stayed) | Class 1 (Left) |
 |--------|------------------|----------------|
@@ -200,10 +224,18 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 | **Precision** | 0.9891 | 0.9895 |
 | **F1-Score** | 0.9935 | 0.9666 |
 
+</div>
+
+<br>
+
+<div align="center">
+
 | Overall Metric | Score |
 |----------------|-------|
 | **Balanced Accuracy** | 0.9714 |
 | **Overall Accuracy** | 0.9892 |
+
+</div>
 
 ✅ **Model generalizes well - no overfitting detected!**
 
@@ -217,6 +249,8 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 ### 🔑 1. The Core Predictors of Turnover
 
+<div align="center">
+
 | Metric | Employees Who Stayed | Employees Who Left | Key Insight |
 |--------|----------------------|--------------------|-------------|
 | Median Satisfaction | 0.69 | 0.41 | Low satisfaction is the common denominator for all departures |
@@ -224,9 +258,13 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | Median Monthly Hours | 198 | 226 | Leavers are pushed significantly harder |
 | Promoted (Last 5 Yrs) | 1.8% | 0.3% | Promotions are a powerful yet neglected retention tool |
 
+</div>
+
 ---
 
 ### 📉 2. The Workload Crisis: A U-Shaped Curve of Risk
+
+<div align="center">
 
 | Risk Group | Hours/Month | Projects | Attrition Rate | Core Driver |
 |------------|-------------|----------|----------------|-------------|
@@ -234,9 +272,13 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | 🟢 The Safe Zone | 160–220 | 3–4 | 1% – 4% | Optimal balance with highest retention |
 | 🟡 Under-Utilized | <160 | 2 | 30% – 54% | Boredom, disengagement, and poor role fit |
 
+</div>
+
 ---
 
 ### 📆 3. Career Stagnation and the Tenure Cliff
+
+<div align="center">
 
 | Tenure (Years) | Attrition Rate | Observation |
 |----------------|----------------|-------------|
@@ -245,11 +287,15 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | 5 | 45.6% | Peak attrition point; nearly half of this cohort leaves |
 | 6+ | 0.0% | Extreme loyalty among those who survive the cliff |
 
+</div>
+
 **The Promotion Paradox:** While only 1.69% of the workforce has been promoted, these employees have an attrition rate of 3.9%, compared to 16.8% for unpromoted staff.
 
 ---
 
 ### 💰 4. Compensation and Departmental Risks
+
+<div align="center">
 
 | Salary Level | Attrition Rate | Workload Pattern | Key Insight |
 |--------------|----------------|------------------|-------------|
@@ -257,9 +303,13 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | Medium | 14.6% | More Hours: 229 vs. 199 | Moderate earners face similar burnout risks |
 | High | 4.8% | Fewer Hours: 160 vs. 201 | Leavers are often under-utilized |
 
+</div>
+
 ---
 
 ### 🚨 5. Critical Flight Risk Profiles
+
+<div align="center">
 
 | Cluster | Performance | Satisfaction | Workload | Primary Reason for Leaving |
 |---------|-------------|--------------|----------|----------------------------|
@@ -267,11 +317,15 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | ⭐ The Poached Stars | High (0.8–1.0) | High (0.8–1.0) | High Overtime | Better external offers and lack of career growth |
 | ❌ The Mismatched | Low (0.2–0.4) | Low (0.2–0.4) | Under-Utilized | Poor role fit or deep disengagement |
 
+</div>
+
 ---
 
 ## 🎯 Strategic Recommendations
 
 ### 1. 🛑 Cap Workloads Immediately (Stop Burnout)
+
+<div align="center">
 
 | Action | Details |
 |--------|---------|
@@ -279,9 +333,13 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Fix** | Flag anyone working >220 hours. Redistribute their work to under-utilized staff |
 | **Why** | 7 projects or 300+ hours guarantees 100% turnover |
 
+</div>
+
 ---
 
 ### 2. 📈 Fix the "Mid-Career" Promotion Gap
+
+<div align="center">
 
 | Action | Details |
 |--------|---------|
@@ -289,9 +347,13 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Fix** | Create a clear promotion path. With only 1.69% of staff promoted in 5 years, the organisation is forcing its experienced staff to leave to advance their careers |
 | **Why** | Promoted employees have ~4% churn rate vs. ~17% for non-promoted |
 
+</div>
+
 ---
 
 ### 3. 💵 Pay High Performers Fairly
+
+<div align="center">
 
 | Action | Details |
 |--------|---------|
@@ -299,9 +361,13 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Fix** | Audit Low and Medium salary brackets. Identify employees with High Evaluations (>0.8) and provide raises or bonuses |
 | **Why** | The organisation is losing top talent because they work the most hours but receive the lowest pay |
 
+</div>
+
 ---
 
 ### 4. 🎯 Engage the Under-Utilized
+
+<div align="center">
 
 | Action | Details |
 |--------|---------|
@@ -309,14 +375,20 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | **The Fix** | Assign them more work, upskill them, or manage them out |
 | **Why** | Boredom is driving nearly as much turnover as burnout |
 
+</div>
+
 ---
 
 ### 5. 🏢 Target High-Risk Departments
+
+<div align="center">
 
 | Action | Details |
 |--------|---------|
 | **The Focus** | HR, Accounting, and Sales (highest churn) |
 | **The Fix** | Conduct "Stay Interviews" in these specific departments to identify local stressors immediately |
+
+</div>
 
 ---
 
