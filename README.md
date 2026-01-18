@@ -7,10 +7,10 @@
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
+</div>
   
 A machine learning project designed to predict employee attrition by analyzing key factors such as job satisfaction, workload, tenure, performance metrics, etc., helping organizations identify **at-risk** employees and implement proactive strategies to improve retention, boost productivity, and reduce turnover costs.
 
-</div>
 
 <br>
 
