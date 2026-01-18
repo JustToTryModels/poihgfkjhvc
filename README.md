@@ -1,7 +1,3 @@
-Of course! Here is the complete, corrected `README.md` file with all tables centered as requested.
-
----
-
 # 🏢 Employee Churn Prediction
 
 <div align="center">  
