@@ -22,7 +22,7 @@ A machine learning project to predict employee attrition, helping organizations 
 ## ❓ What is Employee Churn?
 
 <div align="center">
-  <img src="https://github.com/JustToTryModels/IMAGES/blob/main/employee-churn-PNG.png?raw=true" alt="Employee leaving with box" width="700"/>
+  <img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/employee-churn-PNG.png?raw=true" alt="Employee leaving with box" width="700"/>
 </div>
 
 **Employee churn** (also known as employee turnover or attrition) refers to employees leaving an organization, whether voluntarily or involuntarily. High churn rates can significantly impact a company through:
