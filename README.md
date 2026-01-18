@@ -150,7 +150,11 @@ employee-churn-prediction/
 - **Method:** Recursive Feature Elimination (RFE) & Mean Decrease in Impurity (MDI).
 - Iterative testing to find the minimum feature set required for maximum performance.
 
+<br>
+
 ---
+
+<br>
 
 ## ⚔️ Model Comparison & Selection
 
