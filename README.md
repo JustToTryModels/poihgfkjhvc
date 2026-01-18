@@ -241,9 +241,9 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 | **Balanced Accuracy** | 0.9714 |
 | **Overall Accuracy** | 0.9892 |
 
-✅ **Model generalizes well - no overfitting detected!**
-
 </div>
+
+> ✅ **Model generalizes well - no overfitting detected!**
 
 ---
 
