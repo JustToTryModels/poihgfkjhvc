@@ -132,6 +132,8 @@ employee-churn-prediction/
 
 </div>
 
+<br>
+
 ---
 
 ## 🔬 Methodology
@@ -205,8 +207,6 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 ---
 
-<br>
-
 ## 📈 Final Model Results
 
 
@@ -250,6 +250,8 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 </div>
 
 > ✅ **Model generalizes well - no overfitting detected!**
+
+<br>
 
 ---
 
@@ -331,6 +333,8 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
+<br>
+
 ---
 
 ## 🎯 Strategic Recommendations
@@ -402,6 +406,8 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 
 </div>
 
+<br>
+
 ---
 
 ## 🛠️ Installation & Usage
@@ -437,6 +443,8 @@ streamlit run app.py
 ```
 
 The app will open in the default browser at `http://localhost:8501`
+
+<br>
 
 ---
 
