@@ -9,7 +9,7 @@
 
 </div>
   
-A machine learning project to predict employee attrition, helping organizations identify at-risk employees and take proactive retention measures.
+A machine learning project designed to predict employee attrition by analyzing key factors such as job satisfaction, workload, tenure, performance metrics, etc., helping organizations identify at-risk employees and implement proactive strategies to improve retention, boost productivity, and reduce turnover costs.
 
 <br>
 
