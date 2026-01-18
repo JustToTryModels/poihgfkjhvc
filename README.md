@@ -66,7 +66,7 @@ Predict whether an employee will leave the company based on various factors such
 
 </div>
 
-
+---
 
 ## 🚀 Demo
 
