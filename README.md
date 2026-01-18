@@ -203,9 +203,10 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 ## 📈 Final Model Results
 
-### Selected Features (Top 5)
 
 <div align="center">
+
+### Selected Features (Top 5)
 
 | Rank | Feature |
 |------|---------|
@@ -217,9 +218,10 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 
 </div>
 
-### 💪 Performance Metrics (Random Forest)
 
 <div align="center">
+
+### 💪 Performance Metrics (Random Forest)
 
 | Metric | Class 0 (Stayed) | Class 1 (Left) |
 |--------|------------------|----------------|
