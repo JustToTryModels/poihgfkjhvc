@@ -557,129 +557,37 @@ def load_model_from_huggingface():
 # CALLBACK FUNCTIONS FOR SYNCING SLIDERS AND NUMBER INPUTS
 # ============================================================================
 def sync_satisfaction_slider():
-    """Sync satisfaction level from slider to session state"""
     st.session_state.satisfaction_level = st.session_state.sat_slider
 
 def sync_satisfaction_input():
-    """Sync satisfaction level from number input to session state"""
     st.session_state.satisfaction_level = st.session_state.sat_input
 
 def sync_evaluation_slider():
-    """Sync evaluation from slider to session state"""
     st.session_state.last_evaluation = st.session_state.eval_slider
 
 def sync_evaluation_input():
-    """Sync evaluation from number input to session state"""
     st.session_state.last_evaluation = st.session_state.eval_input
 
 # ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
 def convert_df_to_csv(df):
-    """Convert dataframe to CSV for download"""
     return df.to_csv(index=False).encode('utf-8')
 
 def convert_df_to_excel(df):
-    """Convert dataframe to Excel for download"""
     output = io.BytesIO()
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name='Predictions')
     return output.getvalue()
 
-def get_column_mapping(df_columns, enable_mapping):
-    """
-    Get column mapping from user's columns to required model columns.
-    Returns a dictionary mapping required_feature -> user_column
-    """
-    column_mapping = {}
-    
-    if enable_mapping:
-        st.markdown("""
-        <div class="mapping-card">
-            <h4>🔄 Column Mapping Configuration</h4>
-            <p style="color: #666; font-size: 0.9rem;">
-                Map your data columns to the required model columns. This mapping is <strong>temporary</strong> 
-                and only used for predictions. Your original data and column names remain unchanged.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Create two columns for the mapping UI
-        col1, col2 = st.columns(2)
-        
-        for idx, feature in enumerate(BEST_FEATURES):
-            # Alternate between columns
-            with col1 if idx % 2 == 0 else col2:
-                st.markdown(f"""
-                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #6f42c1;">
-                    <strong>🎯 {feature}</strong><br/>
-                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Find default selection - prefer exact match, otherwise first column
-                default_index = 0
-                column_list = list(df_columns)
-                
-                # Check for exact match
-                if feature in column_list:
-                    default_index = column_list.index(feature)
-                else:
-                    # Check for partial/similar matches
-                    for i, col in enumerate(column_list):
-                        if feature.lower() in col.lower() or col.lower() in feature.lower():
-                            default_index = i
-                            break
-                
-                selected_column = st.selectbox(
-                    f"Select column for {feature}",
-                    options=column_list,
-                    index=default_index,
-                    key=f"mapping_{feature}",
-                    label_visibility="collapsed"
-                )
-                
-                column_mapping[feature] = selected_column
-        
-        # Show mapping summary
-        st.markdown("---")
-        st.markdown("#### 📋 Mapping Summary")
-        
-        mapping_valid = True
-        used_columns = list(column_mapping.values())
-        duplicate_columns = [col for col in used_columns if used_columns.count(col) > 1]
-        
-        if duplicate_columns:
-            st.markdown(f"""
-            <div class="error-box">
-                <h4>⚠️ Duplicate Mapping Detected</h4>
-                <p>The following columns are mapped to multiple features: <strong>{', '.join(set(duplicate_columns))}</strong></p>
-                <p>Each model feature should be mapped to a unique column.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            mapping_valid = False
-        else:
-            st.markdown(f"""
-            <div class="success-box">
-                <h4>✅ Mapping Configuration Valid</h4>
-                <table style="width: 100%; margin-top: 0.5rem;">
-                    <tr style="background-color: #c3e6cb;">
-                        <th style="padding: 0.5rem; text-align: left;">Model Feature</th>
-                        <th style="padding: 0.5rem; text-align: left;">→</th>
-                        <th style="padding: 0.5rem; text-align: left;">Your Column</th>
-                    </tr>
-                    {''.join([f'<tr><td style="padding: 0.3rem;">{feat}</td><td style="padding: 0.3rem;">→</td><td style="padding: 0.3rem;"><strong>{col}</strong></td></tr>' for feat, col in column_mapping.items()])}
-                </table>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        return column_mapping, mapping_valid
-    
-    else:
-        # No mapping - use exact column names
-        for feature in BEST_FEATURES:
-            column_mapping[feature] = feature
-        return column_mapping, True
+def get_default_index(feature, column_list):
+    """Find the best matching column index for a feature"""
+    if feature in column_list:
+        return column_list.index(feature)
+    for i, col in enumerate(column_list):
+        if feature.lower() in col.lower() or col.lower() in feature.lower():
+            return i
+    return 0
 
 # ============================================================================
 # INDIVIDUAL PREDICTION TAB
@@ -690,15 +598,11 @@ def render_individual_prediction_tab(model):
     st.markdown("---")
     st.markdown('<h2 class="section-header">📝 Enter Employee Information</h2>', unsafe_allow_html=True)
     
-    # Initialize session state for syncing slider and number input
     if 'satisfaction_level' not in st.session_state:
         st.session_state.satisfaction_level = 0.5
     if 'last_evaluation' not in st.session_state:
         st.session_state.last_evaluation = 0.7
     
-    # ========================================================================
-    # ROW 1: Satisfaction Level & Last Evaluation (side by side with feature cards)
-    # ========================================================================
     with st.container():
         col1, col2 = st.columns(2)
         
@@ -713,28 +617,19 @@ def render_individual_prediction_tab(model):
             with sat_col1:
                 st.slider(
                     "Satisfaction Slider",
-                    min_value=0.0,
-                    max_value=1.0,
+                    min_value=0.0, max_value=1.0,
                     value=st.session_state.satisfaction_level,
-                    step=0.01,
-                    help="Employee satisfaction level (0 = Very Dissatisfied, 1 = Very Satisfied)",
-                    label_visibility="collapsed",
-                    key="sat_slider",
-                    on_change=sync_satisfaction_slider
+                    step=0.01, label_visibility="collapsed",
+                    key="sat_slider", on_change=sync_satisfaction_slider
                 )
             with sat_col2:
                 st.number_input(
                     "Satisfaction Input",
-                    min_value=0.0,
-                    max_value=1.0,
+                    min_value=0.0, max_value=1.0,
                     value=st.session_state.satisfaction_level,
-                    step=0.01,
-                    format="%.2f",
-                    label_visibility="collapsed",
-                    key="sat_input",
-                    on_change=sync_satisfaction_input
+                    step=0.01, format="%.2f", label_visibility="collapsed",
+                    key="sat_input", on_change=sync_satisfaction_input
                 )
-            
             satisfaction_level = st.session_state.satisfaction_level
         
         with col2:
@@ -748,33 +643,21 @@ def render_individual_prediction_tab(model):
             with eval_col1:
                 st.slider(
                     "Evaluation Slider",
-                    min_value=0.0,
-                    max_value=1.0,
+                    min_value=0.0, max_value=1.0,
                     value=st.session_state.last_evaluation,
-                    step=0.01,
-                    help="Last performance evaluation score (0 = Poor, 1 = Excellent)",
-                    label_visibility="collapsed",
-                    key="eval_slider",
-                    on_change=sync_evaluation_slider
+                    step=0.01, label_visibility="collapsed",
+                    key="eval_slider", on_change=sync_evaluation_slider
                 )
             with eval_col2:
                 st.number_input(
                     "Evaluation Input",
-                    min_value=0.0,
-                    max_value=1.0,
+                    min_value=0.0, max_value=1.0,
                     value=st.session_state.last_evaluation,
-                    step=0.01,
-                    format="%.2f",
-                    label_visibility="collapsed",
-                    key="eval_input",
-                    on_change=sync_evaluation_input
+                    step=0.01, format="%.2f", label_visibility="collapsed",
+                    key="eval_input", on_change=sync_evaluation_input
                 )
-            
             last_evaluation = st.session_state.last_evaluation
         
-        # ========================================================================
-        # ROW 2: Years at Company, Number of Projects, Average Monthly Hours (3 columns)
-        # ========================================================================
         col3, col4, col5 = st.columns(3)
         
         with col3:
@@ -784,14 +667,8 @@ def render_individual_prediction_tab(model):
             </div>
             """, unsafe_allow_html=True)
             time_spend_company = st.number_input(
-                "Years",
-                min_value=1,
-                max_value=40,
-                value=3,
-                step=1,
-                label_visibility="collapsed",
-                help="Number of years the employee has worked at the company",
-                key="individual_years"
+                "Years", min_value=1, max_value=40, value=3, step=1,
+                label_visibility="collapsed", key="individual_years"
             )
         
         with col4:
@@ -801,14 +678,8 @@ def render_individual_prediction_tab(model):
             </div>
             """, unsafe_allow_html=True)
             number_project = st.number_input(
-                "Projects",
-                min_value=1,
-                max_value=10,
-                value=4,
-                step=1,
-                label_visibility="collapsed",
-                help="Number of projects the employee is currently working on",
-                key="individual_projects"
+                "Projects", min_value=1, max_value=10, value=4, step=1,
+                label_visibility="collapsed", key="individual_projects"
             )
         
         with col5:
@@ -818,17 +689,10 @@ def render_individual_prediction_tab(model):
             </div>
             """, unsafe_allow_html=True)
             average_monthly_hours = st.number_input(
-                "Hours",
-                min_value=80,
-                max_value=350,
-                value=200,
-                step=5,
-                label_visibility="collapsed",
-                help="Average number of hours worked per month",
-                key="individual_hours"
+                "Hours", min_value=80, max_value=350, value=200, step=5,
+                label_visibility="collapsed", key="individual_hours"
             )
     
-    # Create input dictionary
     input_data = {
         'satisfaction_level': satisfaction_level,
         'time_spend_company': time_spend_company,
@@ -837,23 +701,13 @@ def render_individual_prediction_tab(model):
         'last_evaluation': last_evaluation
     }
     
-    # ========================================================================
-    # PREDICTION BUTTON
-    # ========================================================================
     st.markdown("---")
-    
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         predict_button = st.button("🔮 Predict Employee Turnover", use_container_width=True, key="individual_predict")
     
-    # ========================================================================
-    # PREDICTION RESULTS
-    # ========================================================================
     if predict_button:
-        # Create input DataFrame with correct feature order
         input_df = pd.DataFrame([input_data])[BEST_FEATURES]
-        
-        # Make prediction
         prediction = model.predict(input_df)[0]
         prediction_proba = model.predict_proba(input_df)[0]
         
@@ -863,7 +717,6 @@ def render_individual_prediction_tab(model):
         st.markdown("---")
         st.subheader("🎯 Prediction Results")
         
-        # Results in two columns
         col1, col2 = st.columns(2)
         
         with col1:
@@ -888,16 +741,12 @@ def render_individual_prediction_tab(model):
         
         with col2:
             st.markdown("### 📊 Prediction Probabilities")
-            
-            # Stay probability with GREEN bar
             st.write(f"**Probability of Staying:** {prob_stay:.1f}%")
             st.markdown(f"""
             <div class="progress-bar-container">
                 <div class="progress-bar-green" style="width: {prob_stay}%;"></div>
             </div>
             """, unsafe_allow_html=True)
-            
-            # Leave probability with RED bar
             st.write(f"**Probability of Leaving:** {prob_leave:.1f}%")
             st.markdown(f"""
             <div class="progress-bar-container">
@@ -914,17 +763,13 @@ def render_batch_prediction_tab(model):
     st.markdown("---")
     st.markdown('<h2 class="section-header">📊 Batch Employee Prediction</h2>', unsafe_allow_html=True)
     
-    # ========================================================================
-    # REQUIRED COLUMNS INFO - NOW AS DROPDOWN/EXPANDER
-    # ========================================================================
     with st.expander("📋 Required Columns in Your File (Click to Expand)"):
         st.markdown("""
         <div style="background-color: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-            <p>Your uploaded file <strong>must contain</strong> these columns (or you can map your columns to these using the Column Mapping feature):</p>
+            <p>Your uploaded file <strong>must contain</strong> these columns (or you can map your columns using Column Mapping):</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # Display required features in a nice format
         col1, col2 = st.columns(2)
         with col1:
             for feature in BEST_FEATURES[:3]:
@@ -943,102 +788,51 @@ def render_batch_prediction_tab(model):
                 </div>
                 """, unsafe_allow_html=True)
         
-        st.info("💡 **Tip:** Your file can contain additional columns (like employee_id, department, etc.). They will be preserved in the output but won't be used for prediction.")
+        st.info("💡 **Tip:** Additional columns will be preserved in the output but won't be used for prediction.")
     
     st.markdown("---")
     
-    # ========================================================================
-    # FILE UPLOAD SECTION
-    # ========================================================================
+    # File Upload Section
     st.markdown("### 📁 Upload Your Data")
-    
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>⚙️ File Settings</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # File format selection
-        file_format = st.selectbox(
-            "Select file format",
-            options=["CSV", "Excel (.xlsx)"],
-            index=0,
-            help="Choose the format of your data file",
-            key="file_format"
-        )
+        st.markdown("""<div class="settings-card"><h4>⚙️ File Settings</h4></div>""", unsafe_allow_html=True)
+        file_format = st.selectbox("Select file format", options=["CSV", "Excel (.xlsx)"], index=0, key="file_format")
     
     with col2:
-        # File uploader based on format
         if file_format == "CSV":
-            uploaded_file = st.file_uploader(
-                "Upload your CSV file",
-                type=["csv"],
-                help="Upload a CSV file containing employee data",
-                key="csv_uploader"
-            )
+            uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"], key="csv_uploader")
         else:
-            uploaded_file = st.file_uploader(
-                "Upload your Excel file",
-                type=["xlsx", "xls"],
-                help="Upload an Excel file containing employee data",
-                key="excel_uploader"
-            )
+            uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx", "xls"], key="excel_uploader")
     
     st.markdown("---")
     
-    # ========================================================================
-    # PREDICTION OUTPUT SETTINGS
-    # ========================================================================
+    # Prediction Output Settings
     st.markdown("### ⚙️ Prediction Output Settings")
-    
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>📝 Column Name for Predictions</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
+        st.markdown("""<div class="settings-card"><h4>📝 Column Name for Predictions</h4></div>""", unsafe_allow_html=True)
         column_name_option = st.selectbox(
             "Select prediction column name",
             options=["Prediction", "Churn", "Will_Leave", "Turnover", "Custom"],
-            index=0,
-            help="Choose the column name where predictions will be stored",
-            key="column_name_option"
+            index=0, key="column_name_option"
         )
-        
         if column_name_option == "Custom":
-            custom_column_name = st.text_input(
-                "Enter custom column name",
-                value="My_Prediction",
-                help="Enter your preferred column name",
-                key="custom_column_name"
-            )
+            custom_column_name = st.text_input("Enter custom column name", value="My_Prediction", key="custom_column_name")
             prediction_column_name = custom_column_name if custom_column_name.strip() else "Prediction"
         else:
             prediction_column_name = column_name_option
     
     with col2:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>🏷️ Prediction Labels</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Label options - Model predicts 1 for leaving, 0 for staying
+        st.markdown("""<div class="settings-card"><h4>🏷️ Prediction Labels</h4></div>""", unsafe_allow_html=True)
         label_option = st.selectbox(
             "Select prediction labels",
             options=["Leave / Stay", "Yes / No", "Churn / Not Churn", "1 / 0", "True / False", "Custom"],
-            index=0,
-            help="Choose how predictions should be labeled (Leaving / Staying format)",
-            key="label_option"
+            index=0, key="label_option"
         )
         
-        # Define label mappings (1 = leaving, 0 = staying)
         label_mappings = {
             "Leave / Stay": {1: "Leave", 0: "Stay"},
             "Yes / No": {1: "Yes", 0: "No"},
@@ -1050,19 +844,9 @@ def render_batch_prediction_tab(model):
         if label_option == "Custom":
             custom_col1, custom_col2 = st.columns(2)
             with custom_col1:
-                custom_leave_label = st.text_input(
-                    "Label for LEAVING",
-                    value="Leaving",
-                    help="Label when employee is predicted to leave",
-                    key="custom_leave_label"
-                )
+                custom_leave_label = st.text_input("Label for LEAVING", value="Leaving", key="custom_leave_label")
             with custom_col2:
-                custom_stay_label = st.text_input(
-                    "Label for STAYING",
-                    value="Staying",
-                    help="Label when employee is predicted to stay",
-                    key="custom_stay_label"
-                )
+                custom_stay_label = st.text_input("Label for STAYING", value="Staying", key="custom_stay_label")
             prediction_labels = {
                 1: custom_leave_label if custom_leave_label.strip() else "Leaving",
                 0: custom_stay_label if custom_stay_label.strip() else "Staying"
@@ -1072,394 +856,51 @@ def render_batch_prediction_tab(model):
         
         st.info(f"📌 **Label Preview:** Leaving → '{prediction_labels[1]}' | Staying → '{prediction_labels[0]}'")
     
-    # ========================================================================
-    # PROBABILITY COLUMNS OPTION
-    # ========================================================================
     st.markdown("---")
     st.markdown("### 📊 Additional Output Options")
-    
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>🎯 Probability Columns</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        include_probabilities = st.checkbox(
-            "Include prediction probabilities in output",
-            value=True,
-            help="Add columns showing the probability (%) of staying and leaving for each employee",
-            key="include_probabilities"
-        )
-        
+        st.markdown("""<div class="settings-card"><h4>🎯 Probability Columns</h4></div>""", unsafe_allow_html=True)
+        include_probabilities = st.checkbox("Include prediction probabilities in output", value=True, key="include_probabilities")
         if include_probabilities:
             st.success("✅ Two additional columns will be added: `Probability_Stay` and `Probability_Leave`")
-        else:
-            st.info("ℹ️ Only the prediction label column will be added to the output")
     
     with col2:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>⚠️ High Risk Filter</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        include_high_risk_download = st.checkbox(
-            "Enable high-risk employees download",
-            value=True,
-            help="Provide a separate download option for employees with >50% probability of leaving",
-            key="include_high_risk"
-        )
-        
+        st.markdown("""<div class="settings-card"><h4>⚠️ High Risk Filter</h4></div>""", unsafe_allow_html=True)
+        include_high_risk_download = st.checkbox("Enable high-risk employees download", value=True, key="include_high_risk")
         if include_high_risk_download:
             st.success("✅ A separate download button for high-risk employees will be available")
-        else:
-            st.info("ℹ️ Only full results download will be available")
     
-    # ========================================================================
-    # PROCESS UPLOADED FILE
-    # ========================================================================
+    # Process Uploaded File
     if uploaded_file is not None:
         st.markdown("---")
         st.markdown("### 📄 Uploaded Data Preview")
         
         try:
-            # Read the file based on format
             if file_format == "CSV":
                 df = pd.read_csv(uploaded_file)
             else:
                 df = pd.read_excel(uploaded_file)
             
-            # Display file info
+            # File info stats
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.markdown(f"""
-                <div class="stats-card">
-                    <h4>Total Rows</h4>
-                    <div class="number">{len(df):,}</div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f"""<div class="stats-card"><h4>Total Rows</h4><div class="number">{len(df):,}</div></div>""", unsafe_allow_html=True)
             with col2:
-                st.markdown(f"""
-                <div class="stats-card">
-                    <h4>Total Columns</h4>
-                    <div class="number">{len(df.columns)}</div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f"""<div class="stats-card"><h4>Total Columns</h4><div class="number">{len(df.columns)}</div></div>""", unsafe_allow_html=True)
             with col3:
-                # Check for required columns
                 available_features = [col for col in BEST_FEATURES if col in df.columns]
-                st.markdown(f"""
-                <div class="stats-card">
-                    <h4>Required Cols Found</h4>
-                    <div class="number">{len(available_features)}/{len(BEST_FEATURES)}</div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown(f"""<div class="stats-card"><h4>Required Cols Found</h4><div class="number">{len(available_features)}/{len(BEST_FEATURES)}</div></div>""", unsafe_allow_html=True)
             
-            # Show data preview
             st.dataframe(df.head(10), use_container_width=True)
             
-            # Check for missing required columns
             missing_columns = [col for col in BEST_FEATURES if col not in df.columns]
             
             # ========================================================================
-            # COLUMN MAPPING SECTION - NEW FEATURE
+            # SIMPLIFIED COLUMN MAPPING SECTION
             # ========================================================================
             st.markdown("---")
-            st.markdown("### 🔄 Column Mapping (Optional)")
             
-            st.markdown("""
-            <div class="warning-box">
-                <h4>📢 Don't want to rename your columns?</h4>
-                <p>If your data has different column names than what the model expects, you can temporarily map them here. 
-                <strong>This mapping is only for predictions</strong> — your original data and column names will remain unchanged in the output.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Enable/disable column mapping
             enable_column_mapping = st.checkbox(
-                "🔧 Enable Column Mapping (Map my columns to model features)",
-                value=len(missing_columns) > 0,  # Auto-enable if columns are missing
-                help="Enable this to map your column names to the required model feature names. Useful when your column names differ from the expected names.",
-                key="enable_column_mapping"
-            )
-            
-            # Get column mapping
-            column_mapping, mapping_valid = get_column_mapping(df.columns, enable_column_mapping)
-            
-            # ========================================================================
-            # VALIDATION AND PREDICTION
-            # ========================================================================
-            st.markdown("---")
-            
-            # Check if all mapped columns exist in dataframe
-            if enable_column_mapping:
-                missing_mapped_columns = [col for col in column_mapping.values() if col not in df.columns]
-                if missing_mapped_columns:
-                    st.markdown(f"""
-                    <div class="error-box">
-                        <h4>❌ Mapped Columns Not Found</h4>
-                        <p>The following mapped columns are not in your file: <strong>{', '.join(missing_mapped_columns)}</strong></p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    mapping_valid = False
-                elif mapping_valid:
-                    st.markdown("""
-                    <div class="success-box">
-                        <h4>✅ Column Mapping Complete!</h4>
-                        <p>All required features have been mapped to columns in your data. Click the button below to generate predictions.</p>
-                        <p><em>Note: Your original column names will be preserved in the output.</em></p>
-                    </div>
-                    """, unsafe_allow_html=True)
-            else:
-                # Not using column mapping - check for required columns directly
-                if missing_columns:
-                    st.markdown(f"""
-                    <div class="error-box">
-                        <h4>❌ Missing Required Columns</h4>
-                        <p>The following required columns are missing from your file:</p>
-                        <ul>
-                            {''.join([f'<li><strong>{col}</strong>: {FEATURE_DESCRIPTIONS[col]}</li>' for col in missing_columns])}
-                        </ul>
-                        <p>Please either:</p>
-                        <ol>
-                            <li>Rename your columns to match the required names, OR</li>
-                            <li>Enable <strong>Column Mapping</strong> above to map your columns to the required features</li>
-                        </ol>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    mapping_valid = False
-                else:
-                    st.markdown("""
-                    <div class="success-box">
-                        <h4>✅ All Required Columns Found!</h4>
-                        <p>Your file contains all necessary columns for prediction. Click the button below to generate predictions.</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-            
-            # Show which columns will be used (only if valid)
-            if mapping_valid:
-                with st.expander("🔍 View columns being used for prediction"):
-                    for feature in BEST_FEATURES:
-                        mapped_col = column_mapping[feature]
-                        sample_values = df[mapped_col].head(3).tolist()
-                        if enable_column_mapping and mapped_col != feature:
-                            st.write(f"• **{feature}** ← `{mapped_col}`: Sample values → {sample_values}")
-                        else:
-                            st.write(f"• **{feature}**: Sample values → {sample_values}")
-                
-                st.markdown("---")
-                
-                # Prediction button
-                col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
-                    batch_predict_button = st.button(
-                        "🔮 Generate Batch Predictions",
-                        use_container_width=True,
-                        key="batch_predict"
-                    )
-                
-                if batch_predict_button:
-                    with st.spinner("🔄 Processing predictions..."):
-                        # Create a temporary dataframe with mapped columns for prediction
-                        # This preserves the original data
-                        prediction_df = pd.DataFrame()
-                        for feature in BEST_FEATURES:
-                            mapped_col = column_mapping[feature]
-                            prediction_df[feature] = df[mapped_col].copy()
-                        
-                        # Make predictions using the mapped data
-                        predictions = model.predict(prediction_df)
-                        prediction_probabilities = model.predict_proba(prediction_df)
-                        
-                        # Create result dataframe with all original columns (unchanged!)
-                        result_df = df.copy()
-                        
-                        # Add prediction column with labels
-                        result_df[prediction_column_name] = [prediction_labels[p] for p in predictions]
-                        
-                        # Add probability columns only if user selected this option
-                        if include_probabilities:
-                            result_df[f"{prediction_column_name}_Probability_Stay"] = (prediction_probabilities[:, 0] * 100).round(2)
-                            result_df[f"{prediction_column_name}_Probability_Leave"] = (prediction_probabilities[:, 1] * 100).round(2)
-                    
-                    st.success("✅ Predictions generated successfully!")
-                    
-                    # Show mapping info if column mapping was used
-                    if enable_column_mapping:
-                        st.info("ℹ️ **Note:** Column mapping was used for predictions. Your original column names have been preserved in the output.")
-                    
-                    st.markdown("---")
-                    st.markdown("### 📊 Prediction Results")
-                    
-                    # Summary statistics
-                    leaving_count = sum(predictions == 1)
-                    staying_count = sum(predictions == 0)
-                    leaving_percentage = (leaving_count / len(predictions)) * 100
-                    staying_percentage = (staying_count / len(predictions)) * 100
-                    
-                    col1, col2, col3, col4 = st.columns(4)
-                    
-                    with col1:
-                        st.markdown(f"""
-                        <div class="stats-card">
-                            <h4>Total Employees</h4>
-                            <div class="number">{len(predictions):,}</div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col2:
-                        st.markdown(f"""
-                        <div class="stats-card" style="border-top-color: #dc3545;">
-                            <h4>Predicted to Leave</h4>
-                            <div class="number" style="color: #dc3545;">{leaving_count:,}</div>
-                            <p style="color: #666;">({leaving_percentage:.1f}%)</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col3:
-                        st.markdown(f"""
-                        <div class="stats-card" style="border-top-color: #28a745;">
-                            <h4>Predicted to Stay</h4>
-                            <div class="number" style="color: #28a745;">{staying_count:,}</div>
-                            <p style="color: #666;">({staying_percentage:.1f}%)</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col4:
-                        avg_leave_prob = prediction_probabilities[:, 1].mean() * 100
-                        st.markdown(f"""
-                        <div class="stats-card" style="border-top-color: #ffc107;">
-                            <h4>Avg. Leave Probability</h4>
-                            <div class="number" style="color: #ffc107;">{avg_leave_prob:.1f}%</div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    # Visual representation
-                    st.markdown("#### 📈 Turnover Distribution")
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        st.write(f"**Staying:** {staying_percentage:.1f}%")
-                        st.markdown(f"""
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-green" style="width: {staying_percentage}%;"></div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col2:
-                        st.write(f"**Leaving:** {leaving_percentage:.1f}%")
-                        st.markdown(f"""
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-red" style="width: {leaving_percentage}%;"></div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    # Show result preview
-                    st.markdown("#### 📄 Result Data Preview")
-                    st.dataframe(result_df.head(20), use_container_width=True)
-                    
-                    # Download section
-                    st.markdown("---")
-                    st.markdown("### 📥 Download Results")
-                    
-                    # Determine number of columns based on options
-                    if include_high_risk_download:
-                        col1, col2, col3 = st.columns([1, 1, 1])
-                    else:
-                        col1, col2 = st.columns([1, 1])
-                    
-                    with col1:
-                        csv_data = convert_df_to_csv(result_df)
-                        st.download_button(
-                            label="📥 Download as CSV",
-                            data=csv_data,
-                            file_name="employee_predictions.csv",
-                            mime="text/csv",
-                            use_container_width=True,
-                            key="download_csv"
-                        )
-                    
-                    with col2:
-                        excel_data = convert_df_to_excel(result_df)
-                        st.download_button(
-                            label="📥 Download as Excel",
-                            data=excel_data,
-                            file_name="employee_predictions.xlsx",
-                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                            use_container_width=True,
-                            key="download_excel"
-                        )
-                    
-                    if include_high_risk_download:
-                        with col3:
-                            # Download only high-risk employees (probability > 50%)
-                            high_risk_df = result_df[prediction_probabilities[:, 1] > 0.5]
-                            if len(high_risk_df) > 0:
-                                high_risk_csv = convert_df_to_csv(high_risk_df)
-                                st.download_button(
-                                    label=f"📥 High Risk Only ({len(high_risk_df)})",
-                                    data=high_risk_csv,
-                                    file_name="high_risk_employees.csv",
-                                    mime="text/csv",
-                                    use_container_width=True,
-                                    key="download_high_risk"
-                                )
-                            else:
-                                st.info("No high-risk employees found")
-        
-        except Exception as e:
-            st.error(f"❌ Error reading file: {str(e)}")
-            st.info("Please ensure your file is properly formatted and not corrupted.")
-    
-    else:
-        # Show sample data format
-        st.markdown("---")
-        with st.expander("📋 View Sample Data Format"):
-            sample_data = pd.DataFrame({
-                'employee_id': [1, 2, 3, 4, 5],
-                'satisfaction_level': [0.38, 0.80, 0.11, 0.72, 0.37],
-                'time_spend_company': [3, 5, 4, 3, 2],
-                'average_monthly_hours': [157, 262, 272, 223, 159],
-                'number_project': [2, 5, 7, 5, 2],
-                'last_evaluation': [0.53, 0.86, 0.88, 0.87, 0.52],
-                'department': ['sales', 'IT', 'IT', 'sales', 'hr'],
-                'salary': ['low', 'medium', 'medium', 'high', 'low']
-            })
-            st.dataframe(sample_data, use_container_width=True)
-            st.info("💡 Note: Only the 5 required columns will be used for prediction. Other columns will be preserved in the output.")
-
-# ============================================================================
-# MAIN APPLICATION
-# ============================================================================
-def main():
-    # Header
-    st.markdown('<h1 class="main-header">👥 Employee Turnover Prediction</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Predict whether employees are likely to leave the company</p>', unsafe_allow_html=True)
-    
-    # Load model silently
-    model = load_model_from_huggingface()
-    
-    if model is None:
-        st.error("❌ Failed to load model. Please check the Hugging Face repository.")
-        st.info(f"Repository: https://huggingface.co/{HF_REPO_ID}")
-        return
-    
-    # ========================================================================
-    # CREATE TABS
-    # ========================================================================
-    tab1, tab2 = st.tabs(["📝 Individual Prediction", "📊 Batch Prediction"])
-    
-    with tab1:
-        render_individual_prediction_tab(model)
-    
-    with tab2:
-        render_batch_prediction_tab(model)
-
-# ============================================================================
-# RUN APPLICATION
-# ============================================================================
-if __name__ == "__main__":
-    main()
+                "🔄 **Enable Column 
