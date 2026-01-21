@@ -121,7 +121,7 @@ st.markdown("""
     
     .stTabs [data-baseweb="tab"] p {
         font-weight: 900 !important;
-        font-size: 1.8rem !important;
+        font-size: 1.4rem !important;
         color: inherit !important;
         margin: 0 !important;
         padding: 0 !important;
