@@ -92,7 +92,7 @@ st.markdown("""
         box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
     
-    /* ===== ENHANCED TAB STYLING - MUCH BIGGER TABS ===== */
+    /* ===== ENHANCED TAB STYLING - MUCH BIGGER TABS WITH BIGGER BOLD TEXT ===== */
     .stTabs [data-baseweb="tab-list"] {
         gap: 20px;
         justify-content: center;
@@ -101,13 +101,13 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab"] {
-        height: 80px !important;
-        min-width: 300px !important;
+        height: 90px !important;
+        min-width: 320px !important;
         padding: 0 50px !important;
         background-color: #f0f2f6;
         border-radius: 15px 15px 0 0 !important;
-        font-weight: 700 !important;
-        font-size: 1.3rem !important;
+        font-weight: 900 !important;
+        font-size: 1.8rem !important;
         color: #1E3A5F !important;
         border: 2px solid #ddd !important;
         border-bottom: none !important;
@@ -115,6 +115,16 @@ st.markdown("""
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
+        text-transform: none !important;
+        letter-spacing: 0.5px !important;
+    }
+    
+    .stTabs [data-baseweb="tab"] p {
+        font-weight: 900 !important;
+        font-size: 1.8rem !important;
+        color: inherit !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
@@ -129,6 +139,12 @@ st.markdown("""
         border: 2px solid #1E3A5F !important;
         border-bottom: none !important;
         box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4) !important;
+    }
+    
+    .stTabs [aria-selected="true"] p {
+        color: white !important;
+        font-weight: 900 !important;
+        font-size: 1.8rem !important;
     }
     
     .stTabs [data-baseweb="tab-panel"] {
