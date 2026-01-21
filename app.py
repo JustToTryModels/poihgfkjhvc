@@ -580,15 +580,6 @@ def convert_df_to_excel(df):
         df.to_excel(writer, index=False, sheet_name='Predictions')
     return output.getvalue()
 
-def get_default_index(feature, column_list):
-    """Find the best matching column index for a feature"""
-    if feature in column_list:
-        return column_list.index(feature)
-    for i, col in enumerate(column_list):
-        if feature.lower() in col.lower() or col.lower() in feature.lower():
-            return i
-    return 0
-
 # ============================================================================
 # INDIVIDUAL PREDICTION TAB
 # ============================================================================
@@ -919,30 +910,39 @@ def render_batch_prediction_tab(model):
                 </div>
                 """, unsafe_allow_html=True)
                 
+                # Add "Select Column" as placeholder option at the beginning
+                mapping_options = ["Select Column"] + column_list
+                
                 # Create compact mapping table with 5 columns
                 cols = st.columns(5)
                 for idx, feature in enumerate(BEST_FEATURES):
                     with cols[idx]:
                         st.markdown(f"**{feature.replace('_', ' ').title()}**")
-                        default_idx = get_default_index(feature, column_list)
+                        # Force index 0 ("Select Column") as the default initial value
                         selected = st.selectbox(
                             f"Map {feature}",
-                            options=column_list,
-                            index=default_idx,
+                            options=mapping_options,
+                            index=0,
                             key=f"map_{feature}",
                             label_visibility="collapsed"
                         )
                         column_mapping[feature] = selected
                 
-                # Check for duplicates
+                # Validation Logic
                 used_columns = list(column_mapping.values())
-                duplicate_columns = [col for col in set(used_columns) if used_columns.count(col) > 1]
                 
-                if duplicate_columns:
-                    st.error(f"⚠️ Duplicate mapping: **{', '.join(duplicate_columns)}** is mapped to multiple features.")
+                # Check 1: Ensure no column is left as "Select Column"
+                if "Select Column" in used_columns:
+                    st.warning("⚠️ Please select a column for every feature to proceed.")
                     mapping_valid = False
                 else:
-                    st.success("✅ Mapping valid! Ready to predict.")
+                    # Check 2: Check for duplicates (only if no placeholders exist)
+                    duplicate_columns = [col for col in set(used_columns) if used_columns.count(col) > 1]
+                    if duplicate_columns:
+                        st.error(f"⚠️ Duplicate mapping: **{', '.join(duplicate_columns)}** is mapped to multiple features.")
+                        mapping_valid = False
+                    else:
+                        st.success("✅ Mapping valid! Ready to predict.")
             else:
                 # No mapping - use exact column names
                 for feature in BEST_FEATURES:
