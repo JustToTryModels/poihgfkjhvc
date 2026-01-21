@@ -853,13 +853,13 @@ def render_batch_prediction_tab(model):
     
     with col1:
         st.markdown("""<div class="settings-card"><h4>🎯 Probability Columns</h4></div>""", unsafe_allow_html=True)
-        include_probabilities = st.checkbox("Include prediction probabilities in output", value=True, key="include_probabilities")
+        include_probabilities = st.toggle("Include prediction probabilities in output", value=True, key="include_probabilities")
         if include_probabilities:
             st.success("✅ Two additional columns will be added: `Probability_Stay` and `Probability_Leave`")
     
     with col2:
         st.markdown("""<div class="settings-card"><h4>⚠️ High Risk Filter</h4></div>""", unsafe_allow_html=True)
-        include_high_risk_download = st.checkbox("Enable high-risk employees download", value=True, key="include_high_risk")
+        include_high_risk_download = st.toggle("Enable high-risk employees download", value=True, key="include_high_risk")
         if include_high_risk_download:
             st.success("✅ A separate download button for high-risk employees will be available")
     
