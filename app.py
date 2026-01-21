@@ -9,1275 +9,453 @@ import io
 # PAGE CONFIGURATION
 # ============================================================================
 st.set_page_config(
-    page_title="Employee Turnover Prediction",
-    page_icon="👥",
+    page_title="🔮 NEON TURNOVER ORACLE",
+    page_icon="💫",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # ============================================================================
-# CUSTOM CSS STYLING
+# INSANELY BEAUTIFUL CUSTOM CSS – THIS IS WHERE THE MAGIC HAPPENS
 # ============================================================================
 st.markdown("""
 <style>
-    /* Center the main content with max-width */
+    /* Full-screen animated cosmic background */
+    [data-testid="stAppViewContainer"] {
+        background: linear-gradient(-45deg, #12081a, #1a0b2e, #2e0854, #4a00e0, #8e2de2, #ff006e, #ff4757);
+        background-size: 600% 600%;
+        animation: cosmicFlow 25s ease infinite;
+    }
+    
+    @keyframes cosmicFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Frosted glass main container */
     .block-container {
-        max-width: 1200px !important;
-        padding-left: 5rem !important;
-        padding-right: 5rem !important;
-        margin: 0 auto !important;
+        background: rgba(15, 5, 30, 0.65) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border-radius: 30px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.6),
+            0 0 100px rgba(142, 45, 226, 0.4),
+            inset 0 0 80px rgba(255, 255, 255, 0.1) !important;
+        max-width: 1400px !important;
+        padding: 3rem 4rem !important;
+        margin: 2rem auto !important;
     }
-    
+
+    /* Rainbow neon title – this alone will make people gasp */
     .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #1E3A5F;
+        font-size: 4.8rem !important;
+        font-weight: 900 !important;
         text-align: center;
-        margin-bottom: 0.5rem;
+        background: linear-gradient(90deg, #ff0000, #ff9100, #ffea00, #00ff73, #00ffff, #8b00ff, #ff00c8, #ff0000);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        backgroundikera-size: 400% 400%;
+        animation: rainbowFlow 8s linear infinite, glowPulse 3s ease-in-out infinite;
+        text-shadow: 0 0 40px rgba(255, 255, 255, 0.6), 0 0 80px rgba(142, 45, 226, 0.8);
+        letter-spacing: 4px;
+        margin-bottom: 0.5rem !important;
     }
+    
+    @keyframes rainbowFlow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+    
+    @keyframes glowPulse {
+        0%, 100% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.6); }
+        50% { text-shadow: 0 0 80px rgba(255, 0, 255, 0.9), 0 0 120px rgba(142, 45, 226, 1); }
+    }
+
     .sub-header {
-        font-size: 1.2rem;
-        color: #666;
+        font-size: 1.6rem;
+        color: #e0aaff !important;
         text-align: center;
-        margin-bottom: 2rem;
+        font-weight: 600;
+        text-shadow: 0 0 20px rgba(224, 170, 255, 0.6);
+        margin-bottom: 3rem;
     }
-    .section-header {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #1E3A5F;
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
-    .prediction-box {
-        padding: 2rem;
-        border-radius: 10px;
-        text-align: center;
-        margin: 1rem 0;
-    }
-    .stay-prediction {
-        background-color: #d4edda;
-        border: 2px solid #28a745;
-    }
-    .leave-prediction {
-        background-color: #f8d7da;
-        border: 2px solid #dc3545;
-    }
-    .metric-card {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 4px solid #007bff;
-        margin: 0.5rem 0;
-    }
-    .feature-box {
-        background-color: #e7f3ff;
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin: 1rem 0;
-        border: 1px solid #b8daff;
-    }
-    
-    /* INPUT CARDS - Light Cream Background */
-    .feature-card {
-        background-color: #FFE8C2;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-left: 5px solid #1E3A5F;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 1rem;
-    }
-    .feature-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    }
-    
-    /* ===== ENHANCED TAB STYLING - MUCH BIGGER TABS WITH BIGGER BOLD TEXT ===== */
+
+    /* Ultra tabs – floating neon pills */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 20px;
+        gap: 25px;
         justify-content: center;
-        background-color: transparent;
-        padding: 10px 0;
+        background: transparent;
+        padding: 20px 0;
+        border-bottom: 2px solid rgba(142, 45, 226, 0.5);
     }
     
     .stTabs [data-baseweb="tab"] {
-        height: 90px !important;
-        min-width: 320px !important;
-        padding: 0 50px !important;
-        background-color: #f0f2f6;
-        border-radius: 15px 15px 0 0 !important;
+        height: 100px !important;
+        min-width: 380px !important;
+        padding: 0 60px !important;
+        background: rgba(15, 5, 30, 0.7) !important;
+        border-radius: 25px 25px 0 0 !important;
         font-weight: 900 !important;
-        font-size: 1.4rem !important;
-        color: #1E3A5F !important;
-        border: 2px solid #ddd !important;
-        border-bottom: none !important;
-        transition: all 0.3s ease !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-transform: none !important;
-        letter-spacing: 0.5px !important;
-    }
-    
-    .stTabs [data-baseweb="tab"] p {
-        font-weight: 900 !important;
-        font-size: 1.4rem !important;
-        color: inherit !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        font-size: 1.6rem !important;
+        color: #e0aaff !important;
+        border: 2px solid rgba(142, 45, 226, 0.6) !important;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s ease !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: #e0e5ec !important;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transform: translateY(-10px) scale(1.05);
+        background: rgba(142, 45, 226, 0.4) !important;
+        box-shadow: 0 20px 50px rgba(142, 45, 226, 0.6) !important;
+        color: white !important;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%) !important;
+        background: linear-gradient(135deg, #8e2de2, #4a00e0) !important;
         color: white !important;
-        border: 2px solid #1E3A5F !important;
+        box-shadow: 0 20px 60px rgba(142, 45, 226, 0.8) !important;
         border-bottom: none !important;
-        box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4) !important;
+        transform: translateY(-5px);
     }
-    
-    .stTabs [aria-selected="true"] p {
-        color: white !important;
-        font-weight: 900 !important;
-        font-size: 1.4rem !important;
-    }
-    
-    .stTabs [data-baseweb="tab-panel"] {
-        padding-top: 20px;
-    }
-    
-    .stTabs [data-baseweb="tab-border"] {
-        display: none !important;
-    }
-    
-    .stTabs [data-baseweb="tab-highlight"] {
-        display: none !important;
-    }
-    
-    /* Upload section styling */
-    .upload-section {
-        background-color: #f8f9fa;
-        border-radius: 12px;
+
+    /* Feature cards – glowing glass */
+    .feature-card {
+        background: rgba(255, 255, 255, 0.12) !important;
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
         padding: 2rem;
-        border: 2px dashed #1E3A5F;
-        margin: 1rem 0;
-    }
-    
-    /* Settings card */
-    .settings-card {
-        background-color: #e8f4f8;
-        border-radius: 12px;
-        padding: 1.5rem;
-        border-left: 5px solid #17a2b8;
-        margin: 1rem 0;
-    }
-    
-    /* Required columns info box */
-    .required-cols-box {
-        background-color: #fff3cd;
-        border: 1px solid #ffc107;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-    }
-    
-    /* Success box */
-    .success-box {
-        background-color: #d4edda;
-        border: 1px solid #28a745;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-    }
-    
-    /* Error box */
-    .error-box {
-        background-color: #f8d7da;
-        border: 1px solid #dc3545;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-    }
-    
-    /* Stats cards */
-    .stats-card {
-        background-color: #ffffff;
-        border-radius: 10px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 15px 35px rgba(0, 0, 0, 0.4),
+            0 0 40px rgba(142, 45, 226, 0.4);
+        transition: all 0.4s ease;
         text-align: center;
-        border-top: 4px solid #1E3A5F;
-    }
-    .stats-card h3 {
-        color: #1E3A5F;
-        margin-bottom: 0.5rem;
-    }
-    .stats-card .number {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #1E3A5F;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #e0aaff;
     }
     
-    /* ===== VIBRANT RAINBOW GRADIENT PREDICT BUTTON ===== */
-    .stButton>button {
+    .feature-card:hover {
+        transform: translateY(-15px) scale(1.05);
+        box-shadow: 0 25px 60px rgba(142, 45, 226, 0.7) !important;
+    }
+
+    /* Prediction result boxes – PURE DRAMA */
+    .prediction-box {
+        padding: 3rem;
+        border-radius: 25px;
+        text-align: center;
+        margin: 2rem 0;
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    .stay-prediction {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.3), rgba(0, 255, 128, 0.2));
+        border: 3px solid #00ff88;
+        box-shadow: 
+            0 0 60px rgba(0, 255, 136, 0.8),
+            0 0 120px rgba(0, 255, 136, 0.5);
+        animation: glowGreen 2s ease-in-out infinite alternate;
+    }
+    
+    .leave-prediction {
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.3), rgba(255, 0, 128, 0.2));
+        border: 3px solid #ff006e;
+        box-shadow: 
+            0 0 60px rgba(255, 0, 110, 0.9),
+            0 0 120px rgba(255, 0, 110, 0.6);
+        animation: glowRed 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glowGreen {
+        from { box-shadow: 0 0 60px rgba(0, 255, 136, 0.8); }
+        to { box-shadow: 0 0 100px rgba(0, 255, 136, 1), 0 0 150px rgba(0, 255, 136, 0.8); }
+    }
+    
+    @keyframes glowRed {
+        from { box-shadow: 0 0 60px rgba(255, 0, 110, 0.9); }
+        to { box-shadow: 0 0 100px rgba(255, 0, 110, 1), 0 0 150px rgba(255, 0, 110, 0.8); }
+    }
+    
+    .prediction-box h1 {
+        font-size: 6.5rem !important;
+        font-weight: 900;
+        margin: 0;
+        text-shadow: 0 0 30px currentColor;
+    }
+
+    /* Ultimate predict button – THIS IS GOD-TIER */
+    .stButton > button {
         width: 100%;
-        background: linear-gradient(
-            45deg, 
-            #ff0080, #ff8c00, #40e0d0, #ff0080, #ff8c00
-        );
-        background-size: 400% 400%;
-        color: white !important;
-        font-size: 1.4rem;
+        height: 90px;
+        font-size: 2rem !important;
         font-weight: 900 !important;
-        padding: 1.2rem 2.5rem;
-        border-radius: 50px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        background: linear-gradient(45deg, #ff006e, #833ab4, #fd1d1d, #fcb045, #00f5ff, #ff006e);
+        background-size: 600% 600%;
+        color: white !important;
         border: none !important;
-        outline: none !important;
-        cursor: pointer;
+        border-radius: 50px;
+        animation: insaneGradient 4s ease infinite, megaPulse 2s ease-in-out infinite;
+        box-shadow: 
+            0 0 50px rgba(255, 0, 110, 0.8),
+            0 0 100px rgba(142, 45, 226, 0.6),
+            0 20px 40px rgba(0, 0, 0, 0.5);
+        transition: all 0.4s ease;
         position: relative;
         overflow: hidden;
-        box-shadow: 
-            0 4px 15px rgba(255, 0, 128, 0.4),
-            0 8px 30px rgba(255, 140, 0, 0.3),
-            0 0 40px rgba(64, 224, 208, 0.2);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: gradientShift 3s ease infinite, pulse 2s ease-in-out infinite;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
     
-    /* Gradient animation - shifting colors */
-    @keyframes gradientShift {
+    @keyframes insaneGradient {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
     }
     
-    /* Pulse glow animation */
-    @keyframes pulse {
-        0% { 
-            box-shadow: 
-                0 4px 15px rgba(255, 0, 128, 0.4),
-                0 8px 30px rgba(255, 140, 0, 0.3),
-                0 0 40px rgba(64, 224, 208, 0.2);
-            transform: scale(1);
-        }
-        50% { 
-            box-shadow: 
-                0 6px 25px rgba(255, 0, 128, 0.6),
-                0 12px 40px rgba(255, 140, 0, 0.5),
-                0 0 60px rgba(64, 224, 208, 0.4),
-                0 0 80px rgba(255, 0, 128, 0.2);
-            transform: scale(1.02);
-        }
-        100% { 
-            box-shadow: 
-                0 4px 15px rgba(255, 0, 128, 0.4),
-                0 8px 30px rgba(255, 140, 0, 0.3),
-                0 0 40px rgba(64, 224, 208, 0.2);
-            transform: scale(1);
-        }
+    @keyframes megaPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
     }
     
-    /* Hover - Electric effect with different gradient */
-    .stButton>button:hover {
-        background: linear-gradient(
-            45deg, 
-            #00f5ff, #ff00ff, #ffff00, #00f5ff, #ff00ff
-        );
-        background-size: 400% 400%;
-        transform: translateY(-5px) scale(1.01);
-        box-shadow: 
-            0 10px 30px rgba(0, 245, 255, 0.5),
-            0 15px 50px rgba(255, 0, 255, 0.4),
-            0 0 100px rgba(255, 255, 0, 0.3),
-            inset 0 0 20px rgba(255, 255, 255, 0.1);
-        animation: gradientShift 1.5s ease infinite;
-        color: white !important;
-        border: none !important;
-        outline: none !important;
-        font-weight: 900 !important;
+    .stButton > button:hover {
+        transform: translateY(-10px) scale(1.1);
+        box-shadow: 0 0 120px rgba(255, 0, 110, 1), 0 0 200px rgba(142, 45, 226, 0.9) !important;
     }
     
-    /* Active/Click - Neon burst effect */
-    .stButton>button:active {
-        background: linear-gradient(
-            45deg, 
-            #ff3366, #ff6b35, #f7931e, #ffd700, #ff3366
-        );
-        background-size: 400% 400%;
-        transform: translateY(2px) scale(0.98);
-        box-shadow: 
-            0 2px 10px rgba(255, 51, 102, 0.6),
-            0 4px 20px rgba(255, 107, 53, 0.4),
-            inset 0 0 30px rgba(255, 255, 255, 0.2);
-        color: white !important;
-        border: none !important;
-        outline: none !important;
-        font-weight: 900 !important;
+    .stButton > button:active {
+        transform:scale(0.95);
     }
-    
-    /* Shimmer/shine effect overlay */
-    .stButton>button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            120deg,
-            transparent,
-            rgba(255, 255, 255, 0.4),
-            transparent
-        );
-        transition: left 0.7s ease;
-    }
-    
-    .stButton>button:hover::before {
-        left: 100%;
-    }
-    
-    /* Sparkle particles effect */
-    .stButton>button::after {
-        content: '✨';
-        position: absolute;
-        font-size: 1.2rem;
-        right: 20px;
-        animation: sparkle 1.5s ease-in-out infinite;
-    }
-    
-    @keyframes sparkle {
-        0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-        50% { opacity: 0.5; transform: scale(1.3) rotate(180deg); }
-    }
-    
-    /* Focus effect - Remove blue border completely */
-    .stButton>button:focus {
-        outline: none !important;
-        border: none !important;
-        box-shadow: 
-            0 4px 15px rgba(255, 0, 128, 0.4),
-            0 8px 30px rgba(255, 140, 0, 0.3),
-            0 0 40px rgba(64, 224, 208, 0.2);
-        color: white !important;
-        font-weight: 900 !important;
-    }
-    
-    /* Focus-visible - Remove blue border completely */
-    .stButton>button:focus-visible {
-        outline: none !important;
-        border: none !important;
-        box-shadow: 
-            0 4px 15px rgba(255, 0, 128, 0.4),
-            0 8px 30px rgba(255, 140, 0, 0.3),
-            0 0 40px rgba(64, 224, 208, 0.2);
-        font-weight: 900 !important;
-    }
-    
-    /* Remove focus ring from button container as well */
-    .stButton>button:focus:not(:focus-visible) {
-        outline: none !important;
-        border: none !important;
-    }
-    
-    /* Ensure text stays white in ALL states */
-    .stButton>button,
-    .stButton>button:hover,
-    .stButton>button:active,
-    .stButton>button:focus,
-    .stButton>button:focus-visible,
-    .stButton>button:visited,
-    .stButton>button span,
-    .stButton>button:hover span,
-    .stButton>button:active span,
-    .stButton>button:focus span,
-    .stButton>button p,
-    .stButton>button:hover p,
-    .stButton>button:active p,
-    .stButton>button:focus p,
-    .stButton>button div,
-    .stButton>button:hover div,
-    .stButton>button:active div,
-    .stButton>button:focus div {
-        color: white !important;
-        outline: none !important;
-        border: none !important;
-        font-weight: 900 !important;
-    }
-    
-    /* Download button styling */
-    .stDownloadButton>button {
-        background: linear-gradient(135deg, #28a745, #20c997) !important;
-        animation: none !important;
-    }
-    .stDownloadButton>button:hover {
-        background: linear-gradient(135deg, #20c997, #28a745) !important;
-    }
-    
-    .info-box {
-        background-color: #fff3cd;
-        border: 1px solid #ffc107;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
-    }
+
+    /* Progress bars with glow */
     .progress-bar-container {
-        width: 100%;
-        background-color: #e9ecef;
-        border-radius: 10px;
-        margin: 5px 0 15px 0;
-        height: 25px;
+        height: 30px;
+        background: rgba(0,0,0,0.4);
+        border-radius: 15px;
         overflow: hidden;
-    }
-    .progress-bar-green {
-        height: 100%;
-        background-color: #28a745;
-        border-radius: 10px;
-        transition: width 0.5s ease-in-out;
-    }
-    .progress-bar-red {
-        height: 100%;
-        background-color: #dc3545;
-        border-radius: 10px;
-        transition: width 0.5s ease-in-out;
+        border: 2px solid rgba(255,255,255,0.2);
     }
     
-    /* Blue styled expander */
-    div[data-testid="stExpander"] {
-        border: none !important;
-        border-radius: 8px !important;
-    }
-    div[data-testid="stExpander"] details {
-        border: none !important;
-    }
-    div[data-testid="stExpander"] details summary {
-        background-color: #1E3A5F !important;
-        color: white !important;
-        border-radius: 8px !important;
-        padding: 0.75rem 1rem !important;
-        font-size: 1.2rem !important;
-        font-weight: 500 !important;
-    }
-    div[data-testid="stExpander"] details summary:hover {
-        background-color: #2E5A8F !important;
-        color: white !important;
-    }
-    div[data-testid="stExpander"] details summary svg {
-        color: white !important;
-        fill: white !important;
-    }
-    div[data-testid="stExpander"] details[open] summary {
-        border-radius: 8px 8px 0 0 !important;
-    }
-    div[data-testid="stExpander"] details > div {
-        border: 1px solid #1E3A5F !important;
-        border-top: none !important;
-        border-radius: 0 0 8px 8px !important;
+    .progress-bar-green, .progress-bar-red {
+        height: 100%;
+        border-radius: 15px;
+        animation: barGlow 3s ease-in-out infinite;
     }
     
-    /* Checkbox styling */
-    .stCheckbox {
-        padding: 0.5rem 0;
+    .progress-bar-green { background: linear-gradient(90deg, #00ff88, #00f5ff); }
+    .progress-bar-red { background: linear-gradient(90deg, #ff006e, #ff4757); }
+    
+    @keyframes barGlow {
+        0%, 100% { box-shadow: 0 0 20px currentColor; }
+        50% { box-shadow: 0 0 40px currentColor; }
     }
-    .stCheckbox label {
-        font-size: 1rem;
-        font-weight: 500;
+
+    /* Stats cards */
+    .stats-card {
+        background: rgba(15, 5, 30, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        border: 1px solid rgba(142, 45, 226, 0.5);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .stats-card .number {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(90deg, #ff00c8, #00ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ============================================================================
-# CONFIGURATION
+# CONFIG & MODEL LOADING
 # ============================================================================
 HF_REPO_ID = "IamPradeep/Employee-Churn-Predictor"
 MODEL_FILENAME = "final_random_forest_model.joblib"
 
-# Define the 5 selected features (in exact order)
 BEST_FEATURES = [
-    "satisfaction_level",
-    "time_spend_company", 
-    "average_monthly_hours",
-    "number_project",
-    "last_evaluation"
+    "satisfaction_level", "time_spend_company", "average_monthly_hours",
+    "number_project", "last_evaluation"
 ]
 
-# Feature descriptions for user reference
 FEATURE_DESCRIPTIONS = {
     "satisfaction_level": "Employee satisfaction level (0.0 - 1.0)",
-    "time_spend_company": "Years at company (integer)",
-    "average_monthly_hours": "Average monthly hours worked (integer)",
-    "number_project": "Number of projects (integer)",
+    "time_spend_company": "Years at company",
+    "average_monthly_hours": "Average monthly hours worked",
+    "number_project": "Number of projects",
     "last_evaluation": "Last performance evaluation score (0.0 - 1.0)"
 }
 
-# ============================================================================
-# LOAD MODEL FROM HUGGING FACE
-# ============================================================================
 @st.cache_resource
-def load_model_from_huggingface():
-    """Load the trained model from Hugging Face Hub"""
+def load_model():
     try:
-        model_path = hf_hub_download(
-            repo_id=HF_REPO_ID,
-            filename=MODEL_FILENAME,
-            repo_type="model"
-        )
-        model = joblib.load(model_path)
-        return model
+        path = hf_hub_download(repo_id=HF_REPO_ID, filename=MODEL_FILENAME)
+        return joblib.load(path)
     except Exception as e:
-        st.error(f"❌ Error loading model: {str(e)}")
+        st.error(f"Model loading failed: {e}")
         return None
 
-# ============================================================================
-# CALLBACK FUNCTIONS FOR SYNCING SLIDERS AND NUMBER INPUTS
-# ============================================================================
-def sync_satisfaction_slider():
-    """Sync satisfaction level from slider to session state"""
-    st.session_state.satisfaction_level = st.session_state.sat_slider
-
-def sync_satisfaction_input():
-    """Sync satisfaction level from number input to session state"""
-    st.session_state.satisfaction_level = st.session_state.sat_input
-
-def sync_evaluation_slider():
-    """Sync evaluation from slider to session state"""
-    st.session_state.last_evaluation = st.session_state.eval_slider
-
-def sync_evaluation_input():
-    """Sync evaluation from number input to session state"""
-    st.session_state.last_evaluation = st.session_state.eval_input
+model = load_model()
+if not model:
+    st.stop()
 
 # ============================================================================
-# HELPER FUNCTIONS
+# SYNC CALLBACKS
 # ============================================================================
-def convert_df_to_csv(df):
-    """Convert dataframe to CSV for download"""
-    return df.to_csv(index=False).encode('utf-8')
+def sync_sat_slider(): st.session_state.satisfaction_level = st.session_state.sat_slider
+def sync_sat_input(): st.session_state.satisfaction_level = st.session_state.sat_input
+def sync_eval_slider(): st.session_state.last_evaluation = st.session_state.eval_slider
+def sync_eval_input(): st.session_state.last_evaluation = st.session_state.eval_input
 
-def convert_df_to_excel(df):
-    """Convert dataframe to Excel for download"""
+# ============================================================================
+# HELPERS
+# ============================================================================
+def csv_download(df): return df.to_csv(index=False).encode('utf-8')
+def excel_download(df):
     output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='openpyxl') as writer:
-        df.to_excel(writer, index=False, sheet_name='Predictions')
+    df.to_excel(output, index=False, engine='openpyxl')
     return output.getvalue()
 
 # ============================================================================
-# INDIVIDUAL PREDICTION TAB
+# INDIVIDUAL PREDICTION
 # ============================================================================
-def render_individual_prediction_tab(model):
-    """Render the individual prediction tab content"""
+def individual_tab():
+    st.markdown("### 💫 Enter Employee Details")
     
-    st.markdown("---")
-    st.markdown('<h2 class="section-header">📝 Enter Employee Information</h2>', unsafe_allow_html=True)
+    if 'satisfaction_level' not in st.session_state: st.session_state.satisfaction_level = 0.5
+    if 'last_evaluation' not in st.session_state: st.session_state.last_evaluation = 0.7
     
-    # Initialize session state for syncing slider and number input
-    if 'satisfaction_level' not in st.session_state:
-        st.session_state.satisfaction_level = 0.5
-    if 'last_evaluation' not in st.session_state:
-        st.session_state.last_evaluation = 0.7
+    col1, col2 = st.columns(2)
     
-    # ========================================================================
-    # ROW 1: Satisfaction Level & Last Evaluation (side by side with feature cards)
-    # ========================================================================
-    with st.container():
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("""
-            <div class="feature-card">
-                <span style="font-size: 1.2rem;">😊 <strong>Satisfaction Level</strong></span>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            sat_col1, sat_col2 = st.columns([3, 1])
-            with sat_col1:
-                st.slider(
-                    "Satisfaction Slider",
-                    min_value=0.0,
-                    max_value=1.0,
-                    value=st.session_state.satisfaction_level,
-                    step=0.01,
-                    help="Employee satisfaction level (0 = Very Dissatisfied, 1 = Very Satisfied)",
-                    label_visibility="collapsed",
-                    key="sat_slider",
-                    on_change=sync_satisfaction_slider
-                )
-            with sat_col2:
-                st.number_input(
-                    "Satisfaction Input",
-                    min_value=0.0,
-                    max_value=1.0,
-                    value=st.session_state.satisfaction_level,
-                    step=0.01,
-                    format="%.2f",
-                    label_visibility="collapsed",
-                    key="sat_input",
-                    on_change=sync_satisfaction_input
-                )
-            
-            satisfaction_level = st.session_state.satisfaction_level
-        
-        with col2:
-            st.markdown("""
-            <div class="feature-card">
-                <span style="font-size: 1.2rem;">📊 <strong>Last Evaluation</strong></span>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            eval_col1, eval_col2 = st.columns([3, 1])
-            with eval_col1:
-                st.slider(
-                    "Evaluation Slider",
-                    min_value=0.0,
-                    max_value=1.0,
-                    value=st.session_state.last_evaluation,
-                    step=0.01,
-                    help="Last performance evaluation score (0 = Poor, 1 = Excellent)",
-                    label_visibility="collapsed",
-                    key="eval_slider",
-                    on_change=sync_evaluation_slider
-                )
-            with eval_col2:
-                st.number_input(
-                    "Evaluation Input",
-                    min_value=0.0,
-                    max_value=1.0,
-                    value=st.session_state.last_evaluation,
-                    step=0.01,
-                    format="%.2f",
-                    label_visibility="collapsed",
-                    key="eval_input",
-                    on_change=sync_evaluation_input
-                )
-            
-            last_evaluation = st.session_state.last_evaluation
-        
-        # ========================================================================
-        # ROW 2: Years at Company, Number of Projects, Average Monthly Hours (3 columns)
-        # ========================================================================
-        col3, col4, col5 = st.columns(3)
-        
-        with col3:
-            st.markdown("""
-            <div class="feature-card">
-                <span style="font-size: 1.2rem;">📅 <strong>Years at Company</strong></span>
-            </div>
-            """, unsafe_allow_html=True)
-            time_spend_company = st.number_input(
-                "Years",
-                min_value=1,
-                max_value=40,
-                value=3,
-                step=1,
-                label_visibility="collapsed",
-                help="Number of years the employee has worked at the company",
-                key="individual_years"
-            )
-        
-        with col4:
-            st.markdown("""
-            <div class="feature-card">
-                <span style="font-size: 1.2rem;">📁 <strong>Number of Projects</strong></span>
-            </div>
-            """, unsafe_allow_html=True)
-            number_project = st.number_input(
-                "Projects",
-                min_value=1,
-                max_value=10,
-                value=4,
-                step=1,
-                label_visibility="collapsed",
-                help="Number of projects the employee is currently working on",
-                key="individual_projects"
-            )
-        
-        with col5:
-            st.markdown("""
-            <div class="feature-card">
-                <span style="font-size: 1.2rem;">⏰ <strong>Avg. Monthly Hours</strong></span>
-            </div>
-            """, unsafe_allow_html=True)
-            average_monthly_hours = st.number_input(
-                "Hours",
-                min_value=80,
-                max_value=350,
-                value=200,
-                step=5,
-                label_visibility="collapsed",
-                help="Average number of hours worked per month",
-                key="individual_hours"
-            )
+    with col1:
+        st.markdown('<div class="feature-card">😊 Satisfaction Level</div>', unsafe_allow_html=True)
+        c1, c2 = st.columns([3,1])
+        with c1: st.slider("", 0.0, 1.0, st.session_state.satisfaction_level, 0.01, key="sat_slider", on_change=sync_sat_slider)
+        with c2: st.number_input("", 0.0, 1.0, st.session_state.satisfaction_level, 0.01, format="%.2f", key="sat_input", on_change=sync_sat_input, label_visibility="collapsed")
     
-    # Create input dictionary
-    input_data = {
-        'satisfaction_level': satisfaction_level,
-        'time_spend_company': time_spend_company,
-        'average_monthly_hours': average_monthly_hours,
-        'number_project': number_project,
-        'last_evaluation': last_evaluation
-    }
-    
-    # ========================================================================
-    # PREDICTION BUTTON
-    # ========================================================================
-    st.markdown("---")
-    
-    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        predict_button = st.button("🔮 Predict Employee Turnover", use_container_width=True, key="individual_predict")
+        st.markdown('<div class="feature-card">📊 Last Evaluation</div>', unsafe_allow_html=True)
+        c1, c2 = st.columns([3,1])
+        with c1: st.slider("", 0.0, 1.0, st.session_state.last_evaluation, 0.01, key="eval_slider", on_change=sync_eval_slider, label_visibility="collapsed")
+        with c2: st.number_input("", 0.0, 1.0, st.session_state.last_evaluation, 0.01, format="%.2f", key="eval_input", on_change=sync_eval_input, label_visibility="collapsed")
     
-    # ========================================================================
-    # PREDICTION RESULTS
-    # ========================================================================
-    if predict_button:
-        # Create input DataFrame with correct feature order
-        input_df = pd.DataFrame([input_data])[BEST_FEATURES]
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown('<div class="feature-card">📅 Years at Company</div>', unsafe_allow_html=True)
+        years = st.number_input("", 1, 40, 3, key="y1")
+    with col2:
+        st.markdown('<div class="feature-card">📁 Number of Projects</div>', unsafe_allow_html=True)
+        projects = st.number_input("", 1, 10, 4, key="p1")
+    with col3:
+        st.markdown('<div class="feature-card">⏰ Avg Monthly Hours</div>', unsafe_allow_html=True)
+        hours = st.number_input("", 80, 350, 200, 5, key="h1")
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🔮 UNLEASH THE ORACLE", use_container_width=True):
+        data = [[st.session_state.satisfaction_level, years, hours, projects, st.session_state.last_evaluation]]
+        df = pd.DataFrame(data, columns=BEST_FEATURES)
         
-        # Make prediction
-        prediction = model.predict(input_df)[0]
-        prediction_proba = model.predict_proba(input_df)[0]
+        pred = model.predict(df)[0]
+        prob = model.predict_proba(df)[0]
+        prob_stay = prob[0] * 100
+        prob_leave = prob[1] * 100
         
-        prob_stay = prediction_proba[0] * 100
-        prob_leave = prediction_proba[1] * 100
+        st.confetti()
         
-        st.markdown("---")
-        st.subheader("🎯 Prediction Results")
-        
-        # Results in two columns
         col1, col2 = st.columns(2)
-        
         with col1:
-            if prediction == 0:
-                st.markdown("""
-                <div class="prediction-box stay-prediction">
-                    <h1>✅ STAY</h1>
-                    <p style="font-size: 1.3rem; margin-top: 1rem;">
-                        Employee is likely to <strong>STAY</strong> with the company
-                    </p>
-                </div>
-                """, unsafe_allow_html=True)
+            if pred == 0:
+                st.markdown('<div class="prediction-box stay-prediction"><h1>STAY 💚</h1><p>They are staying!</p></div>', unsafe_allow_html=True)
             else:
-                st.markdown("""
-                <div class="prediction-box leave-prediction">
-                    <h1>⚠️ LEAVE</h1>
-                    <p style="font-size: 1.3rem; margin-top: 1rem;">
-                        Employee is likely to <strong>LEAVE</strong> the company
-                    </p>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown('<div class="prediction-box leave-prediction"><h1>LEAVE 🔥</h1><p>High risk of leaving!</p></div>', unsafe_allow_html=True)
         
         with col2:
-            st.markdown("### 📊 Prediction Probabilities")
-            
-            # Stay probability with GREEN bar
-            st.write(f"**Probability of Staying:** {prob_stay:.1f}%")
-            st.markdown(f"""
-            <div class="progress-bar-container">
-                <div class="progress-bar-green" style="width: {prob_stay}%;"></div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Leave probability with RED bar
-            st.write(f"**Probability of Leaving:** {prob_leave:.1f}%")
-            st.markdown(f"""
-            <div class="progress-bar-container">
-                <div class="progress-bar-red" style="width: {prob_leave}%;"></div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown("### 📊 Confidence")
+            st.write(f"**Stay:** {prob_stay:.1f}%")
+            st.markdown(f'<div class="progress-bar-container"><div class="progress-bar-green" style="width:{prob_stay}%"></div></div>', unsafe_allow_html=True)
+            st.write(f"**Leave:** {prob_leave:.1f}%")
+            st.markdown(f'<div class="progress-bar-container"><div class="progress-bar-red" style="width:{prob_leave}%"></div></div>', unsafe_allow_html=True)
 
 # ============================================================================
-# BATCH PREDICTION TAB
+# BATCH PREDICTION
 # ============================================================================
-def render_batch_prediction_tab(model):
-    """Render the batch prediction tab content"""
+def batch_tab():
+    st.markdown("### 📊 Batch Prediction Mode")
     
-    st.markdown("---")
-    st.markdown('<h2 class="section-header">📊 Batch Employee Prediction</h2>', unsafe_allow_html=True)
+    with st.expander("📋 Required Columns", expanded=True):
+        for f in BEST_FEATURES:
+            st.markdown(f"**{f}** – {FEATURE_DESCRIPTIONS[f]}")
     
-    # ========================================================================
-    # REQUIRED COLUMNS INFO - NOW AS DROPDOWN/EXPANDER
-    # ========================================================================
-    with st.expander("📋 Required Columns in Your File (Click to Expand)"):
-        st.markdown("""
-        <div style="background-color: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-            <p>Your uploaded file <strong>must contain</strong> these columns with <strong>exact names</strong>:</p>
-        </div>
-        """, unsafe_allow_html=True)
+    uploaded = st.file_uploader("Upload CSV or Excel", type=["csv", "xlsx"])
+    
+    if uploaded:
+        df = pd.read_csv(uploaded) if uploaded.name.endswith('.csv') else pd.read_excel(uploaded)
         
-        # Display required features in a nice format
+        missing = [col for col in BEST_FEATURES if col not in df.columns]
+        if missing:
+            st.error(f"Missing columns: {', '.join(missing)}")
+            return
+        
         col1, col2 = st.columns(2)
         with col1:
-            for feature in BEST_FEATURES[:3]:
-                st.markdown(f"""
-                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #1E3A5F;">
-                    <strong>{feature}</strong><br/>
-                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
-                </div>
-                """, unsafe_allow_html=True)
+            pred_col = st.text_input("Prediction column name", "Turnover_Prediction")
         with col2:
-            for feature in BEST_FEATURES[3:]:
-                st.markdown(f"""
-                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #1E3A5F;">
-                    <strong>{feature}</strong><br/>
-                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
-                </div>
-                """, unsafe_allow_html=True)
+            labels = st.selectbox("Labels", ["Stay/Leave", "No/Yes", "Safe/Risk", "0/1"])
+            label_map = {"Stay/Leave": {0:"Stay",1:"Leave"}, "No/Yes":{0:"No",1:"Yes"}, "Safe/Risk":{0:"Safe",1:"Risk"}, "0/1":{0:"0",1:"1"}}
+            labels_dict = label_map.get(labels, {0:"Stay",1:"Leave"})
         
-        st.info("💡 **Tip:** Your file can contain additional columns (like employee_id, department, etc.). They will be preserved in the output but won't be used for prediction.")
-    
-    st.markdown("---")
-    
-    # ========================================================================
-    # FILE UPLOAD SECTION
-    # ========================================================================
-    st.markdown("### 📁 Upload Your Data")
-    
-    col1, col2 = st.columns([1, 2])
-    
-    with col1:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>⚙️ File Settings</h4>
-        </div>
-        """, unsafe_allow_html=True)
+        add_prob = st.checkbox("Add probability columns", True)
         
-        # File format selection
-        file_format = st.selectbox(
-            "Select file format",
-            options=["CSV", "Excel (.xlsx)"],
-            index=0,
-            help="Choose the format of your data file",
-            key="file_format"
-        )
-    
-    with col2:
-        # File uploader based on format
-        if file_format == "CSV":
-            uploaded_file = st.file_uploader(
-                "Upload your CSV file",
-                type=["csv"],
-                help="Upload a CSV file containing employee data",
-                key="csv_uploader"
-            )
-        else:
-            uploaded_file = st.file_uploader(
-                "Upload your Excel file",
-                type=["xlsx", "xls"],
-                help="Upload an Excel file containing employee data",
-                key="excel_uploader"
-            )
-    
-    st.markdown("---")
-    
-    # ========================================================================
-    # PREDICTION OUTPUT SETTINGS
-    # ========================================================================
-    st.markdown("### ⚙️ Prediction Output Settings")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>📝 Column Name for Predictions</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        column_name_option = st.selectbox(
-            "Select prediction column name",
-            options=["Prediction", "Churn", "Will_Leave", "Turnover", "Custom"],
-            index=0,
-            help="Choose the column name where predictions will be stored",
-            key="column_name_option"
-        )
-        
-        if column_name_option == "Custom":
-            custom_column_name = st.text_input(
-                "Enter custom column name",
-                value="My_Prediction",
-                help="Enter your preferred column name",
-                key="custom_column_name"
-            )
-            prediction_column_name = custom_column_name if custom_column_name.strip() else "Prediction"
-        else:
-            prediction_column_name = column_name_option
-    
-    with col2:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>🏷️ Prediction Labels</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Label options - Model predicts 1 for leaving, 0 for staying
-        label_option = st.selectbox(
-            "Select prediction labels",
-            options=["Leave / Stay", "Yes / No", "Churn / Not Churn", "1 / 0", "True / False", "Custom"],
-            index=0,
-            help="Choose how predictions should be labeled (Leaving / Staying format)",
-            key="label_option"
-        )
-        
-        # Define label mappings (1 = leaving, 0 = staying)
-        label_mappings = {
-            "Leave / Stay": {1: "Leave", 0: "Stay"},
-            "Yes / No": {1: "Yes", 0: "No"},
-            "Churn / Not Churn": {1: "Churn", 0: "Not Churn"},
-            "1 / 0": {1: "1", 0: "0"},
-            "True / False": {1: "True", 0: "False"}
-        }
-        
-        if label_option == "Custom":
-            custom_col1, custom_col2 = st.columns(2)
-            with custom_col1:
-                custom_leave_label = st.text_input(
-                    "Label for LEAVING",
-                    value="Leaving",
-                    help="Label when employee is predicted to leave",
-                    key="custom_leave_label"
-                )
-            with custom_col2:
-                custom_stay_label = st.text_input(
-                    "Label for STAYING",
-                    value="Staying",
-                    help="Label when employee is predicted to stay",
-                    key="custom_stay_label"
-                )
-            prediction_labels = {
-                1: custom_leave_label if custom_leave_label.strip() else "Leaving",
-                0: custom_stay_label if custom_stay_label.strip() else "Staying"
-            }
-        else:
-            prediction_labels = label_mappings[label_option]
-        
-        st.info(f"📌 **Label Preview:** Leaving → '{prediction_labels[1]}' | Staying → '{prediction_labels[0]}'")
-    
-    # ========================================================================
-    # PROBABILITY COLUMNS OPTION
-    # ========================================================================
-    st.markdown("---")
-    st.markdown("### 📊 Additional Output Options")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>🎯 Probability Columns</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        include_probabilities = st.checkbox(
-            "Include prediction probabilities in output",
-            value=True,
-            help="Add columns showing the probability (%) of staying and leaving for each employee",
-            key="include_probabilities"
-        )
-        
-        if include_probabilities:
-            st.success("✅ Two additional columns will be added: `Probability_Stay` and `Probability_Leave`")
-        else:
-            st.info("ℹ️ Only the prediction label column will be added to the output")
-    
-    with col2:
-        st.markdown("""
-        <div class="settings-card">
-            <h4>⚠️ High Risk Filter</h4>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        include_high_risk_download = st.checkbox(
-            "Enable high-risk employees download",
-            value=True,
-            help="Provide a separate download option for employees with >50% probability of leaving",
-            key="include_high_risk"
-        )
-        
-        if include_high_risk_download:
-            st.success("✅ A separate download button for high-risk employees will be available")
-        else:
-            st.info("ℹ️ Only full results download will be available")
-    
-    # ========================================================================
-    # PROCESS UPLOADED FILE
-    # ========================================================================
-    if uploaded_file is not None:
-        st.markdown("---")
-        st.markdown("### 📄 Uploaded Data Preview")
-        
-        try:
-            # Read the file based on format
-            if file_format == "CSV":
-                df = pd.read_csv(uploaded_file)
-            else:
-                df = pd.read_excel(uploaded_file)
+        if st.button("🚀 GENERATE PREDICTIONS", use_container_width=True):
+            X = df[BEST_FEATURES]
+            preds = model.predict(X)
+            probs = model.predict_proba(X)
             
-            # Display file info
-            col1, col2, col3 = st.columns(3)
+            result = df.copy()
+            result[pred_col] = [labels_dict[p] for p in preds]
+            if add_prob:
+                result[f"{pred_col}_Stay_%"] = (probs[:,0]*100).round(1)
+                result[f"{pred_col}_Leave_%"] = (probs[:,1]*100).round(1)
+            
+            st.balloons()
+            st.success("Predictions Ready!")
+            
+            leave_count = sum(preds)
+            st.markdown(f"### ⚡ {leave_count:,} employees predicted to leave ({leave_count/len(preds)*100:.1f}%)")
+            
+            col1, col2 = st.columns(2)
             with col1:
-                st.markdown(f"""
-                <div class="stats-card">
-                    <h4>Total Rows</h4>
-                    <div class="number">{len(df):,}</div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.download_button("📥 Download Full Results (CSV)", csv_download(result), "turnover_predictions.csv", "text/csv")
             with col2:
-                st.markdown(f"""
-                <div class="stats-card">
-                    <h4>Total Columns</h4>
-                    <div class="number">{len(df.columns)}</div>
-                </div>
-                """, unsafe_allow_html=True)
-            with col3:
-                # Check for required columns
-                available_features = [col for col in BEST_FEATURES if col in df.columns]
-                st.markdown(f"""
-                <div class="stats-card">
-                    <h4>Required Cols Found</h4>
-                    <div class="number">{len(available_features)}/{len(BEST_FEATURES)}</div>
-                </div>
-                """, unsafe_allow_html=True)
+                st.download_button("📥 Download Full Results (Excel)", excel_download(result), "turnover_predictions.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             
-            # Show data preview
-            st.dataframe(df.head(10), use_container_width=True)
-            
-            # Check for missing required columns
-            missing_columns = [col for col in BEST_FEATURES if col not in df.columns]
-            
-            if missing_columns:
-                st.markdown(f"""
-                <div class="error-box">
-                    <h4>❌ Missing Required Columns</h4>
-                    <p>The following required columns are missing from your file:</p>
-                    <ul>
-                        {''.join([f'<li><strong>{col}</strong>: {FEATURE_DESCRIPTIONS[col]}</li>' for col in missing_columns])}
-                    </ul>
-                    <p>Please ensure your file contains all required columns with exact names.</p>
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                st.markdown("""
-                <div class="success-box">
-                    <h4>✅ All Required Columns Found!</h4>
-                    <p>Your file contains all necessary columns for prediction. Click the button below to generate predictions.</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Show which columns will be used
-                with st.expander("🔍 View columns being used for prediction"):
-                    for feature in BEST_FEATURES:
-                        sample_values = df[feature].head(3).tolist()
-                        st.write(f"• **{feature}**: Sample values → {sample_values}")
-                
-                st.markdown("---")
-                
-                # Prediction button
-                col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
-                    batch_predict_button = st.button(
-                        "🔮 Generate Batch Predictions",
-                        use_container_width=True,
-                        key="batch_predict"
-                    )
-                
-                if batch_predict_button:
-                    with st.spinner("🔄 Processing predictions..."):
-                        # Extract only required features in correct order
-                        input_features = df[BEST_FEATURES].copy()
-                        
-                        # Make predictions
-                        predictions = model.predict(input_features)
-                        prediction_probabilities = model.predict_proba(input_features)
-                        
-                        # Create result dataframe with all original columns
-                        result_df = df.copy()
-                        
-                        # Add prediction column with labels
-                        result_df[prediction_column_name] = [prediction_labels[p] for p in predictions]
-                        
-                        # Add probability columns only if user selected this option
-                        if include_probabilities:
-                            result_df[f"{prediction_column_name}_Probability_Stay"] = (prediction_probabilities[:, 0] * 100).round(2)
-                            result_df[f"{prediction_column_name}_Probability_Leave"] = (prediction_probabilities[:, 1] * 100).round(2)
-                    
-                    st.success("✅ Predictions generated successfully!")
-                    
-                    st.markdown("---")
-                    st.markdown("### 📊 Prediction Results")
-                    
-                    # Summary statistics
-                    leaving_count = sum(predictions == 1)
-                    staying_count = sum(predictions == 0)
-                    leaving_percentage = (leaving_count / len(predictions)) * 100
-                    staying_percentage = (staying_count / len(predictions)) * 100
-                    
-                    col1, col2, col3, col4 = st.columns(4)
-                    
-                    with col1:
-                        st.markdown(f"""
-                        <div class="stats-card">
-                            <h4>Total Employees</h4>
-                            <div class="number">{len(predictions):,}</div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col2:
-                        st.markdown(f"""
-                        <div class="stats-card" style="border-top-color: #dc3545;">
-                            <h4>Predicted to Leave</h4>
-                            <div class="number" style="color: #dc3545;">{leaving_count:,}</div>
-                            <p style="color: #666;">({leaving_percentage:.1f}%)</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col3:
-                        st.markdown(f"""
-                        <div class="stats-card" style="border-top-color: #28a745;">
-                            <h4>Predicted to Stay</h4>
-                            <div class="number" style="color: #28a745;">{staying_count:,}</div>
-                            <p style="color: #666;">({staying_percentage:.1f}%)</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col4:
-                        avg_leave_prob = prediction_probabilities[:, 1].mean() * 100
-                        st.markdown(f"""
-                        <div class="stats-card" style="border-top-color: #ffc107;">
-                            <h4>Avg. Leave Probability</h4>
-                            <div class="number" style="color: #ffc107;">{avg_leave_prob:.1f}%</div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    # Visual representation
-                    st.markdown("#### 📈 Turnover Distribution")
-                    col1, col2 = st.columns(2)
-                    
-                    with col1:
-                        st.write(f"**Staying:** {staying_percentage:.1f}%")
-                        st.markdown(f"""
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-green" style="width: {staying_percentage}%;"></div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with col2:
-                        st.write(f"**Leaving:** {leaving_percentage:.1f}%")
-                        st.markdown(f"""
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-red" style="width: {leaving_percentage}%;"></div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    # Show result preview
-                    st.markdown("#### 📄 Result Data Preview")
-                    st.dataframe(result_df.head(20), use_container_width=True)
-                    
-                    # Download section
-                    st.markdown("---")
-                    st.markdown("### 📥 Download Results")
-                    
-                    # Determine number of columns based on options
-                    if include_high_risk_download:
-                        col1, col2, col3 = st.columns([1, 1, 1])
-                    else:
-                        col1, col2 = st.columns([1, 1])
-                    
-                    with col1:
-                        csv_data = convert_df_to_csv(result_df)
-                        st.download_button(
-                            label="📥 Download as CSV",
-                            data=csv_data,
-                            file_name="employee_predictions.csv",
-                            mime="text/csv",
-                            use_container_width=True,
-                            key="download_csv"
-                        )
-                    
-                    with col2:
-                        excel_data = convert_df_to_excel(result_df)
-                        st.download_button(
-                            label="📥 Download as Excel",
-                            data=excel_data,
-                            file_name="employee_predictions.xlsx",
-                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                            use_container_width=True,
-                            key="download_excel"
-                        )
-                    
-                    if include_high_risk_download:
-                        with col3:
-                            # Download only high-risk employees (probability > 50%)
-                            high_risk_df = result_df[prediction_probabilities[:, 1] > 0.5]
-                            if len(high_risk_df) > 0:
-                                high_risk_csv = convert_df_to_csv(high_risk_df)
-                                st.download_button(
-                                    label=f"📥 High Risk Only ({len(high_risk_df)})",
-                                    data=high_risk_csv,
-                                    file_name="high_risk_employees.csv",
-                                    mime="text/csv",
-                                    use_container_width=True,
-                                    key="download_high_risk"
-                                )
-                            else:
-                                st.info("No high-risk employees found")
-        
-        except Exception as e:
-            st.error(f"❌ Error reading file: {str(e)}")
-            st.info("Please ensure your file is properly formatted and not corrupted.")
-    
-    else:
-        # Show sample data format
-        st.markdown("---")
-        with st.expander("📋 View Sample Data Format"):
-            sample_data = pd.DataFrame({
-                'employee_id': [1, 2, 3, 4, 5],
-                'satisfaction_level': [0.38, 0.80, 0.11, 0.72, 0.37],
-                'time_spend_company': [3, 5, 4, 3, 2],
-                'average_monthly_hours': [157, 262, 272, 223, 159],
-                'number_project': [2, 5, 7, 5, 2],
-                'last_evaluation': [0.53, 0.86, 0.88, 0.87, 0.52],
-                'department': ['sales', 'IT', 'IT', 'sales', 'hr'],
-                'salary': ['low', 'medium', 'medium', 'high', 'low']
-            })
-            st.dataframe(sample_data, use_container_width=True)
-            st.info("💡 Note: Only the 5 required columns will be used for prediction. Other columns will be preserved in the output.")
+            high_risk = result[probs[:,1] > 0.6]
+            if len(high_risk) > 0:
+                st.download_button(f"⚠️ Download HIGH-RISK Only ({len(high_risk)} employees)", csv_download(high_risk), "HIGH_RISK_EMPLOYEES.csv", "text/csv")
 
 # ============================================================================
-# MAIN APPLICATION
+# MAIN APP
 # ============================================================================
-def main():
-    # Header
-    st.markdown('<h1 class="main-header">👥 Employee Turnover Prediction</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Predict whether employees are likely to leave the company</p>', unsafe_allow_html=True)
-    
-    # Load model silently
-    model = load_model_from_huggingface()
-    
-    if model is None:
-        st.error("❌ Failed to load model. Please check the Hugging Face repository.")
-        st.info(f"Repository: https://huggingface.co/{HF_REPO_ID}")
-        return
-    
-    # ========================================================================
-    # CREATE TABS
-    # ========================================================================
-    tab1, tab2 = st.tabs(["📝 Individual Prediction", "📊 Batch Prediction"])
-    
-    with tab1:
-        render_individual_prediction_tab(model)
-    
-    with tab2:
-        render_batch_prediction_tab(model)
+st.markdown('<h1 class="main-header">NEON TURNOVER ORACLE</h1>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">The most beautiful employee churn predictor on Earth</p>', unsafe_allow_html=True)
 
-# ============================================================================
-# RUN APPLICATION
-# ============================================================================
-if __name__ == "__main__":
-    main()
+tab1, tab2 = st.tabs(["✨ Individual Prediction", "🌌 Batch Prediction"])
+
+with tab1:
+    individual_tab()
+with tab2:
+    batch_tab()
