@@ -535,6 +535,9 @@ FEATURE_DESCRIPTIONS = {
     "last_evaluation": "Last performance evaluation score (0.0 - 1.0)"
 }
 
+# Placeholder for column mapping dropdown
+PLACEHOLDER_SELECT = "-- Select Column --"
+
 # ============================================================================
 # LOAD MODEL FROM HUGGING FACE
 # ============================================================================
@@ -579,6 +582,15 @@ def convert_df_to_excel(df):
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name='Predictions')
     return output.getvalue()
+
+def get_default_index(feature, column_list):
+    """Find the best matching column index for a feature"""
+    if feature in column_list:
+        return column_list.index(feature)
+    for i, col in enumerate(column_list):
+        if feature.lower() in col.lower() or col.lower() in feature.lower():
+            return i
+    return 0
 
 # ============================================================================
 # INDIVIDUAL PREDICTION TAB
@@ -903,6 +915,9 @@ def render_batch_prediction_tab(model):
             mapping_valid = True
             column_list = list(df.columns)
             
+            # Create options list with placeholder as first option
+            dropdown_options = [PLACEHOLDER_SELECT] + column_list
+            
             if enable_column_mapping:
                 st.markdown("""
                 <div class="mapping-card">
@@ -910,39 +925,35 @@ def render_batch_prediction_tab(model):
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Add "Select Column" as placeholder option at the beginning
-                mapping_options = ["Select Column"] + column_list
-                
                 # Create compact mapping table with 5 columns
                 cols = st.columns(5)
                 for idx, feature in enumerate(BEST_FEATURES):
                     with cols[idx]:
                         st.markdown(f"**{feature.replace('_', ' ').title()}**")
-                        # Force index 0 ("Select Column") as the default initial value
                         selected = st.selectbox(
                             f"Map {feature}",
-                            options=mapping_options,
-                            index=0,
+                            options=dropdown_options,
+                            index=0,  # Default to placeholder
                             key=f"map_{feature}",
                             label_visibility="collapsed"
                         )
                         column_mapping[feature] = selected
                 
-                # Validation Logic
-                used_columns = list(column_mapping.values())
+                # Check for unselected mappings (still on placeholder)
+                unselected_features = [feat for feat, col in column_mapping.items() if col == PLACEHOLDER_SELECT]
                 
-                # Check 1: Ensure no column is left as "Select Column"
-                if "Select Column" in used_columns:
-                    st.warning("⚠️ Please select a column for every feature to proceed.")
+                # Check for duplicates (excluding placeholder)
+                used_columns = [col for col in column_mapping.values() if col != PLACEHOLDER_SELECT]
+                duplicate_columns = [col for col in set(used_columns) if used_columns.count(col) > 1]
+                
+                if unselected_features:
+                    st.warning(f"⚠️ Please select columns for: **{', '.join([f.replace('_', ' ').title() for f in unselected_features])}**")
+                    mapping_valid = False
+                elif duplicate_columns:
+                    st.error(f"⚠️ Duplicate mapping: **{', '.join(duplicate_columns)}** is mapped to multiple features.")
                     mapping_valid = False
                 else:
-                    # Check 2: Check for duplicates (only if no placeholders exist)
-                    duplicate_columns = [col for col in set(used_columns) if used_columns.count(col) > 1]
-                    if duplicate_columns:
-                        st.error(f"⚠️ Duplicate mapping: **{', '.join(duplicate_columns)}** is mapped to multiple features.")
-                        mapping_valid = False
-                    else:
-                        st.success("✅ Mapping valid! Ready to predict.")
+                    st.success("✅ Mapping valid! Ready to predict.")
             else:
                 # No mapping - use exact column names
                 for feature in BEST_FEATURES:
