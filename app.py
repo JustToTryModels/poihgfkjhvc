@@ -107,7 +107,7 @@ st.markdown("""
         background-color: #f0f2f6;
         border-radius: 15px 15px 0 0 !important;
         font-weight: 900 !important;
-        font-size: 1.8rem !important;
+        font-size: 1.4rem !important;
         color: #1E3A5F !important;
         border: 2px solid #ddd !important;
         border-bottom: none !important;
@@ -121,7 +121,7 @@ st.markdown("""
     
     .stTabs [data-baseweb="tab"] p {
         font-weight: 900 !important;
-        font-size: 1.8rem !important;
+        font-size: 1.4rem !important;
         color: inherit !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -144,7 +144,7 @@ st.markdown("""
     .stTabs [aria-selected="true"] p {
         color: white !important;
         font-weight: 900 !important;
-        font-size: 1.8rem !important;
+        font-size: 1.4rem !important;
     }
     
     .stTabs [data-baseweb="tab-panel"] {
