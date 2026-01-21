@@ -893,8 +893,9 @@ def render_batch_prediction_tab(model):
             # ========================================================================
             st.markdown("---")
             
-            enable_column_mapping = st.checkbox(
-                "🔄 **Enable Column Mapping** — Map your columns to model features (temporary, original data unchanged)",
+            st.markdown("""<div class="settings-card"><h4>🔄 Column Mapping</h4></div>""", unsafe_allow_html=True)
+            enable_column_mapping = st.toggle(
+                "Enable Column Mapping — Map your columns to model features (temporary, original data unchanged)",
                 value=len(missing_columns) > 0,
                 key="enable_column_mapping"
             )
