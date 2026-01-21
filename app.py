@@ -177,6 +177,15 @@ st.markdown("""
         margin: 1rem 0;
     }
     
+    /* Column mapping card */
+    .mapping-card {
+        background-color: #f0e6ff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border-left: 5px solid #6f42c1;
+        margin: 1rem 0;
+    }
+    
     /* Required columns info box */
     .required-cols-box {
         background-color: #fff3cd;
@@ -199,6 +208,15 @@ st.markdown("""
     .error-box {
         background-color: #f8d7da;
         border: 1px solid #dc3545;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Warning box */
+    .warning-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
         border-radius: 8px;
         padding: 1rem;
         margin: 1rem 0;
@@ -568,6 +586,101 @@ def convert_df_to_excel(df):
         df.to_excel(writer, index=False, sheet_name='Predictions')
     return output.getvalue()
 
+def get_column_mapping(df_columns, enable_mapping):
+    """
+    Get column mapping from user's columns to required model columns.
+    Returns a dictionary mapping required_feature -> user_column
+    """
+    column_mapping = {}
+    
+    if enable_mapping:
+        st.markdown("""
+        <div class="mapping-card">
+            <h4>🔄 Column Mapping Configuration</h4>
+            <p style="color: #666; font-size: 0.9rem;">
+                Map your data columns to the required model columns. This mapping is <strong>temporary</strong> 
+                and only used for predictions. Your original data and column names remain unchanged.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Create two columns for the mapping UI
+        col1, col2 = st.columns(2)
+        
+        for idx, feature in enumerate(BEST_FEATURES):
+            # Alternate between columns
+            with col1 if idx % 2 == 0 else col2:
+                st.markdown(f"""
+                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #6f42c1;">
+                    <strong>🎯 {feature}</strong><br/>
+                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Find default selection - prefer exact match, otherwise first column
+                default_index = 0
+                column_list = list(df_columns)
+                
+                # Check for exact match
+                if feature in column_list:
+                    default_index = column_list.index(feature)
+                else:
+                    # Check for partial/similar matches
+                    for i, col in enumerate(column_list):
+                        if feature.lower() in col.lower() or col.lower() in feature.lower():
+                            default_index = i
+                            break
+                
+                selected_column = st.selectbox(
+                    f"Select column for {feature}",
+                    options=column_list,
+                    index=default_index,
+                    key=f"mapping_{feature}",
+                    label_visibility="collapsed"
+                )
+                
+                column_mapping[feature] = selected_column
+        
+        # Show mapping summary
+        st.markdown("---")
+        st.markdown("#### 📋 Mapping Summary")
+        
+        mapping_valid = True
+        used_columns = list(column_mapping.values())
+        duplicate_columns = [col for col in used_columns if used_columns.count(col) > 1]
+        
+        if duplicate_columns:
+            st.markdown(f"""
+            <div class="error-box">
+                <h4>⚠️ Duplicate Mapping Detected</h4>
+                <p>The following columns are mapped to multiple features: <strong>{', '.join(set(duplicate_columns))}</strong></p>
+                <p>Each model feature should be mapped to a unique column.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            mapping_valid = False
+        else:
+            st.markdown(f"""
+            <div class="success-box">
+                <h4>✅ Mapping Configuration Valid</h4>
+                <table style="width: 100%; margin-top: 0.5rem;">
+                    <tr style="background-color: #c3e6cb;">
+                        <th style="padding: 0.5rem; text-align: left;">Model Feature</th>
+                        <th style="padding: 0.5rem; text-align: left;">→</th>
+                        <th style="padding: 0.5rem; text-align: left;">Your Column</th>
+                    </tr>
+                    {''.join([f'<tr><td style="padding: 0.3rem;">{feat}</td><td style="padding: 0.3rem;">→</td><td style="padding: 0.3rem;"><strong>{col}</strong></td></tr>' for feat, col in column_mapping.items()])}
+                </table>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        return column_mapping, mapping_valid
+    
+    else:
+        # No mapping - use exact column names
+        for feature in BEST_FEATURES:
+            column_mapping[feature] = feature
+        return column_mapping, True
+
 # ============================================================================
 # INDIVIDUAL PREDICTION TAB
 # ============================================================================
@@ -807,7 +920,7 @@ def render_batch_prediction_tab(model):
     with st.expander("📋 Required Columns in Your File (Click to Expand)"):
         st.markdown("""
         <div style="background-color: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-            <p>Your uploaded file <strong>must contain</strong> these columns with <strong>exact names</strong>:</p>
+            <p>Your uploaded file <strong>must contain</strong> these columns (or you can map your columns to these using the Column Mapping feature):</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -1051,30 +1164,91 @@ def render_batch_prediction_tab(model):
             # Check for missing required columns
             missing_columns = [col for col in BEST_FEATURES if col not in df.columns]
             
-            if missing_columns:
-                st.markdown(f"""
-                <div class="error-box">
-                    <h4>❌ Missing Required Columns</h4>
-                    <p>The following required columns are missing from your file:</p>
-                    <ul>
-                        {''.join([f'<li><strong>{col}</strong>: {FEATURE_DESCRIPTIONS[col]}</li>' for col in missing_columns])}
-                    </ul>
-                    <p>Please ensure your file contains all required columns with exact names.</p>
-                </div>
-                """, unsafe_allow_html=True)
+            # ========================================================================
+            # COLUMN MAPPING SECTION - NEW FEATURE
+            # ========================================================================
+            st.markdown("---")
+            st.markdown("### 🔄 Column Mapping (Optional)")
+            
+            st.markdown("""
+            <div class="warning-box">
+                <h4>📢 Don't want to rename your columns?</h4>
+                <p>If your data has different column names than what the model expects, you can temporarily map them here. 
+                <strong>This mapping is only for predictions</strong> — your original data and column names will remain unchanged in the output.</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Enable/disable column mapping
+            enable_column_mapping = st.checkbox(
+                "🔧 Enable Column Mapping (Map my columns to model features)",
+                value=len(missing_columns) > 0,  # Auto-enable if columns are missing
+                help="Enable this to map your column names to the required model feature names. Useful when your column names differ from the expected names.",
+                key="enable_column_mapping"
+            )
+            
+            # Get column mapping
+            column_mapping, mapping_valid = get_column_mapping(df.columns, enable_column_mapping)
+            
+            # ========================================================================
+            # VALIDATION AND PREDICTION
+            # ========================================================================
+            st.markdown("---")
+            
+            # Check if all mapped columns exist in dataframe
+            if enable_column_mapping:
+                missing_mapped_columns = [col for col in column_mapping.values() if col not in df.columns]
+                if missing_mapped_columns:
+                    st.markdown(f"""
+                    <div class="error-box">
+                        <h4>❌ Mapped Columns Not Found</h4>
+                        <p>The following mapped columns are not in your file: <strong>{', '.join(missing_mapped_columns)}</strong></p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    mapping_valid = False
+                elif mapping_valid:
+                    st.markdown("""
+                    <div class="success-box">
+                        <h4>✅ Column Mapping Complete!</h4>
+                        <p>All required features have been mapped to columns in your data. Click the button below to generate predictions.</p>
+                        <p><em>Note: Your original column names will be preserved in the output.</em></p>
+                    </div>
+                    """, unsafe_allow_html=True)
             else:
-                st.markdown("""
-                <div class="success-box">
-                    <h4>✅ All Required Columns Found!</h4>
-                    <p>Your file contains all necessary columns for prediction. Click the button below to generate predictions.</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Show which columns will be used
+                # Not using column mapping - check for required columns directly
+                if missing_columns:
+                    st.markdown(f"""
+                    <div class="error-box">
+                        <h4>❌ Missing Required Columns</h4>
+                        <p>The following required columns are missing from your file:</p>
+                        <ul>
+                            {''.join([f'<li><strong>{col}</strong>: {FEATURE_DESCRIPTIONS[col]}</li>' for col in missing_columns])}
+                        </ul>
+                        <p>Please either:</p>
+                        <ol>
+                            <li>Rename your columns to match the required names, OR</li>
+                            <li>Enable <strong>Column Mapping</strong> above to map your columns to the required features</li>
+                        </ol>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    mapping_valid = False
+                else:
+                    st.markdown("""
+                    <div class="success-box">
+                        <h4>✅ All Required Columns Found!</h4>
+                        <p>Your file contains all necessary columns for prediction. Click the button below to generate predictions.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+            
+            # Show which columns will be used (only if valid)
+            if mapping_valid:
                 with st.expander("🔍 View columns being used for prediction"):
                     for feature in BEST_FEATURES:
-                        sample_values = df[feature].head(3).tolist()
-                        st.write(f"• **{feature}**: Sample values → {sample_values}")
+                        mapped_col = column_mapping[feature]
+                        sample_values = df[mapped_col].head(3).tolist()
+                        if enable_column_mapping and mapped_col != feature:
+                            st.write(f"• **{feature}** ← `{mapped_col}`: Sample values → {sample_values}")
+                        else:
+                            st.write(f"• **{feature}**: Sample values → {sample_values}")
                 
                 st.markdown("---")
                 
@@ -1089,14 +1263,18 @@ def render_batch_prediction_tab(model):
                 
                 if batch_predict_button:
                     with st.spinner("🔄 Processing predictions..."):
-                        # Extract only required features in correct order
-                        input_features = df[BEST_FEATURES].copy()
+                        # Create a temporary dataframe with mapped columns for prediction
+                        # This preserves the original data
+                        prediction_df = pd.DataFrame()
+                        for feature in BEST_FEATURES:
+                            mapped_col = column_mapping[feature]
+                            prediction_df[feature] = df[mapped_col].copy()
                         
-                        # Make predictions
-                        predictions = model.predict(input_features)
-                        prediction_probabilities = model.predict_proba(input_features)
+                        # Make predictions using the mapped data
+                        predictions = model.predict(prediction_df)
+                        prediction_probabilities = model.predict_proba(prediction_df)
                         
-                        # Create result dataframe with all original columns
+                        # Create result dataframe with all original columns (unchanged!)
                         result_df = df.copy()
                         
                         # Add prediction column with labels
@@ -1108,6 +1286,10 @@ def render_batch_prediction_tab(model):
                             result_df[f"{prediction_column_name}_Probability_Leave"] = (prediction_probabilities[:, 1] * 100).round(2)
                     
                     st.success("✅ Predictions generated successfully!")
+                    
+                    # Show mapping info if column mapping was used
+                    if enable_column_mapping:
+                        st.info("ℹ️ **Note:** Column mapping was used for predictions. Your original column names have been preserved in the output.")
                     
                     st.markdown("---")
                     st.markdown("### 📊 Prediction Results")
