@@ -106,8 +106,8 @@ st.markdown("""
         padding: 0 50px !important;
         background-color: #f0f2f6;
         border-radius: 15px 15px 0 0 !important;
-        font-weight: 700 !important;
-        font-size: 1.3rem !important;
+        font-weight: 900 !important;
+        font-size: 1.8rem !important;
         color: #1E3A5F !important;
         border: 2px solid #ddd !important;
         border-bottom: none !important;
@@ -812,7 +812,7 @@ def render_batch_prediction_tab(model):
                     <strong>{feature}</strong><br/>
                     <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
                 </div>
-                """, unsafe_allow_html=True)
+                """, unsafe_for_html=True)
         
         st.info("💡 **Tip:** Your file can contain additional columns (like employee_id, department, etc.). They will be preserved in the output but won't be used for prediction.")
     
@@ -898,7 +898,7 @@ def render_batch_prediction_tab(model):
         <div class="settings-card">
             <h4>🏷️ Prediction Labels</h4>
         </div>
-        """, unsafe_allow_html=True)
+        """, unsafe_for_html=True)
         
         # Label options - Model predicts 1 for leaving, 0 for staying
         label_option = st.selectbox(
@@ -1018,7 +1018,7 @@ def render_batch_prediction_tab(model):
                     <h4>Total Columns</h4>
                     <div class="number">{len(df.columns)}</div>
                 </div>
-                """, unsafe_allow_html=True)
+                """, unsafe_for_html=True)
             with col3:
                 # Check for required columns
                 available_features = [col for col in BEST_FEATURES if col in df.columns]
@@ -1027,7 +1027,7 @@ def render_batch_prediction_tab(model):
                     <h4>Required Cols Found</h4>
                     <div class="number">{len(available_features)}/{len(BEST_FEATURES)}</div>
                 </div>
-                """, unsafe_allow_html=True)
+                """, unsafe_for_html=True)
             
             # Show data preview
             st.dataframe(df.head(10), use_container_width=True)
@@ -1045,14 +1045,14 @@ def render_batch_prediction_tab(model):
                     </ul>
                     <p>Please ensure your file contains all required columns with exact names.</p>
                 </div>
-                """, unsafe_allow_html=True)
+                """, unsafe_for_html=True)
             else:
                 st.markdown("""
                 <div class="success-box">
                     <h4>✅ All Required Columns Found!</h4>
                     <p>Your file contains all necessary columns for prediction. Click the button below to generate predictions.</p>
                 </div>
-                """, unsafe_allow_html=True)
+                """, unsafe_for_html=True)
                 
                 # Show which columns will be used
                 with st.expander("🔍 View columns being used for prediction"):
@@ -1110,7 +1110,7 @@ def render_batch_prediction_tab(model):
                             <h4>Total Employees</h4>
                             <div class="number">{len(predictions):,}</div>
                         </div>
-                        """, unsafe_allow_html=True)
+                        """, unsafe_for_html=True)
                     
                     with col2:
                         st.markdown(f"""
@@ -1119,7 +1119,7 @@ def render_batch_prediction_tab(model):
                             <div class="number" style="color: #dc3545;">{leaving_count:,}</div>
                             <p style="color: #666;">({leaving_percentage:.1f}%)</p>
                         </div>
-                        """, unsafe_allow_html=True)
+                        """, unsafe_for_html=True)
                     
                     with col3:
                         st.markdown(f"""
@@ -1128,7 +1128,7 @@ def render_batch_prediction_tab(model):
                             <div class="number" style="color: #28a745;">{staying_count:,}</div>
                             <p style="color: #666;">({staying_percentage:.1f}%)</p>
                         </div>
-                        """, unsafe_allow_html=True)
+                        """, unsafe_for_html=True)
                     
                     with col4:
                         avg_leave_prob = prediction_probabilities[:, 1].mean() * 100
@@ -1137,7 +1137,7 @@ def render_batch_prediction_tab(model):
                             <h4>Avg. Leave Probability</h4>
                             <div class="number" style="color: #ffc107;">{avg_leave_prob:.1f}%</div>
                         </div>
-                        """, unsafe_allow_html=True)
+                        """, unsafe_for_html=True)
                     
                     # Visual representation
                     st.markdown("#### 📈 Turnover Distribution")
@@ -1149,7 +1149,7 @@ def render_batch_prediction_tab(model):
                         <div class="progress-bar-container">
                             <div class="progress-bar-green" style="width: {staying_percentage}%;"></div>
                         </div>
-                        """, unsafe_allow_html=True)
+                        """, unsafe_for_html=True)
                     
                     with col2:
                         st.write(f"**Leaving:** {leaving_percentage:.1f}%")
@@ -1157,7 +1157,7 @@ def render_batch_prediction_tab(model):
                         <div class="progress-bar-container">
                             <div class="progress-bar-red" style="width: {leaving_percentage}%;"></div>
                         </div>
-                        """, unsafe_allow_html=True)
+                        """, unsafe_for_html=True)
                     
                     # Show result preview
                     st.markdown("#### 📄 Result Data Preview")
