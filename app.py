@@ -16,519 +16,314 @@ st.set_page_config(
 )
 
 # ============================================================================
-# EXTREMELY DECORATIVE CUSTOM CSS STYLING
+# CUSTOM CSS STYLING
 # ============================================================================
 st.markdown("""
 <style>
-    /* ===== CSS VARIABLES FOR THEME ===== */
-    :root {
-        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
-        --danger-gradient: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
-        --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        --dark-gradient: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
-        --neon-pink: #ff2a6d;
-        --neon-blue: #05d9e8;
-        --neon-green: #d1f7ff;
-        --glass-bg: rgba(255, 255, 255, 0.08);
-        --glass-border: rgba(255, 255, 255, 0.18);
-    }
-
-    /* ===== ANIMATED BACKGROUND ===== */
-    body {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
-        position: relative;
-        overflow-x: hidden;
-    }
-    
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: 
-            radial-gradient(circle at 10% 20%, rgba(255, 42, 109, 0.1) 0%, transparent 20%),
-            radial-gradient(circle at 90% 80%, rgba(5, 217, 232, 0.1) 0%, transparent 20%),
-            radial-gradient(circle at 30% 60%, rgba(209, 247, 255, 0.05) 0%, transparent 15%);
-        animation: floatingParticles 20s ease-in-out infinite;
-        pointer-events: none;
-        z-index: -1;
-    }
-    
-    @keyframes gradientBG {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    
-    @keyframes floatingParticles {
-        0%, 100% { transform: translate(0, 0) rotate(0deg); }
-        33% { transform: translate(20px, -20px) rotate(120deg); }
-        66% { transform: translate(-10px, 20px) rotate(240deg); }
-    }
-    
-    /* ===== CENTER CONTAINER WITH GLASS EFFECT ===== */
+    /* Center the main content with max-width */
     .block-container {
-        max-width: 1400px !important;
-        padding: 3rem 4rem !important;
+        max-width: 1200px !important;
+        padding-left: 5rem !important;
+        padding-right: 5rem !important;
         margin: 0 auto !important;
-        background: var(--glass-bg);
-        backdrop-filter: blur(12px);
-        border-radius: 30px;
-        border: 1px solid var(--glass-border);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        animation: containerGlow 4s ease-in-out infinite alternate;
     }
     
-    @keyframes containerGlow {
-        from { box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); }
-        to { box-shadow: 0 8px 40px 0 rgba(255, 42, 109, 0.4), 0 8px 60px 0 rgba(5, 217, 232, 0.3); }
-    }
-    
-    /* ===== MAIN HEADER - GRADIENT TEXT ANIMATION ===== */
     .main-header {
-        font-size: 4rem;
-        font-weight: 900;
-        background: var(--primary-gradient);
-        background-size: 300% 300%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #1E3A5F;
         text-align: center;
-        margin-bottom: 1rem;
-        animation: gradientShift 3s ease infinite;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        position: relative;
-        padding-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
-    
-    .main-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 300px;
-        height: 5px;
-        background: var(--primary-gradient);
-        border-radius: 5px;
-        animation: borderGlow 2s ease-in-out infinite alternate;
-    }
-    
-    @keyframes borderGlow {
-        from { box-shadow: 0 0 10px var(--neon-pink); }
-        to { box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-pink); }
-    }
-    
     .sub-header {
-        font-size: 1.5rem;
-        color: var(--neon-green);
+        font-size: 1.2rem;
+        color: #666;
         text-align: center;
-        margin-bottom: 3rem;
-        font-weight: 300;
-        text-shadow: 0 0 10px rgba(209, 247, 255, 0.5);
-        animation: fadeIn 1s ease-in;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* ===== SECTION HEADER - NEON EFFECT ===== */
-    .section-header {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: white;
-        text-align: center;
-        margin: 3rem 0 2rem 0;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-    
-    .section-header::before,
-    .section-header::after {
-        content: '✨';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        animation: sparkle 2s ease-in-out infinite;
-    }
-    
-    .section-header::before { left: 20%; }
-    .section-header::after { right: 20%; }
-    
-    @keyframes sparkle {
-        0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
-        50% { opacity: 0.5; transform: translateY(-50%) scale(1.5); }
-    }
-    
-    /* ===== FEATURE CARDS - GLASSMORPHISM WITH ANIMATED BORDER ===== */
-    .feature-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        border: 1px solid var(--glass-border);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
-        overflow: hidden;
         margin-bottom: 2rem;
     }
-    
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: var(--primary-gradient);
-        background-size: 400% 400%;
-        border-radius: 20px;
-        z-index: -1;
-        animation: gradientShift 3s ease infinite;
-        opacity: 0;
-        transition: opacity 0.4s ease;
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1E3A5F;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    .prediction-box {
+        padding: 2rem;
+        border-radius: 10px;
+        text-align: center;
+        margin: 1rem 0;
+    }
+    .stay-prediction {
+        background-color: #d4edda;
+        border: 2px solid #28a745;
+    }
+    .leave-prediction {
+        background-color: #f8d7da;
+        border: 2px solid #dc3545;
+    }
+    .metric-card {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+        margin: 0.5rem 0;
+    }
+    .feature-box {
+        background-color: #e7f3ff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+        border: 1px solid #b8daff;
     }
     
-    .feature-card:hover::before {
-        opacity: 1;
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(255, 42, 109, 0.3), 0 0 60px rgba(5, 217, 232, 0.2);
-    }
-    
-    .feature-card span {
-        font-size: 1.4rem !important;
-        font-weight: 700;
-        color: white;
-        display: block;
+    /* INPUT CARDS - Light Cream Background */
+    .feature-card {
+        background-color: #FFE8C2;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-left: 5px solid #1E3A5F;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         margin-bottom: 1rem;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    .feature-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
     
-    /* ===== TABS - ENHANCED WITH GRADIENTS ===== */
-    .stTabs {
-        margin-top: 3rem;
-    }
-    
+    /* ===== ENHANCED TAB STYLING - MUCH BIGGER TABS WITH BIGGER BOLD TEXT ===== */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 25px;
+        gap: 20px;
         justify-content: center;
-        background: transparent;
-        padding: 20px 0;
-        border-bottom: none !important;
+        background-color: transparent;
+        padding: 10px 0;
     }
     
     .stTabs [data-baseweb="tab"] {
-        height: 100px !important;
-        min-width: 350px !important;
-        padding: 0 40px !important;
-        background: var(--glass-bg) !important;
-        backdrop-filter: blur(5px);
-        border-radius: 20px 20px 0 0 !important;
+        height: 90px !important;
+        min-width: 320px !important;
+        padding: 0 50px !important;
+        background-color: #f0f2f6;
+        border-radius: 15px 15px 0 0 !important;
         font-weight: 900 !important;
-        font-size: 1.6rem !important;
-        color: var(--neon-green) !important;
-        border: 2px solid var(--glass-border) !important;
+        font-size: 1.4rem !important;
+        color: #1E3A5F !important;
+        border: 2px solid #ddd !important;
         border-bottom: none !important;
-        transition: all 0.4s ease !important;
-        position: relative;
-        overflow: hidden;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-transform: none !important;
+        letter-spacing: 0.5px !important;
     }
     
-    .stTabs [data-baseweb="tab"]::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--primary-gradient);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: -1;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover::before {
-        opacity: 0.3;
+    .stTabs [data-baseweb="tab"] p {
+        font-weight: 900 !important;
+        font-size: 1.4rem !important;
+        color: inherit !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        color: white !important;
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(255, 42, 109, 0.4);
-        border-color: var(--neon-pink) !important;
+        background-color: #e0e5ec !important;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     
     .stTabs [aria-selected="true"] {
-        background: var(--primary-gradient) !important;
+        background: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%) !important;
         color: white !important;
-        border-color: var(--neon-pink) !important;
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(255, 42, 109, 0.5), 0 0 40px rgba(5, 217, 232, 0.4);
-        animation: tabPulse 2s ease-in-out infinite alternate;
+        border: 2px solid #1E3A5F !important;
+        border-bottom: none !important;
+        box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4) !important;
     }
     
-    .stTabs [aria-selected="true"]::before {
-        opacity: 1;
-    }
-    
-    @keyframes tabPulse {
-        from { box-shadow: 0 10px 30px rgba(255, 42, 109, 0.5), 0 0 40px rgba(5, 217, 232, 0.4); }
-        to { box-shadow: 0 10px 40px rgba(255, 42, 109, 0.7), 0 0 60px rgba(5, 217, 232, 0.6); }
+    .stTabs [aria-selected="true"] p {
+        color: white !important;
+        font-weight: 900 !important;
+        font-size: 1.4rem !important;
     }
     
     .stTabs [data-baseweb="tab-panel"] {
-        padding-top: 3rem;
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 0 0 20px 20px;
-        border: 1px solid var(--glass-border);
-        border-top: none;
-        padding: 3rem 2rem;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        padding-top: 20px;
     }
     
-    /* ===== PREDICTION BOXES - ENHANCED ===== */
-    .prediction-box {
-        padding: 3rem;
-        border-radius: 25px;
-        text-align: center;
-        margin: 2rem 0;
-        position: relative;
-        overflow: hidden;
-        border: 2px solid;
-        animation: boxEntrance 0.8s ease-out;
-        backdrop-filter: blur(10px);
+    .stTabs [data-baseweb="tab-border"] {
+        display: none !important;
     }
     
-    @keyframes boxEntrance {
-        from { opacity: 0; transform: scale(0.8) translateY(30px); }
-        to { opacity: 1; transform: scale(1) translateY(0); }
+    .stTabs [data-baseweb="tab-highlight"] {
+        display: none !important;
     }
     
-    .stay-prediction {
-        background: rgba(40, 167, 69, 0.15);
-        border-color: var(--neon-green);
-        box-shadow: 0 0 40px rgba(40, 167, 69, 0.3);
-    }
-    
-    .stay-prediction::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(40, 167, 69, 0.1) 0%, transparent 70%);
-        animation: rotate 20s linear infinite;
-    }
-    
-    .leave-prediction {
-        background: rgba(220, 53, 69, 0.15);
-        border-color: var(--neon-pink);
-        box-shadow: 0 0 40px rgba(255, 42, 109, 0.4);
-    }
-    
-    .leave-prediction::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255, 42, 109, 0.1) 0%, transparent 70%);
-        animation: rotate 20s linear infinite;
-    }
-    
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    
-    .prediction-box h1 {
-        font-size: 3.5rem;
-        font-weight: 900;
-        margin: 0;
-        position: relative;
-        z-index: 1;
-        text-shadow: 0 0 20px currentColor;
-        animation: textGlow 2s ease-in-out infinite alternate;
-    }
-    
-    @keyframes textGlow {
-        from { text-shadow: 0 0 20px currentColor; }
-        to { text-shadow: 0 0 30px currentColor, 0 0 40px currentColor; }
-    }
-    
-    /* ===== METRIC CARDS - GLASSMORPHISM ===== */
-    .metric-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(5px);
-        padding: 1.5rem;
-        border-radius: 15px;
-        border-left: 5px solid var(--neon-blue);
-        margin: 1rem 0;
-        transition: all 0.3s ease;
-        border: 1px solid var(--glass-border);
-    }
-    
-    .metric-card:hover {
-        transform: translateX(10px);
-        box-shadow: 0 10px 25px rgba(5, 217, 232, 0.3);
-    }
-    
-    /* ===== STATS CARDS - ENHANCED ===== */
-    .stats-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
+    /* Upload section styling */
+    .upload-section {
+        background-color: #f8f9fa;
+        border-radius: 12px;
         padding: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        border: 2px dashed #1E3A5F;
+        margin: 1rem 0;
+    }
+    
+    /* Settings card */
+    .settings-card {
+        background-color: #e8f4f8;
+        border-radius: 12px;
+        padding: 1.5rem;
+        border-left: 5px solid #17a2b8;
+        margin: 1rem 0;
+    }
+    
+    /* Required columns info box */
+    .required-cols-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Success box */
+    .success-box {
+        background-color: #d4edda;
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Error box */
+    .error-box {
+        background-color: #f8d7da;
+        border: 1px solid #dc3545;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Stats cards */
+    .stats-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         text-align: center;
-        border: 1px solid var(--glass-border);
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
+        border-top: 4px solid #1E3A5F;
     }
-    
-    .stats-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: var(--primary-gradient);
-    }
-    
-    .stats-card:hover {
-        transform: translateY(-10px) scale(1.05);
-        box-shadow: 0 15px 40px rgba(255, 42, 109, 0.4), 0 0 60px rgba(5, 217, 232, 0.3);
-    }
-    
     .stats-card h3 {
-        color: white;
-        margin-bottom: 1rem;
-        font-weight: 600;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        color: #1E3A5F;
+        margin-bottom: 0.5rem;
     }
-    
     .stats-card .number {
-        font-size: 3rem;
-        font-weight: 900;
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        animation: numberPulse 1.5s ease-in-out infinite alternate;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #1E3A5F;
     }
     
-    @keyframes numberPulse {
-        from { transform: scale(1); }
-        to { transform: scale(1.1); }
-    }
-    
-    /* ===== PROGRESS BARS - ENHANCED ===== */
-    .progress-bar-container {
-        width: 100%;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 15px;
-        margin: 10px 0 20px 0;
-        height: 35px;
-        overflow: hidden;
-        position: relative;
-        border: 1px solid var(--glass-border);
-    }
-    
-    .progress-bar-green, .progress-bar-red {
-        height: 100%;
-        border-radius: 15px;
-        transition: width 1s cubic-bezier(0.22, 0.61, 0.36, 1);
-        position: relative;
-        overflow: hidden;
-        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-    
-    .progress-bar-green {
-        background: linear-gradient(90deg, #11998e, #38ef7d, #11998e);
-        background-size: 200% 100%;
-        animation: shimmer 2s infinite;
-    }
-    
-    .progress-bar-red {
-        background: linear-gradient(90deg, #ff0844, #ffb199, #ff0844);
-        background-size: 200% 100%;
-        animation: shimmer 2s infinite;
-    }
-    
-    @keyframes shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
-    
-    .progress-bar-container::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        animation: shimmer 2s infinite;
-    }
-    
-    /* ===== ENHANCED PREDICT BUTTON - ULTRA DECORATIVE ===== */
+    /* ===== VIBRANT RAINBOW GRADIENT PREDICT BUTTON ===== */
     .stButton>button {
         width: 100%;
-        background: linear-gradient(45deg, 
-            #ff0080, #ff8c00, #ffd700, #00ff88, #00c3ff, #ff0080);
-        background-size: 600% 600%;
+        background: linear-gradient(
+            45deg, 
+            #ff0080, #ff8c00, #40e0d0, #ff0080, #ff8c00
+        );
+        background-size: 400% 400%;
         color: white !important;
-        font-size: 1.8rem;
+        font-size: 1.4rem;
         font-weight: 900 !important;
-        padding: 1.8rem 3rem;
-        border-radius: 60px;
+        padding: 1.2rem 2.5rem;
+        border-radius: 50px;
         border: none !important;
         outline: none !important;
         cursor: pointer;
         position: relative;
         overflow: hidden;
         box-shadow: 
-            0 0 30px rgba(255, 0, 128, 0.6),
-            0 0 60px rgba(255, 140, 0, 0.5),
-            0 0 90px rgba(0, 195, 255, 0.4);
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: 
-            gradientShift 4s ease infinite,
-            pulse 3s ease-in-out infinite,
-            float 6s ease-in-out infinite;
+            0 4px 15px rgba(255, 0, 128, 0.4),
+            0 8px 30px rgba(255, 140, 0, 0.3),
+            0 0 40px rgba(64, 224, 208, 0.2);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: gradientShift 3s ease infinite, pulse 2s ease-in-out infinite;
         text-transform: uppercase;
-        letter-spacing: 4px;
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-        margin: 2rem 0;
+        letter-spacing: 3px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
     
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+    /* Gradient animation - shifting colors */
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
+    /* Pulse glow animation */
+    @keyframes pulse {
+        0% { 
+            box-shadow: 
+                0 4px 15px rgba(255, 0, 128, 0.4),
+                0 8px 30px rgba(255, 140, 0, 0.3),
+                0 0 40px rgba(64, 224, 208, 0.2);
+            transform: scale(1);
+        }
+        50% { 
+            box-shadow: 
+                0 6px 25px rgba(255, 0, 128, 0.6),
+                0 12px 40px rgba(255, 140, 0, 0.5),
+                0 0 60px rgba(64, 224, 208, 0.4),
+                0 0 80px rgba(255, 0, 128, 0.2);
+            transform: scale(1.02);
+        }
+        100% { 
+            box-shadow: 
+                0 4px 15px rgba(255, 0, 128, 0.4),
+                0 8px 30px rgba(255, 140, 0, 0.3),
+                0 0 40px rgba(64, 224, 208, 0.2);
+            transform: scale(1);
+        }
+    }
+    
+    /* Hover - Electric effect with different gradient */
+    .stButton>button:hover {
+        background: linear-gradient(
+            45deg, 
+            #00f5ff, #ff00ff, #ffff00, #00f5ff, #ff00ff
+        );
+        background-size: 400% 400%;
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 
+            0 10px 30px rgba(0, 245, 255, 0.5),
+            0 15px 50px rgba(255, 0, 255, 0.4),
+            0 0 100px rgba(255, 255, 0, 0.3),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+        animation: gradientShift 1.5s ease infinite;
+        color: white !important;
+        border: none !important;
+        outline: none !important;
+        font-weight: 900 !important;
+    }
+    
+    /* Active/Click - Neon burst effect */
+    .stButton>button:active {
+        background: linear-gradient(
+            45deg, 
+            #ff3366, #ff6b35, #f7931e, #ffd700, #ff3366
+        );
+        background-size: 400% 400%;
+        transform: translateY(2px) scale(0.98);
+        box-shadow: 
+            0 2px 10px rgba(255, 51, 102, 0.6),
+            0 4px 20px rgba(255, 107, 53, 0.4),
+            inset 0 0 30px rgba(255, 255, 255, 0.2);
+        color: white !important;
+        border: none !important;
+        outline: none !important;
+        font-weight: 900 !important;
+    }
+    
+    /* Shimmer/shine effect overlay */
     .stButton>button::before {
         content: '';
         position: absolute;
@@ -536,7 +331,12 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent
+        );
         transition: left 0.7s ease;
     }
     
@@ -544,376 +344,151 @@ st.markdown("""
         left: 100%;
     }
     
+    /* Sparkle particles effect */
     .stButton>button::after {
         content: '✨';
         position: absolute;
-        font-size: 2rem;
-        right: 30px;
-        animation: sparkleIcon 2s ease-in-out infinite;
+        font-size: 1.2rem;
+        right: 20px;
+        animation: sparkle 1.5s ease-in-out infinite;
     }
     
-    @keyframes sparkleIcon {
+    @keyframes sparkle {
         0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-        50% { opacity: 0.7; transform: scale(1.5) rotate(180deg); }
+        50% { opacity: 0.5; transform: scale(1.3) rotate(180deg); }
     }
     
-    .stButton>button:hover {
-        transform: translateY(-8px) scale(1.05);
+    /* Focus effect - Remove blue border completely */
+    .stButton>button:focus {
+        outline: none !important;
+        border: none !important;
         box-shadow: 
-            0 0 50px rgba(255, 0, 128, 0.8),
-            0 0 100px rgba(255, 140, 0, 0.7),
-            0 0 150px rgba(0, 195, 255, 0.6);
-        animation-play-state: paused;
+            0 4px 15px rgba(255, 0, 128, 0.4),
+            0 8px 30px rgba(255, 140, 0, 0.3),
+            0 0 40px rgba(64, 224, 208, 0.2);
+        color: white !important;
+        font-weight: 900 !important;
     }
     
-    .stButton>button:active {
-        transform: translateY(2px) scale(0.98);
-        box-shadow: 
-            0 0 20px rgba(255, 0, 128, 0.4),
-            0 0 40px rgba(255, 140, 0, 0.3);
-    }
-    
-    .stButton>button:focus,
+    /* Focus-visible - Remove blue border completely */
     .stButton>button:focus-visible {
         outline: none !important;
         border: none !important;
         box-shadow: 
-            0 0 30px rgba(255, 0, 128, 0.6),
-            0 0 60px rgba(255, 140, 0, 0.5),
-            0 0 90px rgba(0, 195, 255, 0.4);
+            0 4px 15px rgba(255, 0, 128, 0.4),
+            0 8px 30px rgba(255, 140, 0, 0.3),
+            0 0 40px rgba(64, 224, 208, 0.2);
+        font-weight: 900 !important;
     }
     
-    /* ===== ENHANCED EXPANDER - BLUE THEME ===== */
-    div[data-testid="stExpander"] {
-        border: none !important;
-        border-radius: 20px !important;
-        margin: 2rem 0;
-        overflow: hidden;
-    }
-    
-    div[data-testid="stExpander"] details {
+    /* Remove focus ring from button container as well */
+    .stButton>button:focus:not(:focus-visible) {
+        outline: none !important;
         border: none !important;
     }
     
-    div[data-testid="stExpander"] details summary {
-        background: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 50%, #3E7ABF 100%) !important;
+    /* Ensure text stays white in ALL states */
+    .stButton>button,
+    .stButton>button:hover,
+    .stButton>button:active,
+    .stButton>button:focus,
+    .stButton>button:focus-visible,
+    .stButton>button:visited,
+    .stButton>button span,
+    .stButton>button:hover span,
+    .stButton>button:active span,
+    .stButton>button:focus span,
+    .stButton>button p,
+    .stButton>button:hover p,
+    .stButton>button:active p,
+    .stButton>button:focus p,
+    .stButton>button div,
+    .stButton>button:hover div,
+    .stButton>button:active div,
+    .stButton>button:focus div {
         color: white !important;
-        border-radius: 15px !important;
-        padding: 1.5rem 2rem !important;
-        font-size: 1.4rem !important;
-        font-weight: 700 !important;
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
+        outline: none !important;
+        border: none !important;
+        font-weight: 900 !important;
     }
     
-    div[data-testid="stExpander"] details summary::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        transition: left 0.5s ease;
+    /* Download button styling */
+    .stDownloadButton>button {
+        background: linear-gradient(135deg, #28a745, #20c997) !important;
+        animation: none !important;
     }
-    
-    div[data-testid="stExpander"] details summary:hover::before {
-        left: 100%;
-    }
-    
-    div[data-testid="stExpander"] details summary:hover {
-        background: linear-gradient(135deg, #2E5A8F 0%, #3E7ABF 50%, #4E8ADF 100%) !important;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(30, 58, 95, 0.4);
-    }
-    
-    div[data-testid="stExpander"] details summary svg {
-        color: white !important;
-        fill: white !important;
-        transition: transform 0.4s ease;
-    }
-    
-    div[data-testid="stExpander"] details[open] summary svg {
-        transform: rotate(180deg);
-    }
-    
-    div[data-testid="stExpander"] details[open] summary {
-        border-radius: 15px 15px 0 0 !important;
-    }
-    
-    div[data-testid="stExpander"] details > div {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border) !important;
-        border-top: none !important;
-        border-radius: 0 0 20px 20px !important;
-        padding: 2rem !important;
-    }
-    
-    /* ===== UPLOAD SECTION - ENHANCED ===== */
-    .upload-section {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 25px;
-        padding: 3rem;
-        border: 3px dashed var(--neon-blue);
-        margin: 2rem 0;
-        text-align: center;
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .upload-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--primary-gradient);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: -1;
-    }
-    
-    .upload-section:hover::before {
-        opacity: 0.1;
-    }
-    
-    .upload-section:hover {
-        border-color: var(--neon-pink);
-        transform: scale(1.02);
-        box-shadow: 0 15px 40px rgba(5, 217, 232, 0.3);
-    }
-    
-    /* ===== SETTINGS CARD - ENHANCED ===== */
-    .settings-card {
-        background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        border: 1px solid var(--glass-border);
-        margin: 1.5rem 0;
-        transition: all 0.3s ease;
-    }
-    
-    .settings-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(5, 217, 232, 0.3);
-    }
-    
-    .settings-card h4 {
-        color: white;
-        margin-bottom: 1rem;
-        font-size: 1.3rem;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    }
-    
-    /* ===== INFO/ERROR/SUCCESS BOXES - ENHANCED ===== */
-    .info-box, .error-box, .success-box {
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1.5rem 0;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid;
-        backdrop-filter: blur(5px);
+    .stDownloadButton>button:hover {
+        background: linear-gradient(135deg, #20c997, #28a745) !important;
     }
     
     .info-box {
-        background: rgba(255, 193, 7, 0.1);
-        border-color: #ffc107;
-        color: #ffc107;
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
     }
-    
-    .error-box {
-        background: rgba(220, 53, 69, 0.1);
-        border-color: #dc3545;
-        color: #dc3545;
-    }
-    
-    .success-box {
-        background: rgba(40, 167, 69, 0.1);
-        border-color: #28a745;
-        color: #28a745;
-    }
-    
-    .info-box::before, .error-box::before, .success-box::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 5px;
-        height: 100%;
-        background: currentColor;
-    }
-    
-    .info-box::after, .error-box::after, .success-box::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
+    .progress-bar-container {
         width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, currentColor, transparent);
-        opacity: 0.1;
-        animation: shimmer 3s infinite;
-    }
-    
-    /* ===== INPUT FIELDS - CUSTOM STYLING ===== */
-    .stNumberInput input, .stSelectbox select, .stTextInput input {
-        background: var(--glass-bg) !important;
-        border: 2px solid var(--glass-border) !important;
-        border-radius: 15px !important;
-        color: white !important;
-        font-weight: 500;
-        padding: 0.8rem 1rem !important;
-        transition: all 0.3s ease;
-    }
-    
-    .stNumberInput input:focus, .stSelectbox select:focus, .stTextInput input:focus {
-        border-color: var(--neon-pink) !important;
-        box-shadow: 0 0 20px rgba(255, 42, 109, 0.4) !important;
-        transform: scale(1.05);
-    }
-    
-    .stSlider > div > div > div > div {
-        background: var(--primary-gradient) !important;
-        border-radius: 10px !important;
-    }
-    
-    /* ===== CUSTOM SCROLLBAR ===== */
-    ::-webkit-scrollbar {
-        width: 12px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.3);
+        background-color: #e9ecef;
         border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: var(--primary-gradient);
-        border-radius: 10px;
-        border: 2px solid rgba(0, 0, 0, 0.3);
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--neon-pink);
-    }
-    
-    /* ===== DOWNLOAD BUTTONS - ENHANCED ===== */
-    .stDownloadButton>button {
-        background: linear-gradient(135deg, #28a745, #20c997, #28a745) !important;
-        background-size: 200% 200% !important;
-        animation: gradientShift 2s ease infinite !important;
-        border-radius: 20px !important;
-        font-weight: 700 !important;
-        padding: 1rem 1.5rem !important;
-        transition: all 0.3s ease !important;
-        border: none !important;
-    }
-    
-    .stDownloadButton>button:hover {
-        transform: translateY(-5px) scale(1.05) !important;
-        box-shadow: 0 10px 25px rgba(40, 167, 69, 0.5) !important;
-    }
-    
-    /* ===== DATAFRAME - ENHANCED ===== */
-    .dataframe {
-        background: var(--glass-bg) !important;
-        backdrop-filter: blur(10px);
-        border-radius: 15px !important;
-        border: 1px solid var(--glass-border) !important;
+        margin: 5px 0 15px 0;
+        height: 25px;
         overflow: hidden;
     }
+    .progress-bar-green {
+        height: 100%;
+        background-color: #28a745;
+        border-radius: 10px;
+        transition: width 0.5s ease-in-out;
+    }
+    .progress-bar-red {
+        height: 100%;
+        background-color: #dc3545;
+        border-radius: 10px;
+        transition: width 0.5s ease-in-out;
+    }
     
-    .dataframe th {
-        background: var(--primary-gradient) !important;
+    /* Blue styled expander */
+    div[data-testid="stExpander"] {
+        border: none !important;
+        border-radius: 8px !important;
+    }
+    div[data-testid="stExpander"] details {
+        border: none !important;
+    }
+    div[data-testid="stExpander"] details summary {
+        background-color: #1E3A5F !important;
         color: white !important;
-        font-weight: 700 !important;
-        padding: 1rem !important;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        border-radius: 8px !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 1.2rem !important;
+        font-weight: 500 !important;
     }
-    
-    .dataframe td {
-        padding: 1rem !important;
+    div[data-testid="stExpander"] details summary:hover {
+        background-color: #2E5A8F !important;
         color: white !important;
-        border-bottom: 1px solid var(--glass-border) !important;
+    }
+    div[data-testid="stExpander"] details summary svg {
+        color: white !important;
+        fill: white !important;
+    }
+    div[data-testid="stExpander"] details[open] summary {
+        border-radius: 8px 8px 0 0 !important;
+    }
+    div[data-testid="stExpander"] details > div {
+        border: 1px solid #1E3A5F !important;
+        border-top: none !important;
+        border-radius: 0 0 8px 8px !important;
     }
     
-    .dataframe tr:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-    }
-    
-    /* ===== CHECKBOX ===== */
+    /* Checkbox styling */
     .stCheckbox {
-        padding: 1rem 0;
+        padding: 0.5rem 0;
     }
-    
     .stCheckbox label {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 500;
-        color: white;
-    }
-    
-    .stCheckbox>div>div>div {
-        background: var(--neon-pink) !important;
-        border-color: var(--neon-pink) !important;
-    }
-    
-    /* ===== SELECTBOX DROPDOWN ===== */
-    .stSelectbox div[role="listbox"] {
-        background: var(--glass-bg) !important;
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border) !important;
-        border-radius: 15px !important;
-    }
-    
-    .stSelectbox div[role="option"] {
-        color: white !important;
-        font-weight: 500;
-    }
-    
-    .stSelectbox div[role="option"]:hover {
-        background: var(--primary-gradient) !important;
-    }
-    
-    /* ===== FILE UPLOADER ===== */
-    .stFileUploader {
-        background: var(--glass-bg) !important;
-        backdrop-filter: blur(10px);
-        border: 2px dashed var(--neon-blue) !important;
-        border-radius: 25px !important;
-        padding: 2rem !important;
-        transition: all 0.4s ease;
-    }
-    
-    .stFileUploader:hover {
-        border-color: var(--neon-pink) !important;
-        transform: scale(1.02);
-    }
-    
-    /* ===== REMOVE STREAMLIT BRANDING ===== */
-    #MainMenu { visibility: hidden; }
-    footer { visibility: hidden; }
-    header { visibility: hidden; }
-    
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-        .block-container {
-            padding: 1.5rem !important;
-        }
-        .main-header {
-            font-size: 2.5rem;
-        }
-        .stTabs [data-baseweb="tab"] {
-            min-width: 100% !important;
-            font-size: 1.2rem !important;
-        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1017,7 +592,7 @@ def render_individual_prediction_tab(model):
         with col1:
             st.markdown("""
             <div class="feature-card">
-                <span>😊 <strong>Satisfaction Level</strong></span>
+                <span style="font-size: 1.2rem;">😊 <strong>Satisfaction Level</strong></span>
             </div>
             """, unsafe_allow_html=True)
             
@@ -1052,7 +627,7 @@ def render_individual_prediction_tab(model):
         with col2:
             st.markdown("""
             <div class="feature-card">
-                <span>📊 <strong>Last Evaluation</strong></span>
+                <span style="font-size: 1.2rem;">📊 <strong>Last Evaluation</strong></span>
             </div>
             """, unsafe_allow_html=True)
             
@@ -1092,7 +667,7 @@ def render_individual_prediction_tab(model):
         with col3:
             st.markdown("""
             <div class="feature-card">
-                <span>📅 <strong>Years at Company</strong></span>
+                <span style="font-size: 1.2rem;">📅 <strong>Years at Company</strong></span>
             </div>
             """, unsafe_allow_html=True)
             time_spend_company = st.number_input(
@@ -1109,7 +684,7 @@ def render_individual_prediction_tab(model):
         with col4:
             st.markdown("""
             <div class="feature-card">
-                <span>📁 <strong>Number of Projects</strong></span>
+                <span style="font-size: 1.2rem;">📁 <strong>Number of Projects</strong></span>
             </div>
             """, unsafe_allow_html=True)
             number_project = st.number_input(
@@ -1126,7 +701,7 @@ def render_individual_prediction_tab(model):
         with col5:
             st.markdown("""
             <div class="feature-card">
-                <span>⏰ <strong>Avg. Monthly Hours</strong></span>
+                <span style="font-size: 1.2rem;">⏰ <strong>Avg. Monthly Hours</strong></span>
             </div>
             """, unsafe_allow_html=True)
             average_monthly_hours = st.number_input(
@@ -1183,7 +758,7 @@ def render_individual_prediction_tab(model):
                 st.markdown("""
                 <div class="prediction-box stay-prediction">
                     <h1>✅ STAY</h1>
-                    <p style="font-size: 1.5rem; margin-top: 1rem; font-weight: 600;">
+                    <p style="font-size: 1.3rem; margin-top: 1rem;">
                         Employee is likely to <strong>STAY</strong> with the company
                     </p>
                 </div>
@@ -1192,7 +767,7 @@ def render_individual_prediction_tab(model):
                 st.markdown("""
                 <div class="prediction-box leave-prediction">
                     <h1>⚠️ LEAVE</h1>
-                    <p style="font-size: 1.5rem; margin-top: 1rem; font-weight: 600;">
+                    <p style="font-size: 1.3rem; margin-top: 1rem;">
                         Employee is likely to <strong>LEAVE</strong> the company
                     </p>
                 </div>
@@ -1202,7 +777,7 @@ def render_individual_prediction_tab(model):
             st.markdown("### 📊 Prediction Probabilities")
             
             # Stay probability with GREEN bar
-            st.markdown(f"<p style='font-size: 1.2rem; font-weight: 600;'>Probability of Staying: <span style='color: var(--neon-green);'>{prob_stay:.1f}%</span></p>", unsafe_allow_html=True)
+            st.write(f"**Probability of Staying:** {prob_stay:.1f}%")
             st.markdown(f"""
             <div class="progress-bar-container">
                 <div class="progress-bar-green" style="width: {prob_stay}%;"></div>
@@ -1210,7 +785,7 @@ def render_individual_prediction_tab(model):
             """, unsafe_allow_html=True)
             
             # Leave probability with RED bar
-            st.markdown(f"<p style='font-size: 1.2rem; font-weight: 600;'>Probability of Leaving: <span style='color: var(--neon-pink);'>{prob_leave:.1f}%</span></p>", unsafe_allow_html=True)
+            st.write(f"**Probability of Leaving:** {prob_leave:.1f}%")
             st.markdown(f"""
             <div class="progress-bar-container">
                 <div class="progress-bar-red" style="width: {prob_leave}%;"></div>
@@ -1231,7 +806,7 @@ def render_batch_prediction_tab(model):
     # ========================================================================
     with st.expander("📋 Required Columns in Your File (Click to Expand)"):
         st.markdown("""
-        <div class="info-box">
+        <div style="background-color: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
             <p>Your uploaded file <strong>must contain</strong> these columns with <strong>exact names</strong>:</p>
         </div>
         """, unsafe_allow_html=True)
@@ -1241,17 +816,17 @@ def render_batch_prediction_tab(model):
         with col1:
             for feature in BEST_FEATURES[:3]:
                 st.markdown(f"""
-                <div class="metric-card">
+                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #1E3A5F;">
                     <strong>{feature}</strong><br/>
-                    <small style="color: #ccc;">{FEATURE_DESCRIPTIONS[feature]}</small>
+                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
                 </div>
                 """, unsafe_allow_html=True)
         with col2:
             for feature in BEST_FEATURES[3:]:
                 st.markdown(f"""
-                <div class="metric-card">
+                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #1E3A5F;">
                     <strong>{feature}</strong><br/>
-                    <small style="color: #ccc;">{FEATURE_DESCRIPTIONS[feature]}</small>
+                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
                 </div>
                 """, unsafe_allow_html=True)
         
@@ -1513,7 +1088,7 @@ def render_batch_prediction_tab(model):
                     )
                 
                 if batch_predict_button:
-                    with st.spinner("🔄 Processing predictions... ⏳"):
+                    with st.spinner("🔄 Processing predictions..."):
                         # Extract only required features in correct order
                         input_features = df[BEST_FEATURES].copy()
                         
@@ -1532,7 +1107,7 @@ def render_batch_prediction_tab(model):
                             result_df[f"{prediction_column_name}_Probability_Stay"] = (prediction_probabilities[:, 0] * 100).round(2)
                             result_df[f"{prediction_column_name}_Probability_Leave"] = (prediction_probabilities[:, 1] * 100).round(2)
                     
-                    st.success("✅ Predictions generated successfully! 🎉")
+                    st.success("✅ Predictions generated successfully!")
                     
                     st.markdown("---")
                     st.markdown("### 📊 Prediction Results")
