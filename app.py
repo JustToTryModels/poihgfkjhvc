@@ -92,22 +92,55 @@ st.markdown("""
         box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
     
-    /* Tab styling */
+    /* ===== ENHANCED TAB STYLING - MUCH BIGGER TABS ===== */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 20px;
         justify-content: center;
+        background-color: transparent;
+        padding: 10px 0;
     }
+    
     .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        padding: 0 30px;
+        height: 80px !important;
+        min-width: 300px !important;
+        padding: 0 50px !important;
         background-color: #f0f2f6;
-        border-radius: 8px 8px 0 0;
-        font-weight: 600;
-        font-size: 1.1rem;
+        border-radius: 15px 15px 0 0 !important;
+        font-weight: 700 !important;
+        font-size: 1.3rem !important;
+        color: #1E3A5F !important;
+        border: 2px solid #ddd !important;
+        border-bottom: none !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #e0e5ec !important;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
     .stTabs [aria-selected="true"] {
-        background-color: #1E3A5F !important;
+        background: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%) !important;
         color: white !important;
+        border: 2px solid #1E3A5F !important;
+        border-bottom: none !important;
+        box-shadow: 0 4px 20px rgba(30, 58, 95, 0.4) !important;
+    }
+    
+    .stTabs [data-baseweb="tab-panel"] {
+        padding-top: 20px;
+    }
+    
+    .stTabs [data-baseweb="tab-border"] {
+        display: none !important;
+    }
+    
+    .stTabs [data-baseweb="tab-highlight"] {
+        display: none !important;
     }
     
     /* Upload section styling */
@@ -432,6 +465,15 @@ st.markdown("""
         border-top: none !important;
         border-radius: 0 0 8px 8px !important;
     }
+    
+    /* Checkbox styling */
+    .stCheckbox {
+        padding: 0.5rem 0;
+    }
+    .stCheckbox label {
+        font-size: 1rem;
+        font-weight: 500;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -744,23 +786,35 @@ def render_batch_prediction_tab(model):
     st.markdown('<h2 class="section-header">📊 Batch Employee Prediction</h2>', unsafe_allow_html=True)
     
     # ========================================================================
-    # REQUIRED COLUMNS INFO
+    # REQUIRED COLUMNS INFO - NOW AS DROPDOWN/EXPANDER
     # ========================================================================
-    st.markdown("""
-    <div class="required-cols-box">
-        <h4>📋 Required Columns in Your File</h4>
-        <p>Your uploaded file must contain these columns (with exact names):</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Display required features in a nice format
-    col1, col2 = st.columns(2)
-    with col1:
-        for i, feature in enumerate(BEST_FEATURES[:3]):
-            st.markdown(f"• **{feature}**: {FEATURE_DESCRIPTIONS[feature]}")
-    with col2:
-        for feature in BEST_FEATURES[3:]:
-            st.markdown(f"• **{feature}**: {FEATURE_DESCRIPTIONS[feature]}")
+    with st.expander("📋 Required Columns in Your File (Click to Expand)"):
+        st.markdown("""
+        <div style="background-color: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+            <p>Your uploaded file <strong>must contain</strong> these columns with <strong>exact names</strong>:</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Display required features in a nice format
+        col1, col2 = st.columns(2)
+        with col1:
+            for feature in BEST_FEATURES[:3]:
+                st.markdown(f"""
+                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #1E3A5F;">
+                    <strong>{feature}</strong><br/>
+                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
+                </div>
+                """, unsafe_allow_html=True)
+        with col2:
+            for feature in BEST_FEATURES[3:]:
+                st.markdown(f"""
+                <div style="background-color: #f8f9fa; padding: 0.8rem; border-radius: 6px; margin: 0.5rem 0; border-left: 4px solid #1E3A5F;">
+                    <strong>{feature}</strong><br/>
+                    <small style="color: #666;">{FEATURE_DESCRIPTIONS[feature]}</small>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        st.info("💡 **Tip:** Your file can contain additional columns (like employee_id, department, etc.). They will be preserved in the output but won't be used for prediction.")
     
     st.markdown("---")
     
@@ -890,6 +944,52 @@ def render_batch_prediction_tab(model):
         st.info(f"📌 **Label Preview:** Leaving → '{prediction_labels[1]}' | Staying → '{prediction_labels[0]}'")
     
     # ========================================================================
+    # PROBABILITY COLUMNS OPTION
+    # ========================================================================
+    st.markdown("---")
+    st.markdown("### 📊 Additional Output Options")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="settings-card">
+            <h4>🎯 Probability Columns</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        include_probabilities = st.checkbox(
+            "Include prediction probabilities in output",
+            value=True,
+            help="Add columns showing the probability (%) of staying and leaving for each employee",
+            key="include_probabilities"
+        )
+        
+        if include_probabilities:
+            st.success("✅ Two additional columns will be added: `Probability_Stay` and `Probability_Leave`")
+        else:
+            st.info("ℹ️ Only the prediction label column will be added to the output")
+    
+    with col2:
+        st.markdown("""
+        <div class="settings-card">
+            <h4>⚠️ High Risk Filter</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        include_high_risk_download = st.checkbox(
+            "Enable high-risk employees download",
+            value=True,
+            help="Provide a separate download option for employees with >50% probability of leaving",
+            key="include_high_risk"
+        )
+        
+        if include_high_risk_download:
+            st.success("✅ A separate download button for high-risk employees will be available")
+        else:
+            st.info("ℹ️ Only full results download will be available")
+    
+    # ========================================================================
     # PROCESS UPLOADED FILE
     # ========================================================================
     if uploaded_file is not None:
@@ -986,9 +1086,10 @@ def render_batch_prediction_tab(model):
                         # Add prediction column with labels
                         result_df[prediction_column_name] = [prediction_labels[p] for p in predictions]
                         
-                        # Add probability columns
-                        result_df[f"{prediction_column_name}_Probability_Stay"] = (prediction_probabilities[:, 0] * 100).round(2)
-                        result_df[f"{prediction_column_name}_Probability_Leave"] = (prediction_probabilities[:, 1] * 100).round(2)
+                        # Add probability columns only if user selected this option
+                        if include_probabilities:
+                            result_df[f"{prediction_column_name}_Probability_Stay"] = (prediction_probabilities[:, 0] * 100).round(2)
+                            result_df[f"{prediction_column_name}_Probability_Leave"] = (prediction_probabilities[:, 1] * 100).round(2)
                     
                     st.success("✅ Predictions generated successfully!")
                     
@@ -1066,7 +1167,11 @@ def render_batch_prediction_tab(model):
                     st.markdown("---")
                     st.markdown("### 📥 Download Results")
                     
-                    col1, col2, col3 = st.columns([1, 1, 1])
+                    # Determine number of columns based on options
+                    if include_high_risk_download:
+                        col1, col2, col3 = st.columns([1, 1, 1])
+                    else:
+                        col1, col2 = st.columns([1, 1])
                     
                     with col1:
                         csv_data = convert_df_to_csv(result_df)
@@ -1090,21 +1195,22 @@ def render_batch_prediction_tab(model):
                             key="download_excel"
                         )
                     
-                    with col3:
-                        # Download only high-risk employees (probability > 50%)
-                        high_risk_df = result_df[prediction_probabilities[:, 1] > 0.5]
-                        if len(high_risk_df) > 0:
-                            high_risk_csv = convert_df_to_csv(high_risk_df)
-                            st.download_button(
-                                label=f"📥 High Risk Only ({len(high_risk_df)})",
-                                data=high_risk_csv,
-                                file_name="high_risk_employees.csv",
-                                mime="text/csv",
-                                use_container_width=True,
-                                key="download_high_risk"
-                            )
-                        else:
-                            st.info("No high-risk employees found")
+                    if include_high_risk_download:
+                        with col3:
+                            # Download only high-risk employees (probability > 50%)
+                            high_risk_df = result_df[prediction_probabilities[:, 1] > 0.5]
+                            if len(high_risk_df) > 0:
+                                high_risk_csv = convert_df_to_csv(high_risk_df)
+                                st.download_button(
+                                    label=f"📥 High Risk Only ({len(high_risk_df)})",
+                                    data=high_risk_csv,
+                                    file_name="high_risk_employees.csv",
+                                    mime="text/csv",
+                                    use_container_width=True,
+                                    key="download_high_risk"
+                                )
+                            else:
+                                st.info("No high-risk employees found")
         
         except Exception as e:
             st.error(f"❌ Error reading file: {str(e)}")
