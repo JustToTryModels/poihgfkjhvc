@@ -583,15 +583,6 @@ def convert_df_to_excel(df):
         df.to_excel(writer, index=False, sheet_name='Predictions')
     return output.getvalue()
 
-def get_default_index(feature, column_list):
-    """Find the best matching column index for a feature"""
-    if feature in column_list:
-        return column_list.index(feature)
-    for i, col in enumerate(column_list):
-        if feature.lower() in col.lower() or col.lower() in feature.lower():
-            return i
-    return 0
-
 # ============================================================================
 # INDIVIDUAL PREDICTION TAB
 # ============================================================================
@@ -915,8 +906,8 @@ def render_batch_prediction_tab(model):
             mapping_valid = True
             column_list = list(df.columns)
             
-            # Create options list with placeholder as first option
-            dropdown_options = [PLACEHOLDER_SELECT] + column_list
+            # Add placeholder as first option for dropdowns
+            column_options_with_placeholder = [PLACEHOLDER_SELECT] + column_list
             
             if enable_column_mapping:
                 st.markdown("""
@@ -932,19 +923,19 @@ def render_batch_prediction_tab(model):
                         st.markdown(f"**{feature.replace('_', ' ').title()}**")
                         selected = st.selectbox(
                             f"Map {feature}",
-                            options=dropdown_options,
+                            options=column_options_with_placeholder,
                             index=0,  # Default to placeholder
                             key=f"map_{feature}",
                             label_visibility="collapsed"
                         )
                         column_mapping[feature] = selected
                 
-                # Check for unselected mappings (still on placeholder)
+                # Check for unselected columns (still showing placeholder)
                 unselected_features = [feat for feat, col in column_mapping.items() if col == PLACEHOLDER_SELECT]
                 
                 # Check for duplicates (excluding placeholder)
-                used_columns = [col for col in column_mapping.values() if col != PLACEHOLDER_SELECT]
-                duplicate_columns = [col for col in set(used_columns) if used_columns.count(col) > 1]
+                selected_columns = [col for col in column_mapping.values() if col != PLACEHOLDER_SELECT]
+                duplicate_columns = [col for col in set(selected_columns) if selected_columns.count(col) > 1]
                 
                 if unselected_features:
                     st.warning(f"⚠️ Please select columns for: **{', '.join([f.replace('_', ' ').title() for f in unselected_features])}**")
