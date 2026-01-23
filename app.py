@@ -484,6 +484,8 @@ st.markdown("""
         padding: 0.75rem 1rem !important;
         font-size: 1.2rem !important;
         font-weight: 500 !important;
+        text-align: center !important;
+        justify-content: center !important;
     }
     div[data-testid="stExpander"] details summary:hover {
         background-color: #2E5A8F !important;
@@ -500,6 +502,18 @@ st.markdown("""
         border: 1px solid #1E3A5F !important;
         border-top: none !important;
         border-radius: 0 0 8px 8px !important;
+    }
+    
+    /* Center the expander summary text */
+    div[data-testid="stExpander"] details summary span {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+    div[data-testid="stExpander"] details summary p {
+        text-align: center !important;
+        width: 100% !important;
     }
     
     /* Checkbox styling */
