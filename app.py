@@ -1,9 +1,13 @@
+# Deployment Code
+
 import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
 from huggingface_hub import hf_hub_download
 import io
+import shap
+import matplotlib.pyplot as plt
 
 # ============================================================================
 # PAGE CONFIGURATION
@@ -536,6 +540,68 @@ FEATURE_DESCRIPTIONS = {
 }
 
 # ============================================================================
+# SHAP FEATURE DESCRIPTIONS FOR BUSINESS INTERPRETATION
+# ============================================================================
+SHAP_FEATURE_DESCRIPTIONS = {
+    'satisfaction_level': {
+        'name': 'Job Satisfaction Level',
+        'description': 'How satisfied the employee is with their job',
+        'high_meaning': 'Employee is very satisfied with their job',
+        'low_meaning': 'Employee is dissatisfied with their job',
+        'high_effect': 'Satisfied employees are more likely to STAY',
+        'low_effect': 'Dissatisfied employees are more likely to LEAVE'
+    },
+    'number_project': {
+        'name': 'Number of Projects',
+        'description': 'Number of projects the employee is assigned to',
+        'high_meaning': 'Employee handles many projects (high workload)',
+        'low_meaning': 'Employee has few projects (possibly underutilized)',
+        'high_effect': 'Too many projects can lead to burnout and LEAVING',
+        'low_effect': 'Too few projects may indicate disengagement risk'
+    },
+    'last_evaluation': {
+        'name': 'Last Performance Evaluation Score',
+        'description': 'The employee\'s most recent performance review score',
+        'high_meaning': 'Employee has excellent performance',
+        'low_meaning': 'Employee has poor performance',
+        'high_effect': 'High performers may leave for better opportunities OR stay due to recognition',
+        'low_effect': 'Poor performers may be at risk of leaving or being let go'
+    },
+    'time_spend_company': {
+        'name': 'Years at Company',
+        'description': 'How long the employee has worked at the company',
+        'high_meaning': 'Long-tenured employee',
+        'low_meaning': 'Relatively new employee',
+        'high_effect': 'Long-tenure employees may leave if feeling stagnant',
+        'low_effect': 'New employees might leave if not properly onboarded'
+    },
+    'average_monthly_hours': {
+        'name': 'Average Monthly Working Hours',
+        'description': 'Average number of hours worked per month',
+        'high_meaning': 'Employee works long hours (potential burnout)',
+        'low_meaning': 'Employee works fewer hours',
+        'high_effect': 'Overworked employees are more likely to LEAVE due to burnout',
+        'low_effect': 'Employees with reasonable hours are more likely to STAY'
+    }
+}
+
+DEFAULT_FEATURE_DESC = {
+    'name': 'Feature',
+    'description': 'A predictor variable in the model',
+    'high_meaning': 'High value of this feature',
+    'low_meaning': 'Low value of this feature',
+    'high_effect': 'May influence attrition probability',
+    'low_effect': 'May influence attrition probability'
+}
+
+def get_feature_info(feature_name):
+    """Get feature description, using default if not found."""
+    return SHAP_FEATURE_DESCRIPTIONS.get(feature_name, {
+        **DEFAULT_FEATURE_DESC,
+        'name': feature_name.replace('_', ' ').title()
+    })
+
+# ============================================================================
 # LOAD MODEL FROM HUGGING FACE
 # ============================================================================
 @st.cache_resource
@@ -551,6 +617,16 @@ def load_model_from_huggingface():
         return model
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
+        return None
+
+@st.cache_resource
+def load_shap_explainer(_model):
+    """Load SHAP explainer for the model"""
+    try:
+        explainer = shap.TreeExplainer(_model)
+        return explainer
+    except Exception as e:
+        st.error(f"❌ Error loading SHAP explainer: {str(e)}")
         return None
 
 # ============================================================================
@@ -569,6 +645,83 @@ def sync_evaluation_input():
     st.session_state.last_evaluation = st.session_state.eval_input
 
 # ============================================================================
+# SHAP INTERPRETATION FUNCTIONS
+# ============================================================================
+def get_impact_description(shap_value, threshold_high=0.1, threshold_medium=0.05):
+    """Convert SHAP value to impact description."""
+    abs_shap = abs(shap_value)
+    if abs_shap >= threshold_high:
+        strength = "STRONG"
+    elif abs_shap >= threshold_medium:
+        strength = "MODERATE"
+    else:
+        strength = "WEAK"
+    
+    if shap_value > 0:
+        direction = "increases likelihood of LEAVING"
+    else:
+        direction = "increases likelihood of STAYING"
+    
+    return strength, direction
+
+def generate_individual_explanation(x_sample, sample_shap, feature_names, predicted_class, predicted_proba):
+    """Generate a business narrative explanation for an individual prediction."""
+    
+    explanation = ""
+    
+    # Sort features by absolute SHAP value
+    sorted_indices = np.argsort(np.abs(sample_shap))[::-1]
+    
+    # Prediction summary
+    pred_class_name = "LEAVE" if predicted_class == 1 else "STAY"
+    confidence = max(predicted_proba) * 100
+    
+    explanation += f"**🎯 PREDICTION SUMMARY:**\n\n"
+    explanation += f"The model predicts this employee will: **{pred_class_name}**\n\n"
+    explanation += f"Confidence level: **{confidence:.1f}%**\n\n"
+    
+    # Top factors explanation
+    explanation += f"**📊 WHY THE MODEL MADE THIS PREDICTION:**\n\n"
+    explanation += f"Here are the main factors that influenced this prediction:\n\n"
+    
+    # Get top 5 contributing factors
+    top_5_idx = sorted_indices[:5]
+    
+    factors_toward_leaving = []
+    factors_toward_staying = []
+    
+    for rank, idx in enumerate(top_5_idx, 1):
+        feat_name = feature_names[idx]
+        feat_value = x_sample[idx]
+        shap_val = sample_shap[idx]
+        
+        info = get_feature_info(feat_name)
+        strength, _ = get_impact_description(shap_val)
+        
+        if shap_val > 0:
+            factors_toward_leaving.append((rank, feat_name, feat_value, shap_val, info, strength))
+        else:
+            factors_toward_staying.append((rank, feat_name, feat_value, shap_val, info, strength))
+    
+    # Explain factors pushing toward LEAVING
+    if factors_toward_leaving:
+        explanation += "**🔴 FACTORS PUSHING TOWARD LEAVING:**\n\n"
+        for rank, feat_name, feat_value, shap_val, info, strength in factors_toward_leaving:
+            explanation += f"**{rank}. {info['name']}**\n"
+            explanation += f"- This employee's value: **{feat_value:.2f}**\n"
+            explanation += f"- Impact: **{strength}** push toward LEAVING\n\n"
+    
+    # Explain factors pushing toward STAYING
+    if factors_toward_staying:
+        explanation += "**🔵 FACTORS PUSHING TOWARD STAYING:**\n\n"
+        for rank, feat_name, feat_value, shap_val, info, strength in factors_toward_staying:
+            explanation += f"**{rank}. {info['name']}**\n"
+            explanation += f"- This employee's value: **{feat_value:.2f}**\n"
+            explanation += f"- Impact: **{strength}** push toward STAYING\n\n"
+    
+    return explanation
+
+# ============================================================================
 # HELPER FUNCTIONS
 # ============================================================================
 def convert_df_to_csv(df):
@@ -583,7 +736,7 @@ def convert_df_to_excel(df):
 # ============================================================================
 # INDIVIDUAL PREDICTION TAB
 # ============================================================================
-def render_individual_prediction_tab(model):
+def render_individual_prediction_tab(model, explainer):
     """Render the individual prediction tab content"""
     
     st.markdown("---")
@@ -744,6 +897,79 @@ def render_individual_prediction_tab(model):
                 <div class="progress-bar-red" style="width: {prob_leave}%;"></div>
             </div>
             """, unsafe_allow_html=True)
+        
+        # ====================================================================
+        # SHAP EXPLANATION SECTION (IN EXPANDER)
+        # ====================================================================
+        st.markdown("---")
+        
+        with st.expander("🔍 **View Detailed Prediction Explanation (SHAP Analysis)**", expanded=False):
+            st.markdown("### 📊 SHAP Waterfall Plot")
+            st.markdown("This visualization shows how each feature contributed to the prediction.")
+            
+            try:
+                # Compute SHAP values for this single prediction
+                shap_values_raw = explainer.shap_values(input_df)
+                
+                # Handle different SHAP versions
+                if isinstance(shap_values_raw, list):
+                    shap_values_class_1 = shap_values_raw[1][0]
+                    expected_value = explainer.expected_value[1]
+                else:
+                    shap_values_class_1 = shap_values_raw[0, :, 1]
+                    expected_value = explainer.expected_value[1]
+                
+                # Create SHAP explanation object
+                explanation = shap.Explanation(
+                    values=shap_values_class_1,
+                    base_values=expected_value,
+                    data=input_df.values[0],
+                    feature_names=BEST_FEATURES
+                )
+                
+                # Generate waterfall plot
+                fig, ax = plt.subplots(figsize=(10, 6))
+                shap.waterfall_plot(explanation, show=False)
+                
+                plt.title(
+                    f"SHAP Waterfall Plot - Explaining Prediction\n"
+                    f"Predicted: {'LEAVE' if prediction == 1 else 'STAY'} | "
+                    f"Probability: {prediction_proba[prediction]:.2%}",
+                    fontsize=12,
+                    fontweight='bold',
+                    pad=15
+                )
+                
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close()
+                
+                # Add interpretation note
+                st.info(
+                    "📌 **How to read this plot:** "
+                    "Red bars push the prediction toward LEAVING, while blue bars push toward STAYING. "
+                    "The plot starts from the base value (average prediction) and shows how each feature "
+                    "moves the prediction up or down to reach the final output value."
+                )
+                
+                st.markdown("---")
+                
+                # Generate detailed business interpretation
+                st.markdown("### 📝 Detailed Interpretation")
+                
+                explanation_text = generate_individual_explanation(
+                    x_sample=input_df.values[0],
+                    sample_shap=shap_values_class_1,
+                    feature_names=BEST_FEATURES,
+                    predicted_class=prediction,
+                    predicted_proba=prediction_proba
+                )
+                
+                st.markdown(explanation_text)
+                
+            except Exception as e:
+                st.error(f"❌ Error generating SHAP explanation: {str(e)}")
+                st.info("The prediction was successful, but the detailed explanation could not be generated.")
 
 # ============================================================================
 # BATCH PREDICTION TAB
@@ -1088,10 +1314,16 @@ def main():
         st.info(f"Repository: https://huggingface.co/{HF_REPO_ID}")
         return
     
+    # Load SHAP explainer
+    explainer = load_shap_explainer(model)
+    
+    if explainer is None:
+        st.warning("⚠️ SHAP explainer could not be loaded. Predictions will work, but detailed explanations will not be available.")
+    
     tab1, tab2 = st.tabs(["📝 Individual Prediction", "📊 Batch Prediction"])
     
     with tab1:
-        render_individual_prediction_tab(model)
+        render_individual_prediction_tab(model, explainer)
     
     with tab2:
         render_batch_prediction_tab(model)
