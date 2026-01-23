@@ -962,18 +962,6 @@ def render_individual_prediction_tab(model, explainer):
                     st.markdown("---")
                     st.markdown("### 📝 DETAILED INTERPRETATION")
                     
-                    # Prediction Summary
-                    pred_class_name = "LEAVE" if prediction == 1 else "STAY"
-                    confidence = max(prob_stay, prob_leave)
-                    
-                    st.markdown(f"""
-                    <div class="shap-explanation-box">
-                        <h4>🎯 PREDICTION SUMMARY</h4>
-                        <p>The model predicts this employee will: <strong>{pred_class_name}</strong></p>
-                        <p>Confidence level: <strong>{confidence:.1f}%</strong></p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
                     st.markdown("#### 📊 WHY THE MODEL MADE THIS PREDICTION")
                     st.markdown("Here are the main factors that influenced this prediction:")
                     
