@@ -960,7 +960,6 @@ def render_individual_prediction_tab(model, explainer):
                     
                     # Display detailed interpretation
                     st.markdown("---")
-                    st.markdown("### 📝 DETAILED INTERPRETATION")
                     
                     st.markdown("#### 📊 WHY THE MODEL MADE THIS PREDICTION")
                     st.markdown("Here are the main factors that influenced this prediction:")
