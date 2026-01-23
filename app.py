@@ -1,5 +1,3 @@
-# Deployment Code with SHAP Integration
-
 import streamlit as st
 import joblib
 import pandas as pd
@@ -535,6 +533,12 @@ st.markdown("""
         margin: 0.5rem 0;
         border-radius: 0 8px 8px 0;
     }
+    
+    /* Spacer for SHAP sections */
+    .shap-section-spacer {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -984,6 +988,9 @@ def render_individual_prediction_tab(model, explainer):
                                 • Impact: <strong>{factor['strength']}</strong> push toward LEAVING
                             </div>
                             """, unsafe_allow_html=True)
+                    
+                    # Add spacing between the two sections
+                    st.markdown('<div class="shap-section-spacer"></div>', unsafe_allow_html=True)
                     
                     # Factors pushing toward STAYING
                     if factors_staying:
