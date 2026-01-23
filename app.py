@@ -1,4 +1,4 @@
-# Deployment Code with SHAP Integration
+# Deployment Code
 
 import streamlit as st
 import joblib
@@ -513,27 +513,28 @@ st.markdown("""
         font-weight: 500;
     }
     
-    /* SHAP explanation styling */
-    .shap-explanation-box {
+    /* SHAP Explanation Box */
+    .shap-factor-box {
         background-color: #f8f9fa;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border: 1px solid #dee2e6;
-    }
-    .shap-factor-leaving {
-        background-color: #fff5f5;
         border-left: 4px solid #dc3545;
-        padding: 0.8rem 1rem;
+        padding: 1rem;
         margin: 0.5rem 0;
-        border-radius: 0 8px 8px 0;
+        border-radius: 4px;
     }
-    .shap-factor-staying {
-        background-color: #f0fff4;
-        border-left: 4px solid #28a745;
-        padding: 0.8rem 1rem;
-        margin: 0.5rem 0;
-        border-radius: 0 8px 8px 0;
+    .shap-factor-box.staying {
+        border-left-color: #28a745;
+    }
+    .shap-impact-strong {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .shap-impact-moderate {
+        color: #ffc107;
+        font-weight: bold;
+    }
+    .shap-impact-weak {
+        color: #6c757d;
+        font-weight: bold;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -584,7 +585,7 @@ SHAP_FEATURE_DESCRIPTIONS = {
     },
     'last_evaluation': {
         'name': 'Last Performance Evaluation Score',
-        'description': "The employee's most recent performance review score",
+        'description': 'The employee\'s most recent performance review score',
         'high_meaning': 'Employee has excellent performance',
         'low_meaning': 'Employee has poor performance',
         'high_effect': 'High performers may leave for better opportunities OR stay due to recognition',
@@ -608,8 +609,24 @@ SHAP_FEATURE_DESCRIPTIONS = {
     }
 }
 
+DEFAULT_FEATURE_DESC = {
+    'name': 'Feature',
+    'description': 'A predictor variable in the model',
+    'high_meaning': 'High value of this feature',
+    'low_meaning': 'Low value of this feature',
+    'high_effect': 'May influence attrition probability',
+    'low_effect': 'May influence attrition probability'
+}
+
+def get_feature_info(feature_name):
+    """Get feature description, using default if not found."""
+    return SHAP_FEATURE_DESCRIPTIONS.get(feature_name, {
+        **DEFAULT_FEATURE_DESC,
+        'name': feature_name.replace('_', ' ').title()
+    })
+
 # ============================================================================
-# LOAD MODEL FROM HUGGING FACE
+# LOAD MODEL AND CREATE SHAP EXPLAINER
 # ============================================================================
 @st.cache_resource
 def load_model_from_huggingface():
@@ -626,12 +643,9 @@ def load_model_from_huggingface():
         st.error(f"❌ Error loading model: {str(e)}")
         return None
 
-# ============================================================================
-# SHAP EXPLAINER (CACHED)
-# ============================================================================
 @st.cache_resource
-def get_shap_explainer(_model):
-    """Create and cache SHAP TreeExplainer"""
+def create_shap_explainer(_model):
+    """Create SHAP explainer for the model"""
     try:
         explainer = shap.TreeExplainer(_model)
         return explainer
@@ -640,101 +654,196 @@ def get_shap_explainer(_model):
         return None
 
 # ============================================================================
-# SHAP HELPER FUNCTIONS
+# SHAP EXPLANATION FUNCTIONS
 # ============================================================================
-def get_shap_feature_info(feature_name):
-    """Get feature description for SHAP interpretation."""
-    default = {
-        'name': feature_name.replace('_', ' ').title(),
-        'description': 'A predictor variable in the model',
-        'high_meaning': 'High value of this feature',
-        'low_meaning': 'Low value of this feature',
-        'high_effect': 'May influence attrition probability',
-        'low_effect': 'May influence attrition probability'
-    }
-    return SHAP_FEATURE_DESCRIPTIONS.get(feature_name, default)
-
 def get_impact_description(shap_value, threshold_high=0.1, threshold_medium=0.05):
     """Convert SHAP value to impact description."""
     abs_shap = abs(shap_value)
     if abs_shap >= threshold_high:
         strength = "STRONG"
+        css_class = "shap-impact-strong"
     elif abs_shap >= threshold_medium:
         strength = "MODERATE"
+        css_class = "shap-impact-moderate"
     else:
         strength = "WEAK"
-    return strength
-
-def generate_shap_explanation(input_df, model, explainer, prediction, prediction_proba):
-    """Generate SHAP waterfall plot and detailed explanation for individual prediction."""
+        css_class = "shap-impact-weak"
     
-    # Compute SHAP values
-    shap_values_raw = explainer.shap_values(input_df)
-    
-    # Handle different SHAP versions
-    if isinstance(shap_values_raw, list):
-        # Old SHAP format (list of arrays)
-        shap_values_class_1 = shap_values_raw[1][0]
-        expected_value = explainer.expected_value[1]
+    if shap_value > 0:
+        direction = "increases likelihood of LEAVING"
     else:
-        # New SHAP format (3D array)
-        shap_values_class_1 = shap_values_raw[0, :, 1]
-        expected_value = explainer.expected_value[1]
+        direction = "increases likelihood of STAYING"
     
-    # Get feature values
-    x_sample = input_df.values[0]
-    feature_names = BEST_FEATURES
+    return strength, direction, css_class
+
+def generate_shap_explanation(input_data, model, explainer, predicted_class, predicted_proba):
+    """
+    Generate SHAP explanation for an individual prediction.
+    Returns: (waterfall_fig, explanation_text)
+    """
+    try:
+        # Prepare input for SHAP
+        input_df = pd.DataFrame([input_data])[BEST_FEATURES]
+        x_sample = input_df.values[0]
+        
+        # Compute SHAP values
+        shap_values_raw = explainer.shap_values(input_df)
+        
+        # Handle different SHAP versions
+        if isinstance(shap_values_raw, list):
+            shap_values_class_0 = shap_values_raw[0][0]
+            shap_values_class_1 = shap_values_raw[1][0]
+            expected_value_0 = explainer.expected_value[0]
+            expected_value_1 = explainer.expected_value[1]
+        else:
+            shap_values_class_0 = shap_values_raw[0, :, 0]
+            shap_values_class_1 = shap_values_raw[0, :, 1]
+            expected_value_0 = explainer.expected_value[0]
+            expected_value_1 = explainer.expected_value[1]
+        
+        # Use SHAP values for predicted class
+        if predicted_class == 1:
+            shap_vals = shap_values_class_1
+            base_val = expected_value_1
+        else:
+            shap_vals = shap_values_class_0
+            base_val = expected_value_0
+        
+        # Create SHAP waterfall plot
+        explanation = shap.Explanation(
+            values=shap_vals,
+            base_values=base_val,
+            data=x_sample,
+            feature_names=BEST_FEATURES
+        )
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        shap.waterfall_plot(explanation, show=False)
+        
+        pred_class_name = "LEAVE" if predicted_class == 1 else "STAY"
+        confidence = max(predicted_proba) * 100
+        
+        plt.title(
+            f"SHAP Waterfall Plot - Why This Employee Will {pred_class_name}\n"
+            f"Prediction Confidence: {confidence:.1f}%",
+            fontsize=12,
+            fontweight='bold',
+            pad=15
+        )
+        
+        plt.tight_layout()
+        
+        # Generate text explanation
+        explanation_text = generate_text_explanation(
+            x_sample, shap_vals, BEST_FEATURES, predicted_class, predicted_proba
+        )
+        
+        return fig, explanation_text
+        
+    except Exception as e:
+        st.error(f"Error generating SHAP explanation: {str(e)}")
+        return None, None
+
+def generate_text_explanation(x_sample, shap_values, feature_names, predicted_class, predicted_proba):
+    """Generate detailed text explanation"""
     
-    # Create SHAP Explanation object for waterfall plot
-    explanation = shap.Explanation(
-        values=shap_values_class_1,
-        base_values=expected_value,
-        data=x_sample,
-        feature_names=feature_names
-    )
+    explanation_html = ""
     
-    # Generate waterfall plot
-    fig, ax = plt.subplots(figsize=(10, 6))
-    shap.waterfall_plot(explanation, show=False)
+    # Sort features by absolute SHAP value
+    sorted_indices = np.argsort(np.abs(shap_values))[::-1]
     
-    pred_class_name = "LEAVE" if prediction == 1 else "STAY"
-    prob_leave = prediction_proba[1] * 100
+    # Prediction summary
+    pred_class_name = "LEAVE" if predicted_class == 1 else "STAY"
+    confidence = max(predicted_proba) * 100
     
-    plt.title(
-        f"SHAP Waterfall Plot - Explaining Prediction\n"
-        f"Predicted: {pred_class_name} | Probability of Leaving: {prob_leave:.1f}%",
-        fontsize=12,
-        fontweight='bold',
-        pad=15
-    )
-    plt.tight_layout()
+    explanation_html += f"""
+    <div style="background-color: #e7f3ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 5px solid #1E3A5F;">
+        <h3 style="color: #1E3A5F; margin-top: 0;">🎯 Prediction Summary</h3>
+        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">
+            <strong>The model predicts this employee will: {pred_class_name}</strong>
+        </p>
+        <p style="font-size: 1rem; color: #666; margin: 0;">
+            Confidence level: <strong>{confidence:.1f}%</strong>
+        </p>
+    </div>
+    """
     
-    # Generate text explanation
-    sorted_indices = np.argsort(np.abs(shap_values_class_1))[::-1]
+    explanation_html += f"""
+    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h3 style="color: #1E3A5F; margin-top: 0;">📊 Why The Model Made This Prediction</h3>
+        <p style="color: #666; margin-bottom: 1.5rem;">
+            Here are the main factors that influenced this prediction:
+        </p>
+    """
     
-    factors_leaving = []
-    factors_staying = []
+    # Separate factors into leaving and staying
+    factors_toward_leaving = []
+    factors_toward_staying = []
     
     for idx in sorted_indices:
         feat_name = feature_names[idx]
         feat_value = x_sample[idx]
-        shap_val = shap_values_class_1[idx]
-        info = get_shap_feature_info(feat_name)
-        strength = get_impact_description(shap_val)
+        shap_val = shap_values[idx]
         
-        factor_data = {
-            'name': info['name'],
-            'value': feat_value,
-            'strength': strength,
-            'shap_value': shap_val
-        }
+        info = get_feature_info(feat_name)
+        strength, direction, css_class = get_impact_description(shap_val)
         
         if shap_val > 0:
-            factors_leaving.append(factor_data)
+            factors_toward_leaving.append((feat_name, feat_value, shap_val, info, strength, css_class))
         else:
-            factors_staying.append(factor_data)
+            factors_toward_staying.append((feat_name, feat_value, shap_val, info, strength, css_class))
     
-    return fig, factors_leaving, factors_staying
+    # Display factors pushing toward LEAVING
+    if factors_toward_leaving:
+        explanation_html += """
+        <div style="margin-bottom: 1.5rem;">
+            <h4 style="color: #dc3545; margin-bottom: 1rem;">🔴 Factors Pushing Toward LEAVING:</h4>
+        """
+        
+        for rank, (feat_name, feat_value, shap_val, info, strength, css_class) in enumerate(factors_toward_leaving, 1):
+            explanation_html += f"""
+            <div class="shap-factor-box" style="background-color: #fff5f5; border-left: 4px solid #dc3545; padding: 1rem; margin: 0.5rem 0; border-radius: 4px;">
+                <p style="margin: 0 0 0.5rem 0; font-size: 1.05rem;">
+                    <strong>{rank}. {info['name']}</strong>
+                </p>
+                <p style="margin: 0 0 0.3rem 0; color: #666;">
+                    • This employee's value: <strong>{feat_value:.2f}</strong>
+                </p>
+                <p style="margin: 0; color: #dc3545;">
+                    • Impact: <span class="{css_class}" style="font-weight: bold;">{strength}</span> push toward LEAVING
+                </p>
+            </div>
+            """
+        
+        explanation_html += "</div>"
+    
+    # Display factors pushing toward STAYING
+    if factors_toward_staying:
+        explanation_html += """
+        <div>
+            <h4 style="color: #28a745; margin-bottom: 1rem;">🔵 Factors Pushing Toward STAYING:</h4>
+        """
+        
+        for rank, (feat_name, feat_value, shap_val, info, strength, css_class) in enumerate(factors_toward_staying, 1):
+            explanation_html += f"""
+            <div class="shap-factor-box staying" style="background-color: #f0f9f4; border-left: 4px solid #28a745; padding: 1rem; margin: 0.5rem 0; border-radius: 4px;">
+                <p style="margin: 0 0 0.5rem 0; font-size: 1.05rem;">
+                    <strong>{rank}. {info['name']}</strong>
+                </p>
+                <p style="margin: 0 0 0.3rem 0; color: #666;">
+                    • This employee's value: <strong>{feat_value:.2f}</strong>
+                </p>
+                <p style="margin: 0; color: #28a745;">
+                    • Impact: <span class="{css_class}" style="font-weight: bold;">{strength}</span> push toward STAYING
+                </p>
+            </div>
+            """
+        
+        explanation_html += "</div>"
+    
+    explanation_html += "</div>"
+    
+    return explanation_html
 
 # ============================================================================
 # CALLBACK FUNCTIONS FOR SYNCING SLIDERS AND NUMBER INPUTS
@@ -928,80 +1037,35 @@ def render_individual_prediction_tab(model, explainer):
             </div>
             """, unsafe_allow_html=True)
         
-        # ================================================================
-        # SHAP EXPLANATION SECTION (DROPDOWN)
-        # ================================================================
+        # ============================================================================
+        # SHAP EXPLANATION SECTION (NEW)
+        # ============================================================================
         st.markdown("---")
         
-        with st.expander("🔍 Why did the model make this prediction? (Click to expand SHAP Explanation)"):
+        with st.expander("🔍 **View Detailed Explanation - Why did the model make this prediction?**"):
+            st.markdown("### 📈 SHAP Analysis")
+            st.info("**SHAP (SHapley Additive exPlanations)** shows how each feature contributed to this specific prediction. "
+                   "Features pushing the prediction toward 'LEAVE' appear in red/pink, while features pushing toward 'STAY' appear in blue.")
             
             if explainer is not None:
-                try:
-                    with st.spinner("Generating SHAP explanation..."):
-                        # Generate SHAP explanation
-                        fig, factors_leaving, factors_staying = generate_shap_explanation(
-                            input_df, model, explainer, prediction, prediction_proba
-                        )
+                with st.spinner("Generating explanation..."):
+                    fig, explanation_text = generate_shap_explanation(
+                        input_data, model, explainer, prediction, prediction_proba
+                    )
                     
-                    # Display the waterfall plot
-                    st.markdown("### 📊 SHAP Waterfall Plot")
-                    st.pyplot(fig)
-                    plt.close(fig)
-                    
-                    st.markdown("""
-                    <p style="text-align: center; color: #666; font-style: italic; margin-top: -10px;">
-                        Red bars (positive) → increase probability of leaving | Blue bars (negative) → decrease probability of leaving
-                    </p>
-                    """, unsafe_allow_html=True)
-                    
-                    # Display detailed interpretation
-                    st.markdown("---")
-                    st.markdown("### 📝 DETAILED INTERPRETATION")
-                    
-                    # Prediction Summary
-                    pred_class_name = "LEAVE" if prediction == 1 else "STAY"
-                    confidence = max(prob_stay, prob_leave)
-                    
-                    st.markdown(f"""
-                    <div class="shap-explanation-box">
-                        <h4>🎯 PREDICTION SUMMARY</h4>
-                        <p>The model predicts this employee will: <strong>{pred_class_name}</strong></p>
-                        <p>Confidence level: <strong>{confidence:.1f}%</strong></p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    st.markdown("#### 📊 WHY THE MODEL MADE THIS PREDICTION")
-                    st.markdown("Here are the main factors that influenced this prediction:")
-                    
-                    # Factors pushing toward LEAVING
-                    if factors_leaving:
-                        st.markdown("##### 🔴 FACTORS PUSHING TOWARD LEAVING:")
-                        for i, factor in enumerate(factors_leaving, 1):
-                            st.markdown(f"""
-                            <div class="shap-factor-leaving">
-                                <strong>{i}. {factor['name']}</strong><br/>
-                                • This employee's value: <strong>{factor['value']:.2f}</strong><br/>
-                                • Impact: <strong>{factor['strength']}</strong> push toward LEAVING
-                            </div>
-                            """, unsafe_allow_html=True)
-                    
-                    # Factors pushing toward STAYING
-                    if factors_staying:
-                        st.markdown("##### 🔵 FACTORS PUSHING TOWARD STAYING:")
-                        for i, factor in enumerate(factors_staying, 1):
-                            st.markdown(f"""
-                            <div class="shap-factor-staying">
-                                <strong>{i}. {factor['name']}</strong><br/>
-                                • This employee's value: <strong>{factor['value']:.2f}</strong><br/>
-                                • Impact: <strong>{factor['strength']}</strong> push toward STAYING
-                            </div>
-                            """, unsafe_allow_html=True)
-                    
-                except Exception as e:
-                    st.error(f"Error generating SHAP explanation: {str(e)}")
-                    st.info("The prediction is still valid, but we couldn't generate the detailed explanation.")
+                    if fig is not None and explanation_text is not None:
+                        # Display waterfall plot
+                        st.pyplot(fig)
+                        plt.close(fig)
+                        
+                        st.markdown("---")
+                        
+                        # Display text explanation
+                        st.markdown(explanation_text, unsafe_allow_html=True)
+                    else:
+                        st.error("Unable to generate explanation. Please try again.")
             else:
-                st.warning("SHAP explainer not available. Unable to generate explanation.")
+                st.warning("⚠️ SHAP explainer not available. Detailed explanations cannot be generated.")
 
 # ============================================================================
 # BATCH PREDICTION TAB
@@ -1347,7 +1411,7 @@ def main():
         return
     
     # Create SHAP explainer
-    explainer = get_shap_explainer(model)
+    explainer = create_shap_explainer(model)
     
     tab1, tab2 = st.tabs(["📝 Individual Prediction", "📊 Batch Prediction"])
     
