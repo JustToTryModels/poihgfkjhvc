@@ -987,7 +987,7 @@ def render_individual_prediction_tab(model, explainer):
                     
                     # Factors pushing toward STAYING
                     if factors_staying:
-                        st.markdown("##### 🔵 FACTORS PUSHING TOWARD STAYING:")
+                        st.markdown("##### 🟢 FACTORS PUSHING TOWARD STAYING:")
                         for i, factor in enumerate(factors_staying, 1):
                             st.markdown(f"""
                             <div class="shap-factor-staying">
