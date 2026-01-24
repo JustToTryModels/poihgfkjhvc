@@ -170,23 +170,21 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Settings card - Light Cream Background (matching feature-card) */
+    /* Settings card */
     .settings-card {
-        background-color: #FFE8C2;
+        background-color: #e8f4f8;
         border-radius: 12px;
         padding: 1.5rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-left: 5px solid #1E3A5F;
+        border-left: 5px solid #17a2b8;
         margin: 1rem 0;
     }
     
-    /* Column mapping card - Light Cream Background (matching feature-card) */
+    /* Column mapping card */
     .mapping-card {
-        background-color: #FFE8C2;
+        background-color: #f0e6ff;
         border-radius: 12px;
         padding: 1.5rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        border-left: 5px solid #1E3A5F;
+        border-left: 5px solid #6f42c1;
         margin: 1rem 0;
     }
     
