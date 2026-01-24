@@ -1020,7 +1020,7 @@ def render_batch_prediction_tab(model):
     st.markdown("---")
     st.markdown('<h2 class="section-header">📊 Batch Employee Prediction</h2>', unsafe_allow_html=True)
     
-    with st.expander("📋 Required Columns in Your File (Click to Expand)"):
+    with st.expander("**📋 Required Columns in Your File (Click to Expand)**"):
         st.markdown("""
         <div style="background-color: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
             <p>Your uploaded file <strong>must contain</strong> these columns (or you can map your columns using Column Mapping):</p>
@@ -1185,11 +1185,18 @@ def render_batch_prediction_tab(model):
                 for idx, feature in enumerate(BEST_FEATURES):
                     with cols[idx]:
                         st.markdown(f"**{feature.replace('_', ' ').title()}**")
-                        # Force index 0 ("Select Column") as the default initial value
+                        
+                        # Determine the default index
+                        # If the feature exists in the uploaded data columns, auto-select it
+                        if feature in column_list:
+                            default_index = mapping_options.index(feature)
+                        else:
+                            default_index = 0  # "Select Column"
+                        
                         selected = st.selectbox(
                             f"Map {feature}",
                             options=mapping_options,
-                            index=0,
+                            index=default_index,
                             key=f"map_{feature}",
                             label_visibility="collapsed"
                         )
@@ -1326,7 +1333,7 @@ def render_batch_prediction_tab(model):
     
     else:
         st.markdown("---")
-        with st.expander("📋 View Sample Data Format"):
+        with st.expander("**📋 View Sample Data Format**"):
             sample_data = pd.DataFrame({
                 'employee_id': [1, 2, 3, 4, 5],
                 'satisfaction_level': [0.38, 0.80, 0.11, 0.72, 0.37],
