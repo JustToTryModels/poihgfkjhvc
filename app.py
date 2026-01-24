@@ -553,6 +553,44 @@ st.markdown("""
         margin-top: 2rem;
         margin-bottom: 1rem;
     }
+    
+    /* Yellow indicator for unmapped columns */
+    .needs-mapping-indicator {
+        background-color: #fff3cd;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        text-align: center;
+        border: 2px solid #ffc107;
+        margin-top: 4px;
+        font-weight: 600;
+        color: #856404;
+        animation: pulseYellow 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulseYellow {
+        0%, 100% {
+            background-color: #fff3cd;
+            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+        }
+        50% {
+            background-color: #ffe69c;
+            box-shadow: 0 0 8px 2px rgba(255, 193, 7, 0.6);
+        }
+    }
+    
+    /* Mapped column indicator */
+    .mapped-indicator {
+        background-color: #d4edda;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        text-align: center;
+        border: 1px solid #28a745;
+        margin-top: 4px;
+        font-weight: 500;
+        color: #155724;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -1201,6 +1239,12 @@ def render_batch_prediction_tab(model):
                             label_visibility="collapsed"
                         )
                         column_mapping[feature] = selected
+                        
+                        # Add visual indicator based on selection
+                        if selected == "Select Column":
+                            st.markdown('<div class="needs-mapping-indicator">⚠️ Needs Mapping</div>', unsafe_allow_html=True)
+                        else:
+                            st.markdown('<div class="mapped-indicator">✓ Mapped</div>', unsafe_allow_html=True)
                 
                 # Validation Logic
                 used_columns = list(column_mapping.values())
