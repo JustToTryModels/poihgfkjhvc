@@ -469,57 +469,39 @@ st.markdown("""
         transition: width 0.5s ease-in-out;
     }
     
-    /* ===== ATTRACTIVE SHAP EXPANDER STYLING ===== */
+    /* Blue styled expander */
     div[data-testid="stExpander"] {
         border: none !important;
-        border-radius: 12px !important;
-        margin: 1.5rem 0 !important;
-        overflow: hidden !important;
+        border-radius: 8px !important;
     }
     div[data-testid="stExpander"] details {
         border: none !important;
     }
     div[data-testid="stExpander"] details summary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+        background-color: #1E3A5F !important;
         color: white !important;
-        border-radius: 12px !important;
-        padding: 1.2rem 1.5rem !important;
-        font-size: 1.4rem !important;
-        font-weight: 800 !important;
+        border-radius: 8px !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 1.2rem !important;
+        font-weight: 500 !important;
         text-align: center !important;
         justify-content: center !important;
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4), 0 0 30px rgba(240, 147, 251, 0.2) !important;
-        transition: all 0.4s ease !important;
-        letter-spacing: 0.5px !important;
-        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2) !important;
-        animation: shimmerExpander 3s ease-in-out infinite !important;
     }
-    
-    @keyframes shimmerExpander {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    
     div[data-testid="stExpander"] details summary:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #f093fb 50%, #667eea 100%) !important;
+        background-color: #2E5A8F !important;
         color: white !important;
-        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5), 0 0 50px rgba(240, 147, 251, 0.3) !important;
-        transform: translateY(-3px) scale(1.01) !important;
     }
     div[data-testid="stExpander"] details summary svg {
         color: white !important;
         fill: white !important;
-        filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3)) !important;
     }
     div[data-testid="stExpander"] details[open] summary {
-        border-radius: 12px 12px 0 0 !important;
+        border-radius: 8px 8px 0 0 !important;
     }
     div[data-testid="stExpander"] details > div {
-        border: 2px solid #667eea !important;
+        border: 1px solid #1E3A5F !important;
         border-top: none !important;
-        border-radius: 0 0 12px 12px !important;
-        background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%) !important;
+        border-radius: 0 0 8px 8px !important;
     }
     
     /* Center the expander summary text */
@@ -532,8 +514,6 @@ st.markdown("""
     div[data-testid="stExpander"] details summary p {
         text-align: center !important;
         width: 100% !important;
-        font-weight: 800 !important;
-        font-size: 1.4rem !important;
     }
     
     /* Checkbox styling */
@@ -971,7 +951,7 @@ def render_individual_prediction_tab(model, explainer):
         # ================================================================
         st.markdown("---")
         
-        with st.expander("🔍 **WHY DID THE MODEL MAKE THIS PREDICTION?** — Click to Reveal AI Explanation ✨"):
+        with st.expander("🔍 Why did the model make this prediction? (Click to expand SHAP Explanation)"):
             
             if explainer is not None:
                 try:
