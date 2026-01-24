@@ -1272,6 +1272,33 @@ def render_batch_prediction_tab(model):
                 else:
                     st.success("✅ All required columns found! Ready to predict.")
             
+            # ========================================================================
+            # DATA QUALITY CHECKS: NULL VALUES AND NON-NUMERIC DATA
+            # ========================================================================
+            if mapping_valid:
+                # Check for null values in mapped columns
+                null_issues = []
+                for feature in BEST_FEATURES:
+                    source_col = column_mapping[feature]
+                    null_count = df[source_col].isnull().sum()
+                    if null_count > 0:
+                        null_issues.append(f"**{source_col}**: {null_count} null value(s)")
+                
+                if null_issues:
+                    st.warning(f"⚠️ **Null Values Detected:** Your data contains null values in the following columns. Please clean your data before proceeding:\n\n" + "\n\n".join([f"• {issue}" for issue in null_issues]))
+                    mapping_valid = False
+                
+                # Check for non-numeric data types in mapped columns
+                non_numeric_issues = []
+                for feature in BEST_FEATURES:
+                    source_col = column_mapping[feature]
+                    if not pd.api.types.is_numeric_dtype(df[source_col]):
+                        non_numeric_issues.append(f"**{source_col}** (current type: `{df[source_col].dtype}`)")
+                
+                if non_numeric_issues:
+                    st.warning(f"⚠️ **Non-Numeric Data Detected:** The following columns must contain numeric values (integer or float) for the model to work. Please ensure these columns contain only numbers:\n\n" + "\n\n".join([f"• {issue}" for issue in non_numeric_issues]))
+                    mapping_valid = False
+            
             # Prediction Section
             if mapping_valid:
                 st.markdown("---")
