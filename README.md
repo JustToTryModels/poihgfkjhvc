@@ -86,8 +86,8 @@ Try the live prediction model here:
 <div align="center">
   <table>
     <tr>
-      <td align="center"><b>Individual Prediction</b></td>
-      <td align="center"><b>Batch Predictions</b></td>
+      <th>Individual Prediction</th>
+      <th>Batch Predictions</th>
     </tr>
     <tr>
       <td><img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Individual_gif.gif?raw=true" alt="Individual Prediction" width="400"/></td>
@@ -104,6 +104,7 @@ Try the live prediction model here:
 
 ## 📁 Project Structure
 
+```
 employee-churn-prediction/
 ├── Data/
 │   └── HR_comma_sep.csv                    # Dataset
@@ -476,4 +477,3 @@ The app will open in the default browser at `http://localhost:8501`
   
   If this project was helpful, please consider giving it a ⭐
 </div>
-```
