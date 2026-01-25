@@ -86,8 +86,8 @@ Try the live prediction model here:
 <div align="center">
   <table>
     <tr>
-      <th>Individual Prediction</th>
-      <th>Batch Predictions</th>
+      <th>📝 Individual Prediction</th>
+      <th>📊 Batch Predictions</th>
     </tr>
     <tr>
       <td><img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Individual_gif.gif?raw=true" alt="Individual Prediction" width="400"/></td>
