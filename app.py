@@ -484,9 +484,7 @@ st.markdown("""
         transition: width 0.5s ease-in-out;
     }
     
-    /* =========================================================================
-       EXPANDER STYLING - UPDATED
-       ========================================================================= */
+    /* Blue styled expander */
     div[data-testid="stExpander"] {
         border: none !important;
         border-radius: 8px !important;
@@ -494,8 +492,6 @@ st.markdown("""
     div[data-testid="stExpander"] details {
         border: none !important;
     }
-    
-    /* DEFAULT STATE (CLOSED): Dark Blue Background */
     div[data-testid="stExpander"] details summary {
         background-color: #1E3A5F !important;
         color: white !important;
@@ -505,41 +501,22 @@ st.markdown("""
         font-weight: 500 !important;
         text-align: center !important;
         justify-content: center !important;
-        transition: background-color 0.3s ease;
     }
-    
-    /* Hover on Closed State */
     div[data-testid="stExpander"] details summary:hover {
         background-color: #2E5A8F !important;
         color: white !important;
     }
-    
-    /* OPEN/EXPANDED STATE: Green Background */
-    div[data-testid="stExpander"] details[open] summary {
-        background-color: #28a745 !important;
-        border-radius: 8px 8px 0 0 !important;
-    }
-    
-    /* Hover on Open State: Darker Green */
-    div[data-testid="stExpander"] details[open] summary:hover {
-        background-color: #218838 !important;
-    }
-    
     div[data-testid="stExpander"] details summary svg {
         color: white !important;
         fill: white !important;
     }
-    
-    /* Content Box: Default Border */
+    div[data-testid="stExpander"] details[open] summary {
+        border-radius: 8px 8px 0 0 !important;
+    }
     div[data-testid="stExpander"] details > div {
         border: 1px solid #1E3A5F !important;
         border-top: none !important;
         border-radius: 0 0 8px 8px !important;
-    }
-    
-    /* Content Box: Green Border when Open (Matches Header) */
-    div[data-testid="stExpander"] details[open] > div {
-        border: 1px solid #28a745 !important;
     }
     
     /* Center the expander summary text */
