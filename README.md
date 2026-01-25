@@ -84,16 +84,7 @@ Try the live prediction model here:
 [![Open Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://employee-turnover-predictor.streamlit.app/) 
 
 <div align="center">
-  <table>
-    <tr>
-      <th>📝 Individual Prediction</th>
-      <th>📊 Batch Predictions</th>
-    </tr>
-    <tr>
-      <td><img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Individual_gif.gif?raw=true" alt="Individual Prediction" width="470"/></td>
-      <td><img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/batch_gif.gif?raw=true" alt="Batch Predictions" width="470"/></td>
-    </tr>
-  </table>
+  <img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/Employee-Churn-GIF.gif?raw=true" alt="Employee" width="650" />
 </div>
 
 > Enter employee details and get instant predictions on their likelihood of leaving!
