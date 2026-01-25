@@ -484,87 +484,62 @@ st.markdown("""
         transition: width 0.5s ease-in-out;
     }
     
-    /* ===== EXPANDER STYLING - Dark Blue (Closed) / Green (Open) ===== */
+    /* =========================================================================
+       EXPANDER STYLING - UPDATED
+       ========================================================================= */
     div[data-testid="stExpander"] {
         border: none !important;
-        border-radius: 12px !important;
-        margin: 1rem 0 !important;
-        overflow: visible !important;
+        border-radius: 8px !important;
     }
-    
     div[data-testid="stExpander"] details {
         border: none !important;
-        border-radius: 12px !important;
-        overflow: visible !important;
     }
     
-    /* Closed state - Dark Blue */
+    /* DEFAULT STATE (CLOSED): Dark Blue Background */
     div[data-testid="stExpander"] details summary {
         background-color: #1E3A5F !important;
         color: white !important;
-        border-radius: 12px !important;
-        padding: 1rem 1.5rem !important;
+        border-radius: 8px !important;
+        padding: 0.75rem 1rem !important;
         font-size: 1.2rem !important;
-        font-weight: 600 !important;
+        font-weight: 500 !important;
         text-align: center !important;
         justify-content: center !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3) !important;
-        border: 2px solid #1E3A5F !important;
+        transition: background-color 0.3s ease;
     }
     
-    /* Closed state hover - Lighter Blue */
+    /* Hover on Closed State */
     div[data-testid="stExpander"] details summary:hover {
         background-color: #2E5A8F !important;
         color: white !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4) !important;
-        border-color: #2E5A8F !important;
     }
     
-    /* Arrow/Icon styling */
+    /* OPEN/EXPANDED STATE: Green Background */
+    div[data-testid="stExpander"] details[open] summary {
+        background-color: #28a745 !important;
+        border-radius: 8px 8px 0 0 !important;
+    }
+    
+    /* Hover on Open State: Darker Green */
+    div[data-testid="stExpander"] details[open] summary:hover {
+        background-color: #218838 !important;
+    }
+    
     div[data-testid="stExpander"] details summary svg {
         color: white !important;
         fill: white !important;
-        transition: transform 0.3s ease !important;
     }
     
-    /* Open state - Green */
-    div[data-testid="stExpander"] details[open] summary {
-        background-color: #28a745 !important;
-        border-radius: 12px 12px 0 0 !important;
-        border: 2px solid #28a745 !important;
-        border-bottom: none !important;
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
-    }
-    
-    /* Open state hover - Lighter Green */
-    div[data-testid="stExpander"] details[open] summary:hover {
-        background-color: #2dbe4e !important;
-        border-color: #2dbe4e !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
-    }
-    
-    /* Icon rotation when open */
-    div[data-testid="stExpander"] details[open] summary svg {
-        transform: rotate(180deg) !important;
-    }
-    
-    /* Content area styling - Green border when open */
+    /* Content Box: Default Border */
     div[data-testid="stExpander"] details > div {
-        border: 2px solid #1E3A5F !important;
+        border: 1px solid #1E3A5F !important;
         border-top: none !important;
-        border-radius: 0 0 12px 12px !important;
-        background-color: #ffffff !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+        border-radius: 0 0 8px 8px !important;
     }
     
-    /* Content area with green border when expanded */
+    /* Content Box: Green Border when Open (Matches Header) */
     div[data-testid="stExpander"] details[open] > div {
-        border: 2px solid #28a745 !important;
-        border-top: none !important;
+        border: 1px solid #28a745 !important;
     }
     
     /* Center the expander summary text */
@@ -574,11 +549,9 @@ st.markdown("""
         width: 100% !important;
         text-align: center !important;
     }
-    
     div[data-testid="stExpander"] details summary p {
         text-align: center !important;
         width: 100% !important;
-        margin: 0 !important;
     }
     
     /* Checkbox styling */
