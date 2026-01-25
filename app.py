@@ -484,112 +484,87 @@ st.markdown("""
         transition: width 0.5s ease-in-out;
     }
     
-    /* ===== BEAUTIFUL EXPANDER/DROPDOWN WITH BLUE CLOSED & GREEN OPEN ===== */
-    
-    /* Expander container */
+    /* ===== EXPANDER STYLING - Dark Blue (Closed) / Green (Open) ===== */
     div[data-testid="stExpander"] {
         border: none !important;
         border-radius: 12px !important;
-        margin: 1.5rem 0 !important;
-        overflow: hidden !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        margin: 1rem 0 !important;
+        overflow: visible !important;
     }
     
-    div[data-testid="stExpander"]:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
-        transform: translateY(-2px) !important;
-    }
-    
-    /* Expander details element */
     div[data-testid="stExpander"] details {
         border: none !important;
-        background: transparent !important;
+        border-radius: 12px !important;
+        overflow: visible !important;
     }
     
-    /* ===== EXPANDER HEADER (SUMMARY) - CLOSED STATE (DARK BLUE) ===== */
+    /* Closed state - Dark Blue */
     div[data-testid="stExpander"] details summary {
-        background: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%) !important;
+        background-color: #1E3A5F !important;
         color: white !important;
         border-radius: 12px !important;
-        padding: 1.2rem 2rem !important;
-        font-size: 1.25rem !important;
-        font-weight: 700 !important;
+        padding: 1rem 1.5rem !important;
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
         text-align: center !important;
         justify-content: center !important;
         cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3) !important;
         border: 2px solid #1E3A5F !important;
-        box-shadow: 
-            0 4px 12px rgba(30, 58, 95, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        position: relative !important;
-        overflow: hidden !important;
     }
     
-    /* Hover effect on CLOSED expander - stays blue but brighter */
-    div[data-testid="stExpander"] details:not([open]) summary:hover {
-        background: linear-gradient(135deg, #2E5A8F 0%, #3E6A9F 100%) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 
-            0 6px 18px rgba(30, 58, 95, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-        border: 2px solid #2E5A8F !important;
-    }
-    
-    /* ===== EXPANDER HEADER (SUMMARY) - OPEN STATE (GREEN) ===== */
-    div[data-testid="stExpander"] details[open] summary {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
-        border: 2px solid #28a745 !important;
-        border-radius: 12px 12px 0 0 !important;
-        box-shadow: 
-            0 4px 12px rgba(40, 167, 69, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    /* Closed state hover - Lighter Blue */
+    div[data-testid="stExpander"] details summary:hover {
+        background-color: #2E5A8F !important;
         color: white !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4) !important;
+        border-color: #2E5A8F !important;
     }
     
-    /* Hover effect on OPEN expander - stays green but brighter */
-    div[data-testid="stExpander"] details[open] summary:hover {
-        background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%) !important;
-        box-shadow: 
-            0 6px 18px rgba(40, 167, 69, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-        border: 2px solid #20c997 !important;
-    }
-    
-    /* Icon color (arrow) */
+    /* Arrow/Icon styling */
     div[data-testid="stExpander"] details summary svg {
         color: white !important;
         fill: white !important;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
-        transition: transform 0.4s ease !important;
+        transition: transform 0.3s ease !important;
     }
     
-    /* Rotate arrow when expanded */
+    /* Open state - Green */
+    div[data-testid="stExpander"] details[open] summary {
+        background-color: #28a745 !important;
+        border-radius: 12px 12px 0 0 !important;
+        border: 2px solid #28a745 !important;
+        border-bottom: none !important;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+    }
+    
+    /* Open state hover - Lighter Green */
+    div[data-testid="stExpander"] details[open] summary:hover {
+        background-color: #2dbe4e !important;
+        border-color: #2dbe4e !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
+    }
+    
+    /* Icon rotation when open */
     div[data-testid="stExpander"] details[open] summary svg {
         transform: rotate(180deg) !important;
     }
     
-    /* Content area when expanded */
+    /* Content area styling - Green border when open */
     div[data-testid="stExpander"] details > div {
-        background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%) !important;
-        border: 2px solid #28a745 !important;
+        border: 2px solid #1E3A5F !important;
         border-top: none !important;
         border-radius: 0 0 12px 12px !important;
-        padding: 2rem !important;
-        box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.05) !important;
-        animation: expandContent 0.3s ease-out !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
     }
     
-    @keyframes expandContent {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Content area with green border when expanded */
+    div[data-testid="stExpander"] details[open] > div {
+        border: 2px solid #28a745 !important;
+        border-top: none !important;
     }
     
     /* Center the expander summary text */
@@ -598,35 +573,12 @@ st.markdown("""
         justify-content: center !important;
         width: 100% !important;
         text-align: center !important;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
     }
     
     div[data-testid="stExpander"] details summary p {
         text-align: center !important;
         width: 100% !important;
         margin: 0 !important;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-    }
-    
-    /* Shimmer effect on expander */
-    div[data-testid="stExpander"] details summary::before {
-        content: '' !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: -100% !important;
-        width: 100% !important;
-        height: 100% !important;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.3),
-            transparent
-        ) !important;
-        transition: left 0.6s ease !important;
-    }
-    
-    div[data-testid="stExpander"] details summary:hover::before {
-        left: 100% !important;
     }
     
     /* Checkbox styling */
