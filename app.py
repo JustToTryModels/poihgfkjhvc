@@ -434,13 +434,26 @@ st.markdown("""
         font-weight: 900 !important;
     }
     
-    /* Download button styling */
+    /* Download button styling - UPDATED TO FORCE WHITE TEXT */
     .stDownloadButton>button {
         background: linear-gradient(135deg, #28a745, #20c997) !important;
         animation: none !important;
     }
     .stDownloadButton>button:hover {
         background: linear-gradient(135deg, #20c997, #28a745) !important;
+    }
+    
+    /* Force white text on download buttons for ALL states */
+    .stDownloadButton>button,
+    .stDownloadButton>button:hover,
+    .stDownloadButton>button:active,
+    .stDownloadButton>button:focus,
+    .stDownloadButton>button:visited,
+    .stDownloadButton>button:focus-visible,
+    .stDownloadButton>button span,
+    .stDownloadButton>button:hover span,
+    .stDownloadButton>button:active span {
+        color: white !important;
     }
     
     .info-box {
