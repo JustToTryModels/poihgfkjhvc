@@ -484,39 +484,139 @@ st.markdown("""
         transition: width 0.5s ease-in-out;
     }
     
-    /* Blue styled expander */
+    /* ===== BEAUTIFUL ENHANCED EXPANDER/DROPDOWN STYLING ===== */
+    
+    /* Expander container */
     div[data-testid="stExpander"] {
         border: none !important;
-        border-radius: 8px !important;
+        border-radius: 15px !important;
+        margin: 1.5rem 0 !important;
+        overflow: hidden !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08) !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
+    
+    div[data-testid="stExpander"]:hover {
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12) !important;
+        transform: translateY(-2px) !important;
+    }
+    
+    /* Expander details element */
     div[data-testid="stExpander"] details {
         border: none !important;
+        background: transparent !important;
     }
+    
+    /* ===== EXPANDER HEADER (SUMMARY) - GRADIENT MAGIC ===== */
     div[data-testid="stExpander"] details summary {
-        background-color: #1E3A5F !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+        background-size: 200% 200% !important;
         color: white !important;
-        border-radius: 8px !important;
-        padding: 0.75rem 1rem !important;
-        font-size: 1.2rem !important;
-        font-weight: 500 !important;
+        border-radius: 15px !important;
+        padding: 1.5rem 2rem !important;
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
         text-align: center !important;
         justify-content: center !important;
+        cursor: pointer !important;
+        border: 3px solid transparent !important;
+        box-shadow: 
+            0 6px 20px rgba(102, 126, 234, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        animation: gradientFlow 6s ease infinite !important;
+        letter-spacing: 0.5px !important;
     }
+    
+    /* Gradient flowing animation */
+    @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    /* Shimmer effect on expander */
+    div[data-testid="stExpander"] details summary::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent
+        ) !important;
+        transition: left 0.7s ease !important;
+    }
+    
+    div[data-testid="stExpander"] details summary:hover::before {
+        left: 100% !important;
+    }
+    
+    /* Hover effect on expander header */
     div[data-testid="stExpander"] details summary:hover {
-        background-color: #2E5A8F !important;
-        color: white !important;
+        background: linear-gradient(135deg, #f093fb 0%, #764ba2 50%, #667eea 100%) !important;
+        background-size: 200% 200% !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 
+            0 10px 30px rgba(102, 126, 234, 0.6),
+            0 0 50px rgba(240, 147, 251, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+        border: 3px solid rgba(255, 255, 255, 0.4) !important;
     }
+    
+    /* Active/pressed state */
+    div[data-testid="stExpander"] details summary:active {
+        transform: translateY(1px) !important;
+        box-shadow: 
+            0 4px 15px rgba(102, 126, 234, 0.4),
+            inset 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    /* Icon color (arrow) */
     div[data-testid="stExpander"] details summary svg {
         color: white !important;
         fill: white !important;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+        transition: transform 0.4s ease !important;
     }
+    
+    /* Rotate arrow when expanded */
+    div[data-testid="stExpander"] details[open] summary svg {
+        transform: rotate(180deg) !important;
+    }
+    
+    /* When expander is open - adjust header radius */
     div[data-testid="stExpander"] details[open] summary {
-        border-radius: 8px 8px 0 0 !important;
+        border-radius: 15px 15px 0 0 !important;
+        border-bottom: 3px solid rgba(255, 255, 255, 0.3) !important;
     }
+    
+    /* Content area when expanded */
     div[data-testid="stExpander"] details > div {
-        border: 1px solid #1E3A5F !important;
+        background: linear-gradient(to bottom, #fdfbfb 0%, #f8f9ff 100%) !important;
+        border: 3px solid rgba(102, 126, 234, 0.2) !important;
         border-top: none !important;
-        border-radius: 0 0 8px 8px !important;
+        border-radius: 0 0 15px 15px !important;
+        padding: 2rem !important;
+        box-shadow: inset 0 4px 15px rgba(102, 126, 234, 0.05) !important;
+        animation: expandContent 0.4s ease-out !important;
+    }
+    
+    @keyframes expandContent {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
     /* Center the expander summary text */
@@ -525,10 +625,33 @@ st.markdown("""
         justify-content: center !important;
         width: 100% !important;
         text-align: center !important;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
     }
+    
     div[data-testid="stExpander"] details summary p {
         text-align: center !important;
         width: 100% !important;
+        margin: 0 !important;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Pulsing glow effect for closed expanders */
+    @keyframes pulseGlow {
+        0%, 100% {
+            box-shadow: 
+                0 6px 20px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        50% {
+            box-shadow: 
+                0 8px 30px rgba(102, 126, 234, 0.6),
+                0 0 40px rgba(240, 147, 251, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+    }
+    
+    div[data-testid="stExpander"] details:not([open]) summary {
+        animation: gradientFlow 6s ease infinite, pulseGlow 3s ease-in-out infinite !important;
     }
     
     /* Checkbox styling */
