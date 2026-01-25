@@ -938,10 +938,22 @@ def render_individual_prediction_tab(model, explainer):
     with col2:
         predict_button = st.button("🔮 Predict Employee Turnover", use_container_width=True, key="individual_predict")
     
+    # Store predictions in session state so they persist
     if predict_button:
         input_df = pd.DataFrame([input_data])[BEST_FEATURES]
         prediction = model.predict(input_df)[0]
         prediction_proba = model.predict_proba(input_df)[0]
+        
+        st.session_state['ind_prediction'] = prediction
+        st.session_state['ind_proba'] = prediction_proba
+        st.session_state['ind_input_df'] = input_df
+        st.session_state['ind_submitted'] = True
+
+    # Display results if they exist in session state
+    if st.session_state.get('ind_submitted', False):
+        prediction = st.session_state['ind_prediction']
+        prediction_proba = st.session_state['ind_proba']
+        input_df = st.session_state['ind_input_df']
         
         prob_stay = prediction_proba[0] * 100
         prob_leave = prediction_proba[1] * 100
@@ -1308,6 +1320,7 @@ def render_batch_prediction_tab(model):
                 with col2:
                     batch_predict_button = st.button("🔮 Generate Batch Predictions", use_container_width=True, key="batch_predict")
                 
+                # Logic to process and store batch predictions
                 if batch_predict_button:
                     with st.spinner("🔄 Processing predictions..."):
                         # Create temporary dataframe with mapped columns
@@ -1326,6 +1339,18 @@ def render_batch_prediction_tab(model):
                             result_df[f"{prediction_column_name}_Probability_Stay"] = (prediction_probabilities[:, 0] * 100).round(2)
                             result_df[f"{prediction_column_name}_Probability_Leave"] = (prediction_probabilities[:, 1] * 100).round(2)
                     
+                    # Store everything in session state
+                    st.session_state['batch_result_df'] = result_df
+                    st.session_state['batch_probabilities'] = prediction_probabilities
+                    st.session_state['batch_predictions'] = predictions
+                    st.session_state['batch_submitted'] = True
+
+                # Display batch results if they exist in session state
+                if st.session_state.get('batch_submitted', False):
+                    result_df = st.session_state['batch_result_df']
+                    prediction_probabilities = st.session_state['batch_probabilities']
+                    predictions = st.session_state['batch_predictions']
+
                     st.success("✅ Predictions generated successfully!")
                     
                     if enable_column_mapping:
