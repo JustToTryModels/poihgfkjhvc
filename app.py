@@ -94,7 +94,7 @@ st.markdown("""
         box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     }
     
-    /* ===== ENHANCED TAB STYLING ===== */
+    /* ===== ENHANCED TAB STYLING - MUCH BIGGER TABS WITH BIGGER BOLD TEXT ===== */
     .stTabs [data-baseweb="tab-list"] {
         gap: 20px;
         justify-content: center;
@@ -170,7 +170,7 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Settings card */
+    /* Settings card - Light Cream Background (matching feature-card) */
     .settings-card {
         background-color: #FFE8C2;
         border-radius: 12px;
@@ -180,13 +180,49 @@ st.markdown("""
         margin: 1rem 0;
     }
     
-    /* Column mapping card */
+    /* Column mapping card - Light Cream Background (matching feature-card) */
     .mapping-card {
         background-color: #FFE8C2;
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         border-left: 5px solid #1E3A5F;
+        margin: 1rem 0;
+    }
+    
+    /* Required columns info box */
+    .required-cols-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Success box */
+    .success-box {
+        background-color: #d4edda;
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Error box */
+    .error-box {
+        background-color: #f8d7da;
+        border: 1px solid #dc3545;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    /* Warning box */
+    .warning-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
         margin: 1rem 0;
     }
     
@@ -238,18 +274,40 @@ st.markdown("""
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
     
+    /* Gradient animation - shifting colors */
     @keyframes gradientShift {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
     }
     
+    /* Pulse glow animation */
     @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.02); }
-        100% { transform: scale(1); }
+        0% { 
+            box-shadow: 
+                0 4px 15px rgba(255, 0, 128, 0.4),
+                0 8px 30px rgba(255, 140, 0, 0.3),
+                0 0 40px rgba(64, 224, 208, 0.2);
+            transform: scale(1);
+        }
+        50% { 
+            box-shadow: 
+                0 6px 25px rgba(255, 0, 128, 0.6),
+                0 12px 40px rgba(255, 140, 0, 0.5),
+                0 0 60px rgba(64, 224, 208, 0.4),
+                0 0 80px rgba(255, 0, 128, 0.2);
+            transform: scale(1.02);
+        }
+        100% { 
+            box-shadow: 
+                0 4px 15px rgba(255, 0, 128, 0.4),
+                0 8px 30px rgba(255, 140, 0, 0.3),
+                0 0 40px rgba(64, 224, 208, 0.2);
+            transform: scale(1);
+        }
     }
     
+    /* Hover - Electric effect with different gradient */
     .stButton>button:hover {
         background: linear-gradient(
             45deg, 
@@ -257,8 +315,126 @@ st.markdown("""
         );
         background-size: 400% 400%;
         transform: translateY(-5px) scale(1.01);
+        box-shadow: 
+            0 10px 30px rgba(0, 245, 255, 0.5),
+            0 15px 50px rgba(255, 0, 255, 0.4),
+            0 0 100px rgba(255, 255, 0, 0.3),
+            inset 0 0 20px rgba(255, 255, 255, 0.1);
+        animation: gradientShift 1.5s ease infinite;
+        color: white !important;
+        border: none !important;
+        outline: none !important;
+        font-weight: 900 !important;
     }
     
+    /* Active/Click - Neon burst effect */
+    .stButton>button:active {
+        background: linear-gradient(
+            45deg, 
+            #ff3366, #ff6b35, #f7931e, #ffd700, #ff3366
+        );
+        background-size: 400% 400%;
+        transform: translateY(2px) scale(0.98);
+        box-shadow: 
+            0 2px 10px rgba(255, 51, 102, 0.6),
+            0 4px 20px rgba(255, 107, 53, 0.4),
+            inset 0 0 30px rgba(255, 255, 255, 0.2);
+        color: white !important;
+        border: none !important;
+        outline: none !important;
+        font-weight: 900 !important;
+    }
+    
+    /* Shimmer/shine effect overlay */
+    .stButton>button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent
+        );
+        transition: left 0.7s ease;
+    }
+    
+    .stButton>button:hover::before {
+        left: 100%;
+    }
+    
+    /* Sparkle particles effect */
+    .stButton>button::after {
+        content: '✨';
+        position: absolute;
+        font-size: 1.2rem;
+        right: 20px;
+        animation: sparkle 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes sparkle {
+        0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        50% { opacity: 0.5; transform: scale(1.3) rotate(180deg); }
+    }
+    
+    /* Focus effect - Remove blue border completely */
+    .stButton>button:focus {
+        outline: none !important;
+        border: none !important;
+        box-shadow: 
+            0 4px 15px rgba(255, 0, 128, 0.4),
+            0 8px 30px rgba(255, 140, 0, 0.3),
+            0 0 40px rgba(64, 224, 208, 0.2);
+        color: white !important;
+        font-weight: 900 !important;
+    }
+    
+    /* Focus-visible - Remove blue border completely */
+    .stButton>button:focus-visible {
+        outline: none !important;
+        border: none !important;
+        box-shadow: 
+            0 4px 15px rgba(255, 0, 128, 0.4),
+            0 8px 30px rgba(255, 140, 0, 0.3),
+            0 0 40px rgba(64, 224, 208, 0.2);
+        font-weight: 900 !important;
+    }
+    
+    /* Remove focus ring from button container as well */
+    .stButton>button:focus:not(:focus-visible) {
+        outline: none !important;
+        border: none !important;
+    }
+    
+    /* Ensure text stays white in ALL states */
+    .stButton>button,
+    .stButton>button:hover,
+    .stButton>button:active,
+    .stButton>button:focus,
+    .stButton>button:focus-visible,
+    .stButton>button:visited,
+    .stButton>button span,
+    .stButton>button:hover span,
+    .stButton>button:active span,
+    .stButton>button:focus span,
+    .stButton>button p,
+    .stButton>button:hover p,
+    .stButton>button:active p,
+    .stButton>button:focus p,
+    .stButton>button div,
+    .stButton>button:hover div,
+    .stButton>button:active div,
+    .stButton>button:focus div {
+        color: white !important;
+        outline: none !important;
+        border: none !important;
+        font-weight: 900 !important;
+    }
+    
+    /* Download button styling - UPDATED TO FORCE WHITE TEXT */
     .stDownloadButton>button {
         background: linear-gradient(135deg, #28a745, #20c997) !important;
         animation: none !important;
@@ -267,10 +443,26 @@ st.markdown("""
         background: linear-gradient(135deg, #20c997, #28a745) !important;
     }
     
-    .stDownloadButton>button, .stDownloadButton>button:hover, .stDownloadButton>button:focus {
+    /* Force white text on download buttons for ALL states */
+    .stDownloadButton>button,
+    .stDownloadButton>button:hover,
+    .stDownloadButton>button:active,
+    .stDownloadButton>button:focus,
+    .stDownloadButton>button:visited,
+    .stDownloadButton>button:focus-visible,
+    .stDownloadButton>button span,
+    .stDownloadButton>button:hover span,
+    .stDownloadButton>button:active span {
         color: white !important;
     }
     
+    .info-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
     .progress-bar-container {
         width: 100%;
         background-color: #e9ecef;
@@ -283,84 +475,69 @@ st.markdown("""
         height: 100%;
         background-color: #28a745;
         border-radius: 10px;
+        transition: width 0.5s ease-in-out;
     }
     .progress-bar-red {
         height: 100%;
         background-color: #dc3545;
         border-radius: 10px;
+        transition: width 0.5s ease-in-out;
     }
     
-    /* ==================================================================== */
-    /* BEAUTIFUL EXPANDER / DROPDOWN STYLING                                */
-    /* ==================================================================== */
-    
-    /* 1. The Container - Remove default border, add elegant shadow */
+    /* Blue styled expander */
     div[data-testid="stExpander"] {
         border: none !important;
-        background-color: transparent !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        border-radius: 15px !important;
-        margin-bottom: 1.5rem;
+        border-radius: 8px !important;
     }
-
-    /* 2. The Header (Summary) - Gradient Background & Modern Typography */
+    div[data-testid="stExpander"] details {
+        border: none !important;
+    }
     div[data-testid="stExpander"] details summary {
-        background: linear-gradient(135deg, #1E3A5F 0%, #3a6ea5 100%) !important;
+        background-color: #1E3A5F !important;
         color: white !important;
-        border-radius: 15px !important;
-        padding: 1.2rem 2rem !important;
-        font-size: 1.25rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.5px;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+        border-radius: 8px !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 1.2rem !important;
+        font-weight: 500 !important;
         text-align: center !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        transition: all 0.3s ease !important;
+        justify-content: center !important;
     }
-
-    /* 3. Hover Effect on Header - Lift & Brighten */
     div[data-testid="stExpander"] details summary:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(30, 58, 95, 0.4);
-        background: linear-gradient(135deg, #254672 0%, #4a82bf 100%) !important;
+        background-color: #2E5A8F !important;
+        color: white !important;
     }
-
-    /* 4. The SVG Icon (Arrow) - Force White & Bold */
     div[data-testid="stExpander"] details summary svg {
         color: white !important;
         fill: white !important;
-        stroke: white !important;
-        stroke-width: 1px;
-        width: 1.4rem !important;
-        height: 1.4rem !important;
-        margin-right: 12px !important;
-        opacity: 1 !important;
+    }
+    div[data-testid="stExpander"] details[open] summary {
+        border-radius: 8px 8px 0 0 !important;
+    }
+    div[data-testid="stExpander"] details > div {
+        border: 1px solid #1E3A5F !important;
+        border-top: none !important;
+        border-radius: 0 0 8px 8px !important;
     }
     
-    /* 5. Center text inside summary */
-    div[data-testid="stExpander"] details summary span,
+    /* Center the expander summary text */
+    div[data-testid="stExpander"] details summary span {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
     div[data-testid="stExpander"] details summary p {
-        color: white !important;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center !important;
+        width: 100% !important;
     }
-
-    /* 6. Active/Open State - Flatten Bottom Corners */
-    div[data-testid="stExpander"] details[open] summary {
-        border-radius: 15px 15px 0 0 !important;
-        background: linear-gradient(135deg, #162c4a 0%, #2E5A8F 100%) !important;
-        box-shadow: none !important;
+    
+    /* Checkbox styling */
+    .stCheckbox {
+        padding: 0.5rem 0;
     }
-
-    /* 7. The Expanded Content - Border & Padding */
-    div[data-testid="stExpander"] details > div {
-        background-color: #ffffff !important;
-        border: 2px solid #1E3A5F !important;
-        border-top: none !important;
-        border-radius: 0 0 15px 15px !important;
-        padding: 2rem !important;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    .stCheckbox label {
+        font-size: 1rem;
+        font-weight: 500;
     }
     
     /* SHAP explanation styling */
@@ -386,7 +563,13 @@ st.markdown("""
         border-radius: 0 8px 8px 0;
     }
     
-    /* Indicators */
+    /* Spacer for SHAP sections */
+    .shap-section-spacer {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Yellow indicator for unmapped columns */
     .needs-mapping-indicator {
         background-color: #fff3cd;
         padding: 4px 8px;
@@ -397,7 +580,21 @@ st.markdown("""
         margin-top: 4px;
         font-weight: 600;
         color: #856404;
+        animation: pulseYellow 1.5s ease-in-out infinite;
     }
+    
+    @keyframes pulseYellow {
+        0%, 100% {
+            background-color: #fff3cd;
+            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+        }
+        50% {
+            background-color: #ffe69c;
+            box-shadow: 0 0 8px 2px rgba(255, 193, 7, 0.6);
+        }
+    }
+    
+    /* Mapped column indicator */
     .mapped-indicator {
         background-color: #d4edda;
         padding: 4px 8px;
@@ -819,7 +1016,7 @@ def render_individual_prediction_tab(model, explainer):
         # ================================================================
         st.markdown("---")
         
-        with st.expander("🔍 WHY DID THE MODEL MAKE THIS PREDICTION? (CLICK TO EXPAND SHAP EXPLANATION)"):
+        with st.expander("**🔍 Why did the model make this prediction? (Click to expand SHAP Explanation)**"):
             
             if explainer is not None:
                 try:
@@ -888,7 +1085,7 @@ def render_batch_prediction_tab(model):
     st.markdown("---")
     st.markdown('<h2 class="section-header">📊 Batch Employee Prediction</h2>', unsafe_allow_html=True)
     
-    with st.expander("📋 REQUIRED COLUMNS IN YOUR FILE (CLICK TO EXPAND)"):
+    with st.expander("**📋 Required Columns in Your File (Click to Expand)**"):
         st.markdown("""
         <div style="background-color: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
             <p>Your uploaded file <strong>must contain</strong> these columns (or you can map your columns using Column Mapping):</p>
@@ -1247,7 +1444,7 @@ def render_batch_prediction_tab(model):
     
     else:
         st.markdown("---")
-        with st.expander("📋 VIEW SAMPLE DATA FORMAT"):
+        with st.expander("**📋 View Sample Data Format**"):
             sample_data = pd.DataFrame({
                 'employee_id': [1, 2, 3, 4, 5],
                 'satisfaction_level': [0.38, 0.80, 0.11, 0.72, 0.37],
