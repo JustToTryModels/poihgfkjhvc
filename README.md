@@ -379,7 +379,7 @@ This waterfall plot explains a prediction where the model was **95.7% confident*
 
 ### Summary
 
-The organisation is facing a dual crisis of **burnout and stagnation**, systematically losing its most valuable employees. While low satisfaction (median 0.41 for leavers) is the immediate trigger, the root causes are structural: unsustainable workloads, a near-total lack of career progression, and compensation that fails to reward high effort.
+The organization is facing a dual crisis of **burnout and stagnation**, systematically losing its most valuable employees. While low satisfaction (median 0.41 for leavers) is the immediate trigger, the root causes are structural: unsustainable workloads, a near-total lack of career progression, and compensation that fails to reward high effort.
 
 ### 🔑 1. The Core Predictors of Turnover
 
@@ -388,7 +388,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | Metric | Employees Who Stayed | Employees Who Left | Key Insight |
 |--------|----------------------|--------------------|-------------|
 | Median Satisfaction | 0.69 | 0.41 | Low satisfaction is the common denominator for all departures |
-| Median Evaluation | 0.71 | 0.79 | The organisation is systematically losing its highest-performing employees |
+| Median Evaluation | 0.71 | 0.79 | The organization is systematically losing its highest-performing employees |
 | Median Monthly Hours | 198 | 226 | Leavers are pushed significantly harder |
 | Promoted (Last 5 Yrs) | 1.8% | 0.3% | Promotions are a powerful yet neglected retention tool |
 
@@ -480,7 +480,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 | Action | Details |
 |--------|---------|
 | **The Rule** | Implement a mandatory career review at the 3-year mark |
-| **The Fix** | Create a clear promotion path. With only 1.69% of staff promoted in 5 years, the organisation is forcing its experienced staff to leave to advance their careers |
+| **The Fix** | Create a clear promotion path. With only 1.69% of staff promoted in 5 years, the organization is forcing its experienced staff to leave to advance their careers |
 | **Why** | Promoted employees have ~4% churn rate vs. ~17% for non-promoted |
 
 </div>
@@ -495,7 +495,7 @@ The organisation is facing a dual crisis of **burnout and stagnation**, systemat
 |--------|---------|
 | **The Rule** | Stop underpaying the hardest workers |
 | **The Fix** | Audit Low and Medium salary brackets. Identify employees with High Evaluations (>0.8) and provide raises or bonuses |
-| **Why** | The organisation is losing top talent because they work the most hours but receive the lowest pay |
+| **Why** | The organization is losing top talent because they work the most hours but receive the lowest pay |
 
 </div>
 
