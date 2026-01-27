@@ -90,8 +90,8 @@ Try the live prediction model here:
       <th>📊 Batch Predictions</th>
     </tr>
     <tr>
-      <td><img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Individual_gif.gif?raw=true" alt="Individual Prediction" width="470"/></td>
-      <td><img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/batch_gif.gif?raw=true" alt="Batch Predictions" width="470"/></td>
+      <td><img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/Individual_gif.gif?raw=true" alt="Individual Prediction" width="470"/></td>
+      <td><img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/batch_gif.gif?raw=true" alt="Batch Predictions" width="470"/></td>
     </tr>
   </table>
 </div>
