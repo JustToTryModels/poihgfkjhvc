@@ -309,6 +309,8 @@ Global interpretability reveals which features are most influential **across all
 
 <br>
 
+<div align="center">
+  
 #### 📖 How to Read the Summary Plot
 
 | Element | Meaning |
@@ -318,6 +320,8 @@ Global interpretability reveals which features are most influential **across all
 | **Position (left/right)** | Left = Pushes toward STAY, Right = Pushes toward LEAVE |
 | **Feature order** | Top features have the strongest overall impact |
 
+</div>
+  
 **Key Insight:** Notice how **blue dots (low satisfaction)** cluster on the **right side** for `satisfaction_level` — this clearly shows that dissatisfied employees are much more likely to leave.
 
 <br>
@@ -354,12 +358,16 @@ This waterfall plot explains a prediction where the model was **95.7% confident*
 
 <br>
 
+<div align="center">
+  
 #### 🔑 Interpretation Rules
 
 | SHAP Value | Bar Color | Meaning |
 |------------|:---------:|---------|
 | **Positive (+)** | 🔴 Red | Pushes toward **LEAVING** |
 | **Negative (-)** | 🔵 Blue | Pushes toward **STAYING** |
+
+</div>
 
 > **Final Prediction Logic:** If red bars outweigh blue → **LEAVE** | If blue bars outweigh red → **STAY**
 
