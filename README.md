@@ -288,7 +288,7 @@ To understand **why** the model makes specific predictions, we used **SHAP (SHap
 Global interpretability reveals which features are most influential **across all predictions**.
 
 <div align="center">
-  <img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Global_Interpretability.png?raw=true" alt="SHAP Summary Plot" width="750"/>
+  <img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/Global_Interpretability.png?raw=true" alt="SHAP Summary Plot" width="750"/>
 </div>
 
 <br>
@@ -331,7 +331,7 @@ Global interpretability reveals which features are most influential **across all
 Local interpretability explains **why a specific employee** was predicted to leave or stay.
 
 <div align="center">
-  <img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Local_Interpretability.png?raw=true" alt="SHAP Waterfall Plot" width="750"/>
+  <img src="https://github.com/MarpakaPradeepSai/Employee-Churn-Prediction/blob/main/Data/Images%20&%20GIFs/Local_Interpretability.png?raw=true" alt="SHAP Waterfall Plot" width="750"/>
 </div>
 
 <br>
