@@ -26,6 +26,7 @@ A machine learning project designed to predict employee attrition by analyzing k
 - [Methodology](#-methodology)
 - [Model Comparison & Selection](#-model-comparison--selection)
 - [Final Model Results](#-final-model-results)
+- [Model Explainability (SHAP Analysis)](#-model-explainability-shap-analysis)
 - [Key Findings](#-key-findings)
 - [Strategic Recommendations](#-strategic-recommendations)
 - [Installation & Usage](#-installation--usage)
@@ -69,6 +70,7 @@ Predict whether an employee will leave the company based on various factors such
 | **Selected Model** | Random Forest Classifier |
 | **Imbalance Handling** | Class weighting + Stratified K-Fold Cross-Validation |
 | **Feature Selection** | Recursive Feature Elimination (RFE) & MDI |
+| **Explainability** | SHAP (SHapley Additive exPlanations) |
 | **Deployment** | Streamlit Web Application |
 
 </div>
@@ -272,6 +274,94 @@ Random Forest achieved top-tier performance using only **5 key features**. Fewer
 </div>
 
 > ✅ **Model generalizes well - no overfitting detected!**
+
+<br>
+
+---
+
+## 🔍 Model Explainability (SHAP Analysis)
+
+To understand **why** the model makes specific predictions, we used **SHAP (SHapley Additive exPlanations)** — a game-theoretic approach that explains the output of any machine learning model.
+
+### 🌍 Global Interpretability
+
+Global interpretability reveals which features are most influential **across all predictions**.
+
+<div align="center">
+  <img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Global_Interpretability.png?raw=true" alt="SHAP Summary Plot" width="750"/>
+</div>
+
+<br>
+
+<div align="center">
+
+#### Feature Importance Ranking (Mean |SHAP|)
+
+| Rank | Feature | Mean \|SHAP\| | Primary Effect |
+|:----:|---------|:-------------:|----------------|
+| 1 | `satisfaction_level` | 0.1793 | 🔵 Low satisfaction → LEAVE |
+| 2 | `time_spend_company` | 0.0869 | 🔴 4-5 years tenure → LEAVE |
+| 3 | `number_project` | 0.0838 | 🔴 2 or 6+ projects → LEAVE |
+| 4 | `average_monthly_hours` | 0.0818 | 🔴 High hours (>240) → LEAVE |
+| 5 | `last_evaluation` | 0.0767 | 🔴 Very high/low scores → LEAVE |
+
+</div>
+
+<br>
+
+#### 📖 How to Read the Summary Plot
+
+| Element | Meaning |
+|---------|---------|
+| **Each dot** | Represents one employee |
+| **Dot color** | 🔴 Red = High feature value, 🔵 Blue = Low feature value |
+| **Position (left/right)** | Left = Pushes toward STAY, Right = Pushes toward LEAVE |
+| **Feature order** | Top features have the strongest overall impact |
+
+**Key Insight:** Notice how **blue dots (low satisfaction)** cluster on the **right side** for `satisfaction_level` — this clearly shows that dissatisfied employees are much more likely to leave.
+
+<br>
+
+### 🎯 Local Interpretability (Individual Prediction)
+
+Local interpretability explains **why a specific employee** was predicted to leave or stay.
+
+<div align="center">
+  <img src="https://github.com/JustToTryModels/poihgfkjhvc/blob/main/Local_Interpretability.png?raw=true" alt="SHAP Waterfall Plot" width="750"/>
+</div>
+
+<br>
+
+#### 📋 Example: High-Risk Employee Analysis
+
+This waterfall plot explains a prediction where the model was **95.7% confident** the employee would leave.
+
+<div align="center">
+
+| Factor | Value | SHAP Impact | Interpretation |
+|--------|:-----:|:-----------:|----------------|
+| `average_monthly_hours` | 303 | +0.189 🔴 | **Severe burnout risk** — works 50% more than average |
+| `satisfaction_level` | 0.10 | +0.163 🔴 | **Extremely dissatisfied** — lowest 10% |
+| `time_spend_company` | 5 years | +0.068 🔴 | **Career plateau** — prime flight-risk tenure |
+| `number_project` | 5 | +0.059 🔴 | **Heavy workload** — above optimal range |
+| `last_evaluation` | 0.84 | -0.022 🔵 | High performer (slight retention factor) |
+
+</div>
+
+<br>
+
+**Net Effect:** The massive push from overwork (+0.189) and dissatisfaction (+0.163) far outweighs any retention factors, resulting in a clear **LEAVE** prediction.
+
+<br>
+
+#### 🔑 Interpretation Rules
+
+| SHAP Value | Bar Color | Meaning |
+|------------|:---------:|---------|
+| **Positive (+)** | 🔴 Red | Pushes toward **LEAVING** |
+| **Negative (-)** | 🔵 Blue | Pushes toward **STAYING** |
+
+> **Final Prediction Logic:** If red bars outweigh blue → **LEAVE** | If blue bars outweigh red → **STAY**
 
 <br>
 
